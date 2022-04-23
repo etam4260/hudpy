@@ -1,9 +1,14 @@
 from datetime import date
-import os 
+import os
+import itertools
+from typing import Union
 
-def hud_cw_zip_tract(zip, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+
+def hud_cw_zip_tract(zip: Union[int, str] = None,
+                     year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                     quarter: Union[int, str] = 1,
+                     minimal: bool = False,
+                     key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_zip_tract
     #' @title hud_cw_zip_tract
@@ -26,10 +31,57 @@ def hud_cw_zip_tract(zip, year = (date.today() - 365).strftime("%Y"),
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
-def hud_cw_zip_county(zip, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
-    """
+    primary_geoid = "zip"
+    secondary_geoid = "tract"
+
+    args = cw_input_check_cleansing(zip, year, quarter, key)
+    zip = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(zip) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(zip, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
+
+
+def hud_cw_zip_county(zip: Union[int, str] = None,
+                      year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                      quarter: Union[int, str] = 1,
+                      minimal: bool = False,
+                      key: str = os.getenv("HUD_KEY")):
+    """ 
     #' @name hud_cw_zip_county
     #' @title hud_cw_zip_county
     #' @description This function queries the Crosswalks API provided by
@@ -52,9 +104,53 @@ def hud_cw_zip_county(zip, year = (date.today() - 365).strftime("%Y"),
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
-def hud_cw_zip_cbsa (zip, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+    primary_geoid = "zip"
+    secondary_geoid = "county"
+
+    args = cw_input_check_cleansing(zip, year, quarter, key)
+    zip = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(zip) != 5):
+         raise ValueError("Query input is not of length 5")
+
+    all_queries = list(itertools.product(zip, year, quarter))
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
+
+def hud_cw_zip_cbsa(zip: Union[int, str] = None,
+                    year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                    quarter: Union[int, str] = 1,
+                    minimal: bool = False,
+                    key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_zip_cbsa
     #' @title hud_cw_zip_cbsa
@@ -77,9 +173,55 @@ def hud_cw_zip_cbsa (zip, year = (date.today() - 365).strftime("%Y"),
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
-def hud_cw_zip_cbsadiv(zip, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+    primary_geoid = "zip"
+    secondary_geoid = "cbsa"
+
+    args = cw_input_check_cleansing(zip, year, quarter, key)
+    zip = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(zip) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(zip, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
+
+def hud_cw_zip_cbsadiv(zip: Union[int, str] = None,
+                       year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                       quarter: Union[int, str] = 1,
+                       minimal: bool = False,
+                       key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_zip_cbsadiv
     #' @title hud_cw_zip_cbsadiv
@@ -102,9 +244,56 @@ def hud_cw_zip_cbsadiv(zip, year = (date.today() - 365).strftime("%Y"),
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
-def hud_cw_zip_cd(zip, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+    primary_geoid = "zip"
+    secondary_geoid = "cbsadiv"
+
+    args = cw_input_check_cleansing(zip, year, quarter, key)
+    zip = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(zip) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(zip, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
+
+
+def hud_cw_zip_cd(zip: Union[int, str] = None,
+                  year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                  quarter: Union[int, str] = 1,
+                  minimal: bool = False,
+                  key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_zip_cd
     #' @title hud_cw_zip_cd
@@ -127,9 +316,55 @@ def hud_cw_zip_cd(zip, year = (date.today() - 365).strftime("%Y"),
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
-def hud_cw_zip_countysub(zip, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+    primary_geoid = "zip"
+    secondary_geoid = "cd"
+
+    args = cw_input_check_cleansing(zip, year, quarter, key)
+    zip = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(zip) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(zip, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
+
+def hud_cw_zip_countysub(zip: Union[int, str] = None,
+                         year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                         quarter: Union[int, str] = 1,
+                         minimal: bool = False,
+                         key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_zip_countysub
     #' @title hud_cw_zip_countysub
@@ -152,9 +387,55 @@ def hud_cw_zip_countysub(zip, year = (date.today() - 365).strftime("%Y"),
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
-def hud_cw_tract_zip(tract, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+    primary_geoid = "zip"
+    secondary_geoid = "countysub"
+
+    args = cw_input_check_cleansing(zip, year, quarter, key)
+    zip = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(zip) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(zip, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
+
+def hud_cw_tract_zip(tract: Union[int, str] = None,
+                     year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                     quarter: Union[int, str] = 1,
+                     minimal: bool = False,
+                     key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_tract_zip
     #' @title hud_cw_tract_zip
@@ -176,10 +457,57 @@ def hud_cw_tract_zip(tract, year = (date.today() - 365).strftime("%Y"),
     #'   oth-ratio, tot-ratio. For more details on these measurements, visit
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
+
+    primary_geoid = "tract"
+    secondary_geoid = "zip"
+
+    args = cw_input_check_cleansing(tract, year, quarter, key)
+    tract = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(zip) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(tract, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
   
-def hud_cw_county_zip(county, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+
+def hud_cw_county_zip(county: Union[int, str] = None,
+                      year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                      quarter: Union[int, str] = 1,
+                      minimal: bool = False,
+                      key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_county_zip
     #' @title hud_cw_county_zip
@@ -203,9 +531,55 @@ def hud_cw_county_zip(county, year = (date.today() - 365).strftime("%Y"),
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
-def hud_cw_cbsa_zip(cbsa, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+    primary_geoid = "county"
+    secondary_geoid = "zip"
+
+    args = cw_input_check_cleansing(county, year, quarter, key)
+    county = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(zip) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(county, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
+
+def hud_cw_cbsa_zip(cbsa: Union[int, str] = None,
+                    year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                    quarter: Union[int, str] = 1,
+                    minimal: bool = False,
+                    key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_cbsa_zip
     #' @title hud_cw_cbsa_zip
@@ -228,9 +602,56 @@ def hud_cw_cbsa_zip(cbsa, year = (date.today() - 365).strftime("%Y"),
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
-def hud_cw_cbsadiv_zip(cbsadiv, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+    primary_geoid = "cbsa"
+    secondary_geoid = "zip"
+
+    args = cw_input_check_cleansing(cbsa, year, quarter, key)
+    cbsa = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(cbsa) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(cbsa, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
+
+
+def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str] = None,
+                       year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                       quarter: Union[int, str] = 1,
+                       minimal: bool = False,
+                       key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_cbsadiv_zip
     #' @title hud_cw_cbsadiv_zip
@@ -254,9 +675,56 @@ def hud_cw_cbsadiv_zip(cbsadiv, year = (date.today() - 365).strftime("%Y"),
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
-def hud_cw_cd_zip(cd, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+    primary_geoid = "cbsadiv"
+    secondary_geoid = "zip"
+
+    args = cw_input_check_cleansing(cbsadiv, year, quarter, key)
+    cbsadiv = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(cbsadiv) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(cbsadiv, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
+
+
+def hud_cw_cd_zip(cd: Union[int, str] = None,
+                  year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                  quarter: Union[int, str] = 1,
+                  minimal: bool = False,
+                  key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_cd_zip
     #' @title hud_cw_cd_zip
@@ -281,9 +749,56 @@ def hud_cw_cd_zip(cd, year = (date.today() - 365).strftime("%Y"),
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
     
-def hud_cw_countysub_zip(countysub, year = (date.today() - 365).strftime("%Y"),
-                             quarter = 1, minimal = False,
-                             key = os.getenv("HUD_KEY")):
+    primary_geoid = "cd"
+    secondary_geoid = "zip"
+
+    args = cw_input_check_cleansing(cd, year, quarter, key)
+    cd = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(cd) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(cd, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
+
+
+def hud_cw_countysub_zip(countysub: Union[int, str] = None,
+                         year: Union[int, str] = (date.today() - 365).strftime("%Y"),
+                         quarter: Union[int, str] = 1,
+                         minimal: bool = False,
+                         key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw_zip_countysub
     #' @title hud_cw_zip_countysub
@@ -305,3 +820,47 @@ def hud_cw_countysub_zip(countysub, year = (date.today() - 365).strftime("%Y"),
     #'   oth-ratio, tot-ratio. For more details on these measurements, visit
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
+
+    primary_geoid = "countysub"
+    secondary_geoid = "zip"
+
+    args = cw_input_check_cleansing(countysub, year, quarter, key)
+    countysub = args[1]
+    year = args[2]
+    quarter = args[3]
+    key = args[4]
+
+
+    if any(len(countysub) != 5):
+         raise ValueError("Query input is not of length 5")
+
+
+    all_queries = list(itertools.product(countysub, year, quarter))
+
+
+    urls = []
+    for i in range(0, len(all_queries) - 1):
+        urls.append(
+            "https://www.huduser.gov/hudapi/public/usps?type=" +
+            "1" +
+            "&query" +
+            all_queries[i, 1] +
+            "&year" +
+            all_queries[i, 2] +
+            "&quarter" +
+            all_queries[i, 3] 
+        )
+
+
+    if minimal == False:
+        return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key)["tract"])
+
+    return(cw_do_query_calls(urls, all_queries[1],
+                                all_queries[2], all_queries[3],
+                                primary_geoid,
+                                secondary_geoid,
+                                key))
