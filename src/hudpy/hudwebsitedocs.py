@@ -1,8 +1,8 @@
 import os
 import platform
+from typing import Union
 
-
-def hudpy_website(website:str = ["github-pages","github"]):
+def hudpy_website(website: Union[str, int, list: int, list: str, tuple: Union[int, str]] = ["github-pages", "github"]):
     """
     #' @name hudpy_website
     #' @title hudpy_website
@@ -11,13 +11,13 @@ def hudpy_website(website:str = ["github-pages","github"]):
     #'   the websites associated with it. 
     #    Currently supports Linux, Darwin 
     #    and Windows OS.
-    #' @param website An array of websites.
+    #' @param website A list of websites.
     #'   1) "github-pages"
     #'   2) "github"
     """
 
-    github_pages = "https://etam4260.github.io/hudr/"
-    github = "https://github.com/etam4260/hudr"
+    github_pages = "https://etam4260.github.io/hudpy/"
+    github = "https://github.com/etam4260/hudpy"
 
     if platform.system() == "Linux":
         if "github-pages" in website:

@@ -1,0 +1,20 @@
+import math
+
+def download_bar(done = None, total = None, percentage = None, current = None):
+    
+    done_perc = done/total
+    remain_perc = (total-done)/total
+
+    # Create the number of bars to appear on the screen
+    done_bars = "=" * round(done_perc * 50)
+    remain_bars = "-" *  round(remain_perc * 50)
+
+    if (round(remain_perc * 50) - round(remain_perc * 50)) == 0.5:
+        remain_bar = "-" * math.floor(remain_perc * 50)
+    
+    # Create the entire loading bar
+    loading = "Downloading\t" + "[" + done_bars + remain_bars + "]\t" + \
+                round(done_perc * 100, 0), "%\t" + done + "/" + total
+
+    # Print to the same line over and over again in the terminal. 
+    print("\r" + loading, end = "")

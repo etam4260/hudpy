@@ -2,11 +2,11 @@ from datetime import date
 import os
 import itertools
 from typing import Union
+import hudinputcheck
 
-
-def hud_cw_zip_tract(zip: Union[int, str] = None,
-                     year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                     quarter: Union[int, str] = 1,
+def hud_cw_zip_tract(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                     year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                     quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                      minimal: bool = False,
                      key: str = os.getenv("HUD_KEY")):
     """
@@ -34,7 +34,7 @@ def hud_cw_zip_tract(zip: Union[int, str] = None,
     primary_geoid = "zip"
     secondary_geoid = "tract"
 
-    args = cw_input_check_cleansing(zip, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[1]
     year = args[2]
     quarter = args[3]
@@ -47,9 +47,8 @@ def hud_cw_zip_tract(zip: Union[int, str] = None,
 
     all_queries = list(itertools.product(zip, year, quarter))
 
-
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -63,22 +62,22 @@ def hud_cw_zip_tract(zip: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
 
-def hud_cw_zip_county(zip: Union[int, str] = None,
-                      year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                      quarter: Union[int, str] = 1,
+def hud_cw_zip_county(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                      year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                      quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                       minimal: bool = False,
                       key: str = os.getenv("HUD_KEY")):
     """ 
@@ -107,7 +106,7 @@ def hud_cw_zip_county(zip: Union[int, str] = None,
     primary_geoid = "zip"
     secondary_geoid = "county"
 
-    args = cw_input_check_cleansing(zip, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[1]
     year = args[2]
     quarter = args[3]
@@ -120,7 +119,7 @@ def hud_cw_zip_county(zip: Union[int, str] = None,
     all_queries = list(itertools.product(zip, year, quarter))
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -134,21 +133,21 @@ def hud_cw_zip_county(zip: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
-def hud_cw_zip_cbsa(zip: Union[int, str] = None,
-                    year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                    quarter: Union[int, str] = 1,
+def hud_cw_zip_cbsa(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                    year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                    quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                     minimal: bool = False,
                     key: str = os.getenv("HUD_KEY")):
     """
@@ -176,7 +175,7 @@ def hud_cw_zip_cbsa(zip: Union[int, str] = None,
     primary_geoid = "zip"
     secondary_geoid = "cbsa"
 
-    args = cw_input_check_cleansing(zip, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[1]
     year = args[2]
     quarter = args[3]
@@ -191,7 +190,7 @@ def hud_cw_zip_cbsa(zip: Union[int, str] = None,
 
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -205,21 +204,21 @@ def hud_cw_zip_cbsa(zip: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
-def hud_cw_zip_cbsadiv(zip: Union[int, str] = None,
-                       year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                       quarter: Union[int, str] = 1,
+def hud_cw_zip_cbsadiv(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                       year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                       quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                        minimal: bool = False,
                        key: str = os.getenv("HUD_KEY")):
     """
@@ -247,7 +246,7 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str] = None,
     primary_geoid = "zip"
     secondary_geoid = "cbsadiv"
 
-    args = cw_input_check_cleansing(zip, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[1]
     year = args[2]
     quarter = args[3]
@@ -262,7 +261,7 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str] = None,
 
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -276,22 +275,22 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
 
-def hud_cw_zip_cd(zip: Union[int, str] = None,
-                  year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                  quarter: Union[int, str] = 1,
+def hud_cw_zip_cd(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                  year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                  quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                   minimal: bool = False,
                   key: str = os.getenv("HUD_KEY")):
     """
@@ -319,7 +318,7 @@ def hud_cw_zip_cd(zip: Union[int, str] = None,
     primary_geoid = "zip"
     secondary_geoid = "cd"
 
-    args = cw_input_check_cleansing(zip, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[1]
     year = args[2]
     quarter = args[3]
@@ -334,7 +333,7 @@ def hud_cw_zip_cd(zip: Union[int, str] = None,
 
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -348,21 +347,21 @@ def hud_cw_zip_cd(zip: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
-def hud_cw_zip_countysub(zip: Union[int, str] = None,
-                         year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                         quarter: Union[int, str] = 1,
+def hud_cw_zip_countysub(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                         year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                         quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                          minimal: bool = False,
                          key: str = os.getenv("HUD_KEY")):
     """
@@ -390,7 +389,7 @@ def hud_cw_zip_countysub(zip: Union[int, str] = None,
     primary_geoid = "zip"
     secondary_geoid = "countysub"
 
-    args = cw_input_check_cleansing(zip, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[1]
     year = args[2]
     quarter = args[3]
@@ -405,7 +404,7 @@ def hud_cw_zip_countysub(zip: Union[int, str] = None,
 
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -419,21 +418,21 @@ def hud_cw_zip_countysub(zip: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
-def hud_cw_tract_zip(tract: Union[int, str] = None,
-                     year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                     quarter: Union[int, str] = 1,
+def hud_cw_tract_zip(tract: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                     year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                     quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                      minimal: bool = False,
                      key: str = os.getenv("HUD_KEY")):
     """
@@ -461,7 +460,7 @@ def hud_cw_tract_zip(tract: Union[int, str] = None,
     primary_geoid = "tract"
     secondary_geoid = "zip"
 
-    args = cw_input_check_cleansing(tract, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(tract, year, quarter, key)
     tract = args[1]
     year = args[2]
     quarter = args[3]
@@ -476,7 +475,7 @@ def hud_cw_tract_zip(tract: Union[int, str] = None,
 
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -490,22 +489,22 @@ def hud_cw_tract_zip(tract: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
   
 
-def hud_cw_county_zip(county: Union[int, str] = None,
-                      year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                      quarter: Union[int, str] = 1,
+def hud_cw_county_zip(county: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                      year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                      quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                       minimal: bool = False,
                       key: str = os.getenv("HUD_KEY")):
     """
@@ -534,7 +533,7 @@ def hud_cw_county_zip(county: Union[int, str] = None,
     primary_geoid = "county"
     secondary_geoid = "zip"
 
-    args = cw_input_check_cleansing(county, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(county, year, quarter, key)
     county = args[1]
     year = args[2]
     quarter = args[3]
@@ -549,7 +548,7 @@ def hud_cw_county_zip(county: Union[int, str] = None,
 
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -563,21 +562,21 @@ def hud_cw_county_zip(county: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
-def hud_cw_cbsa_zip(cbsa: Union[int, str] = None,
-                    year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                    quarter: Union[int, str] = 1,
+def hud_cw_cbsa_zip(cbsa: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                    year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                    quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                     minimal: bool = False,
                     key: str = os.getenv("HUD_KEY")):
     """
@@ -605,7 +604,7 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str] = None,
     primary_geoid = "cbsa"
     secondary_geoid = "zip"
 
-    args = cw_input_check_cleansing(cbsa, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(cbsa, year, quarter, key)
     cbsa = args[1]
     year = args[2]
     quarter = args[3]
@@ -620,7 +619,7 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str] = None,
 
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -634,22 +633,22 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
 
-def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str] = None,
-                       year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                       quarter: Union[int, str] = 1,
+def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                       year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                       quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                        minimal: bool = False,
                        key: str = os.getenv("HUD_KEY")):
     """
@@ -678,7 +677,7 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str] = None,
     primary_geoid = "cbsadiv"
     secondary_geoid = "zip"
 
-    args = cw_input_check_cleansing(cbsadiv, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(cbsadiv, year, quarter, key)
     cbsadiv = args[1]
     year = args[2]
     quarter = args[3]
@@ -693,7 +692,7 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str] = None,
 
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -707,22 +706,22 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
 
-def hud_cw_cd_zip(cd: Union[int, str] = None,
-                  year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                  quarter: Union[int, str] = 1,
+def hud_cw_cd_zip(cd: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                  year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                  quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                   minimal: bool = False,
                   key: str = os.getenv("HUD_KEY")):
     """
@@ -752,7 +751,7 @@ def hud_cw_cd_zip(cd: Union[int, str] = None,
     primary_geoid = "cd"
     secondary_geoid = "zip"
 
-    args = cw_input_check_cleansing(cd, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(cd, year, quarter, key)
     cd = args[1]
     year = args[2]
     quarter = args[3]
@@ -767,7 +766,7 @@ def hud_cw_cd_zip(cd: Union[int, str] = None,
 
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -781,22 +780,22 @@ def hud_cw_cd_zip(cd: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
 
-def hud_cw_countysub_zip(countysub: Union[int, str] = None,
-                         year: Union[int, str] = (date.today() - 365).strftime("%Y"),
-                         quarter: Union[int, str] = 1,
+def hud_cw_countysub_zip(countysub: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+                         year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                         quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                          minimal: bool = False,
                          key: str = os.getenv("HUD_KEY")):
     """
@@ -824,7 +823,7 @@ def hud_cw_countysub_zip(countysub: Union[int, str] = None,
     primary_geoid = "countysub"
     secondary_geoid = "zip"
 
-    args = cw_input_check_cleansing(countysub, year, quarter, key)
+    args = hudinputcheck.cw_input_check_cleansing(countysub, year, quarter, key)
     countysub = args[1]
     year = args[2]
     quarter = args[3]
@@ -839,7 +838,7 @@ def hud_cw_countysub_zip(countysub: Union[int, str] = None,
 
 
     urls = []
-    for i in range(0, len(all_queries) - 1):
+    for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
@@ -853,13 +852,13 @@ def hud_cw_countysub_zip(countysub: Union[int, str] = None,
 
 
     if minimal == False:
-        return(cw_do_query_calls(urls, all_queries[1],
+        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(cw_do_query_calls(urls, all_queries[1],
+    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
                                 all_queries[2], all_queries[3],
                                 primary_geoid,
                                 secondary_geoid,
