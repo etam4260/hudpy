@@ -2,13 +2,14 @@ from datetime import date
 import os
 import itertools
 from typing import Union
+import pandas as pd
 import hudinputcheck
 
 def hud_cw_zip_tract(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
                      year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                      quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                      minimal: bool = False,
-                     key: str = os.getenv("HUD_KEY")):
+                     key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_zip_tract
     #' @title hud_cw_zip_tract
@@ -79,7 +80,7 @@ def hud_cw_zip_county(zip: Union[int, str, list: int, list: str, tuple: Union[in
                       year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                       quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                       minimal: bool = False,
-                      key: str = os.getenv("HUD_KEY")):
+                      key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """ 
     #' @name hud_cw_zip_county
     #' @title hud_cw_zip_county
@@ -149,7 +150,7 @@ def hud_cw_zip_cbsa(zip: Union[int, str, list: int, list: str, tuple: Union[int,
                     year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                     quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                     minimal: bool = False,
-                    key: str = os.getenv("HUD_KEY")):
+                    key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_zip_cbsa
     #' @title hud_cw_zip_cbsa
@@ -220,7 +221,7 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str, list: int, list: str, tuple: Union[i
                        year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                        quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                        minimal: bool = False,
-                       key: str = os.getenv("HUD_KEY")):
+                       key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_zip_cbsadiv
     #' @title hud_cw_zip_cbsadiv
@@ -292,7 +293,7 @@ def hud_cw_zip_cd(zip: Union[int, str, list: int, list: str, tuple: Union[int, s
                   year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                   quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                   minimal: bool = False,
-                  key: str = os.getenv("HUD_KEY")):
+                  key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_zip_cd
     #' @title hud_cw_zip_cd
@@ -363,7 +364,7 @@ def hud_cw_zip_countysub(zip: Union[int, str, list: int, list: str, tuple: Union
                          year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                          quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                          minimal: bool = False,
-                         key: str = os.getenv("HUD_KEY")):
+                         key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_zip_countysub
     #' @title hud_cw_zip_countysub
@@ -434,7 +435,7 @@ def hud_cw_tract_zip(tract: Union[int, str, list: int, list: str, tuple: Union[i
                      year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                      quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                      minimal: bool = False,
-                     key: str = os.getenv("HUD_KEY")):
+                     key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_tract_zip
     #' @title hud_cw_tract_zip
@@ -506,7 +507,7 @@ def hud_cw_county_zip(county: Union[int, str, list: int, list: str, tuple: Union
                       year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                       quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                       minimal: bool = False,
-                      key: str = os.getenv("HUD_KEY")):
+                      key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_county_zip
     #' @title hud_cw_county_zip
@@ -578,7 +579,7 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, list: int, list: str, tuple: Union[int
                     year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                     quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                     minimal: bool = False,
-                    key: str = os.getenv("HUD_KEY")):
+                    key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_cbsa_zip
     #' @title hud_cw_cbsa_zip
@@ -650,7 +651,7 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list: int, list: str, tuple: Uni
                        year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                        quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                        minimal: bool = False,
-                       key: str = os.getenv("HUD_KEY")):
+                       key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_cbsadiv_zip
     #' @title hud_cw_cbsadiv_zip
@@ -723,7 +724,7 @@ def hud_cw_cd_zip(cd: Union[int, str, list: int, list: str, tuple: Union[int, st
                   year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                   quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                   minimal: bool = False,
-                  key: str = os.getenv("HUD_KEY")):
+                  key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_cd_zip
     #' @title hud_cw_cd_zip
@@ -797,7 +798,7 @@ def hud_cw_countysub_zip(countysub: Union[int, str, list: int, list: str, tuple:
                          year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                          quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
                          minimal: bool = False,
-                         key: str = os.getenv("HUD_KEY")):
+                         key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_cw_zip_countysub
     #' @title hud_cw_zip_countysub

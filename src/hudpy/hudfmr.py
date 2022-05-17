@@ -1,4 +1,5 @@
 from distutils.log import warn
+from sqlite3 import DatabaseError
 from typing import Union
 import hudinputcheck
 import itertools
@@ -9,7 +10,7 @@ import huddownloadbar
 
 def hud_fmr_state_metroareas(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                              year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                             key: str):
+                             key: str) -> pd.DataFrame:
     """
     #' @name hud_fmr_state_metroareas
     #' @title hud_fmr_state_metroareas
@@ -77,7 +78,7 @@ def hud_fmr_state_metroareas(state: Union[int, str, list: int, list: str, tuple:
 
 def hud_fmr_state_counties(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                            year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                           key: str):
+                           key: str) -> pd.DataFrame:
     """
     #' @name hud_fmr_state_counties
     #' @title hud_fmr_state_counties
@@ -144,7 +145,7 @@ def hud_fmr_state_counties(state: Union[int, str, list: int, list: str, tuple: U
 
 def hud_fmr_county_zip(county: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                        year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                       key: str):
+                       key: str) -> pd.DataFrame:
     """
     #' @name hud_fmr_county_zip
     #' @title hud_fmr_county_zip
@@ -165,7 +166,7 @@ def hud_fmr_county_zip(county: Union[int, str, list: int, list: str, tuple: Unio
 
 def hud_fmr_metroarea_zip(metroarea: Union[str, list: str, tuple: str],
                           year: Union[str, list: str, tuple: str],
-                          key: str):
+                          key: str) -> pd.DataFrame:
     """
     #' @name hud_fmr_metroarea_zip
     #' @title hud_fmr_metroarea_zip

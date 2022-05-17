@@ -8,7 +8,7 @@ import json
 import itertools
 import huddoquerycalls
 
-def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")):
+def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @title hud_nation_states_territories
     #' @description Get a list of state and US territories
@@ -43,7 +43,7 @@ def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")):
 
 
 def hud_state_metropolitan(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                           key: str = os.getenv("HUD_KEY")):
+                           key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_state_metropolitan
     #' @title hud_state_metropolitan
@@ -132,7 +132,7 @@ def hud_state_metropolitan(state: Union[int, str, list: int, list: str, tuple: U
 
 
 def hud_state_counties(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                       key: str = os.getenv("HUD_KEY")):
+                       key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_state_counties
     #' @title hud_state_counties
@@ -197,7 +197,7 @@ def hud_state_counties(state: Union[int, str, list: int, list: str, tuple: Union
 
 
 def hud_state_places(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                     key: str = os.getenv("HUD_KEY")):
+                     key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_state_places
     #' @title hud_state_places
@@ -263,7 +263,7 @@ def hud_state_places(state: Union[int, str, list: int, list: str, tuple: Union[i
 
 
 def hud_state_minor_civil_divisions(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                                    key: str = os.getenv("HUD_KEY")):
+                                    key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     #' @name hud_state_minor_civil_divisions
     #' @title hud_state_minor_civil_divisions

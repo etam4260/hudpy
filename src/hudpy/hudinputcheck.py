@@ -7,7 +7,7 @@ import hudinputcheck
 
 def chas_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                                year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                               key: str):
+                               key: str) -> list:
     """
     #' @name chas_input_check_cleansing
     #' @title chas_input_check_cleansing
@@ -71,7 +71,7 @@ def chas_input_check_cleansing(query: Union[int, str, list: int, list: str, tupl
 def cw_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                              year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                              quarter: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                             key: str):
+                             key: str) -> list:
     """
     #' @name cw_input_check_cleansing
     #' @title cw_input_check_cleansing
@@ -138,7 +138,7 @@ def cw_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple:
 
 def fmr_il_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                                  year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                                 key: str):
+                                 key: str) -> list:
     """
     #' @name fmr_il_input_check_cleansing
     #' @title fmr_il_input_check_cleansing
@@ -229,7 +229,7 @@ def crosswalk_a_dataset_input_check_cleansing(data,
                                               method: str, 
                                               year: Union[int, str], 
                                               quarter: Union[int, str], 
-                                              key: str):
+                                              key: str) -> list:
     """
     #' @name crosswalk_a_dataset_input_check_cleansing
     #' @title crosswalk_a_dataset_input_check_cleansing
