@@ -1,4 +1,15 @@
-def hud_cw():
+import os
+from datetime import date
+from typing import Union
+import hudinternetonline
+import hudinputcheck
+
+def hud_cw(type: Union[str, int],
+           query: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+           year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+           quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+           minimal: bool = False,
+           key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_cw
     #' @title hud_cw
@@ -54,8 +65,12 @@ def hud_cw():
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
-def hud_fmr():
+
+def hud_fmr(query: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+            year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+            key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_fmr
     #' @title hud_fmr
@@ -84,9 +99,13 @@ def hud_fmr():
     #'   individual county within the state.
     """
 
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
 
-def hud_il():
+
+def hud_il(query: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+           year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+           key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_il
     #' @title hud_il
@@ -110,9 +129,14 @@ def hud_il():
     #'   https://www.huduser.gov/portal/dataset/fmr-api.html
     """
 
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
 
-def hud_chas():
+def hud_chas(type: Union[str, int],
+             state_id: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+             entity_id: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
+             year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+             key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_chas
     #' @title hud_chas
@@ -144,3 +168,5 @@ def hud_chas():
     #'   particular state. For more details about these measurements, go to
     #'   https://www.huduser.gov/portal/dataset/chas-api.html
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")

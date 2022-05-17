@@ -1,4 +1,15 @@
-def hud_chas_nation():
+from typing import Union
+from datetime import date
+import os 
+import hudinternetonline
+import hudinputcheck
+import huddoquerycalls
+import hudpkgenv
+import hudmisc
+import itertools
+
+def hud_chas_nation(year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+                    key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_chas_nation
     #' @title hud_chas_nation
@@ -17,7 +28,20 @@ def hud_chas_nation():
     #' @returns Returns a dataframe with CHAS data for the entire nation.
     """
 
-def hud_chas_state():
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    
+    args = hudinputcheck.chas_input_check_cleansing(year = year, key = key)
+    year = args[[1]]
+    key = args[[2]]
+
+    urls = "https://www.huduser.gov/hudapi/public/chas?type=" + "1" + "&year=" + year
+
+    return(huddoquerycalls.chas_do_query_calls(urls, key = key))
+
+
+def hud_chas_state(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
+                   year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
+                   key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_chas_state
     #' @title hud_chas_state
@@ -37,9 +61,53 @@ def hud_chas_state():
     #' @param key The key obtain from HUD USER website.
     #' @returns Returns a dataframe with CHAS data for a particular state.
     """
+    
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
+    args = hudinputcheck.chas_input_check_cleansing(state, year, key)
+    state = args[[1]]
+    year = args[[2]]
+    key = args[[3]]
+
+    # Assume abbreviation or fips code if length of 2. Captitalize does not
+    # affect numbers. Assume full state name if length more than 2
+    if all(map(len() == 2, state)):
+        state = map(str.upper(), state)
+    elif all(map(len() > 2, state)):
+        state = map(str.capitalize(), state)
+
+    if hudpkgenv.pkg_env["states"] == None:
+        hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
+    
+    for i in range(0, len(state)):
+        if state[i] not in hudpkgenv.pkg_env["states"]:
+            raise ValueError("There is no matching fips code for " + state[i])
+
+    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_name"])) != 0: 
+        # Not sure if this is right syntax... need to test it...
+        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_name"].isin(state))[2]
+    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_code"])) != 0:   
+        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_code"].isin(state))[2]
+    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_num"])) != 0:  
+        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_num"].isin(state))[2]
 
 
-def hud_chas_county():
+    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=2"], state, ["&year="], year))
+    
+    urls = []
+    for i in range(0, len(all_queries)):
+        urls.append(
+            all_queries[i][0] + 
+            all_queries[i][1] +
+            all_queries[i][2] +
+            all_queries[i][3]
+        )
+
+    return huddoquerycalls.chas_do_query_calls(urls, key = key)
+
+def hud_chas_county(county: Union[int, str, list: int, list: str, tuple: Union[int, str]],
+                    year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
+                    key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_chas_county
     #' @title hud_chas_county
@@ -61,7 +129,33 @@ def hud_chas_county():
     #' @returns Returns a dataframe with CHAS data for counties.
     """
 
-def hud_chas_state_mcd():
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
+    args = hudinputcheck.chas_input_check_cleansing(county, year, key)
+    county = args[[1]]
+    year = args[[2]]
+    key = args[[3]]
+
+    # Try to fix the counties that have lost leading zeros in them...
+    # county = add_leading_zeros(geoid_type = "county", county)
+
+    # The first 2 are state fip. Last 3 are county fip.
+    state_fip = map(lambda x: int(x[1,2]), county)
+    county_fip = map(lambda x: int(x[3,5]), county)
+
+    check_county = county + "99999"
+
+    if hudpkgenv.pkg_env["states"] == None:
+        hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
+    
+    for i in range(0, len(state_fip)):
+        if state_fip[i] not in hudpkgenv.pkg_env["states"]:
+            raise ValueError("There is no matching fips code for " + state_fip[i])
+
+
+def hud_chas_state_mcd(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
+                       year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
+                       key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_chas_state_mcd
     #' @title hud_chas_state_mcd
@@ -81,7 +175,11 @@ def hud_chas_state_mcd():
     #' @returns Returns a dataframe with CHAS data for mcds.
     """
 
-def hud_chas_state_place():
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
+def hud_chas_state_place(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
+                         year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
+                         key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_chas_state_place
     #' @title hud_chas_state_place
@@ -101,3 +199,5 @@ def hud_chas_state_place():
     #' @param key The key obtain from HUD USER website.
     #' @returns Returns a dataframe with CHAS data for places.
     """
+    
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")

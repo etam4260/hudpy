@@ -7,6 +7,7 @@ import re
 import json
 import itertools
 import huddoquerycalls
+import hudinternetonline
 
 def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
@@ -20,6 +21,9 @@ def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFra
     #' @returns A dataframe containing details of all the states and territories
     #'   in the US.
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
     if type(key) != str:
         raise ValueError("\nKey should be a string")
 
@@ -55,6 +59,9 @@ def hud_state_metropolitan(state: Union[int, str, list: int, list: str, tuple: U
     #' @keywords CBSA
     #' @returns A dataframe containing details of metropolitan areas in US.
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
     if not isinstance(state, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
@@ -143,6 +150,9 @@ def hud_state_counties(state: Union[int, str, list: int, list: str, tuple: Union
     #' @keywords Counties
     #' @returns A dataframe containing all counties within a state
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
     if not isinstance(state, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
@@ -208,6 +218,8 @@ def hud_state_places(state: Union[int, str, list: int, list: str, tuple: Union[i
     #' @keywords places.
     #' @returns A dataframe containing details of places in a state.
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if not isinstance(state, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
@@ -275,6 +287,8 @@ def hud_state_minor_civil_divisions(state: Union[int, str, list: int, list: str,
     #' @returns A dataframe containing details of minor civil divisions in a state.
     #' @examples
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if not isinstance(state, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")

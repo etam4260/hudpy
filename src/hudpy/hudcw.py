@@ -4,6 +4,7 @@ import itertools
 from typing import Union
 import pandas as pd
 import hudinputcheck
+import hudinternetonline
 
 def hud_cw_zip_tract(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
                      year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
@@ -31,6 +32,8 @@ def hud_cw_zip_tract(zip: Union[int, str, list: int, list: str, tuple: Union[int
     #'   oth-ratio, tot-ratio. For more details on these measurements, visit
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
+    
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     primary_geoid = "zip"
     secondary_geoid = "tract"
@@ -104,6 +107,8 @@ def hud_cw_zip_county(zip: Union[int, str, list: int, list: str, tuple: Union[in
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
     primary_geoid = "zip"
     secondary_geoid = "county"
 
@@ -172,6 +177,8 @@ def hud_cw_zip_cbsa(zip: Union[int, str, list: int, list: str, tuple: Union[int,
     #'   oth-ratio, tot-ratio. For more details on these measurements, visit
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
+    
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     primary_geoid = "zip"
     secondary_geoid = "cbsa"
@@ -243,6 +250,8 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str, list: int, list: str, tuple: Union[i
     #'   oth-ratio, tot-ratio. For more details on these measurements, visit
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     primary_geoid = "zip"
     secondary_geoid = "cbsadiv"
@@ -316,6 +325,8 @@ def hud_cw_zip_cd(zip: Union[int, str, list: int, list: str, tuple: Union[int, s
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
     primary_geoid = "zip"
     secondary_geoid = "cd"
 
@@ -387,6 +398,8 @@ def hud_cw_zip_countysub(zip: Union[int, str, list: int, list: str, tuple: Union
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
     primary_geoid = "zip"
     secondary_geoid = "countysub"
 
@@ -457,6 +470,8 @@ def hud_cw_tract_zip(tract: Union[int, str, list: int, list: str, tuple: Union[i
     #'   oth-ratio, tot-ratio. For more details on these measurements, visit
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     primary_geoid = "tract"
     secondary_geoid = "zip"
@@ -531,6 +546,8 @@ def hud_cw_county_zip(county: Union[int, str, list: int, list: str, tuple: Union
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
 
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
     primary_geoid = "county"
     secondary_geoid = "zip"
 
@@ -601,6 +618,8 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, list: int, list: str, tuple: Union[int
     #'   oth-ratio, tot-ratio. For more details on these measurements, visit
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     primary_geoid = "cbsa"
     secondary_geoid = "zip"
@@ -674,6 +693,8 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list: int, list: str, tuple: Uni
     #'   oth-ratio, tot-ratio. For more details on these measurements, visit
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     primary_geoid = "cbsadiv"
     secondary_geoid = "zip"
@@ -749,6 +770,8 @@ def hud_cw_cd_zip(cd: Union[int, str, list: int, list: str, tuple: Union[int, st
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
     
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
     primary_geoid = "cd"
     secondary_geoid = "zip"
 
@@ -820,6 +843,8 @@ def hud_cw_countysub_zip(countysub: Union[int, str, list: int, list: str, tuple:
     #'   oth-ratio, tot-ratio. For more details on these measurements, visit
     #'   https://www.huduser.gov/portal/dataset/uspszip-api.html
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     primary_geoid = "countysub"
     secondary_geoid = "zip"

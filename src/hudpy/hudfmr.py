@@ -7,6 +7,7 @@ import urllib3
 import pandas as pd
 import json
 import huddownloadbar
+import hudinternetonline
 
 def hud_fmr_state_metroareas(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                              year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
@@ -26,6 +27,9 @@ def hud_fmr_state_metroareas(state: Union[int, str, list: int, list: str, tuple:
     #' @keywords Fair Markets Rent API
     #' @returns A data frame with fair markets rent for metro areas in states.
     """  
+    
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    
     args = hudinputcheck.fmr_il_input_check_cleansing(state, year, key)
     query = args[1]
     year = args[2]
@@ -94,6 +98,9 @@ def hud_fmr_state_counties(state: Union[int, str, list: int, list: str, tuple: U
     #' @keywords Fair Markets Rent API
     #' @returns A data frame with fair markets rent for counties in states.
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
     args = hudinputcheck.fmr_il_input_check_cleansing(state, year, key)
     query = args[1]
     year = args[2]
@@ -164,6 +171,46 @@ def hud_fmr_county_zip(county: Union[int, str, list: int, list: str, tuple: Unio
     #' @returns A data frame with fair markets rent for zip codes in counties.
     """
 
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
+    args = hudinputcheck.fmr_il_input_check_cleansing(county, year, key)
+    query = args[[1]]
+    year = args[[2]]
+    key = args[[3]]
+
+    error_urls = list()
+
+    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/fmr/data/"], query, ["?year="], year))
+    
+    # Make query calls for all queries.
+    result = pd.DataFrame()
+    
+    urls = []
+    for i in range(0, len(all_queries)):
+        urls.append(
+            all_queries[i][0] + 
+            all_queries[i][1] +
+            all_queries[i][2] +
+            all_queries[i][3]
+        )
+
+    for i in range(len(urls)):
+        url = urls[i]
+
+        headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
+        call = urllib3.http.request("GET", url, headers = headers, timeout = 30)
+
+        cont = json.loads(call.data.decode('utf-8'))    
+        cont = pd.json_normalize(cont) 
+
+        huddownloadbar.download_bar(i, len(urls))
+
+        if "error" in cont.columns:
+            error_urls.append(urls)
+        else:
+            result.append(cont["data"]["counties"])
+
+
 def hud_fmr_metroarea_zip(metroarea: Union[str, list: str, tuple: str],
                           year: Union[str, list: str, tuple: str],
                           key: str) -> pd.DataFrame:
@@ -184,3 +231,43 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list: str, tuple: str],
     #' @keywords Fair Markets Rent API
     #' @returns A data frame with fair markets rent for zip codes in metro areas.
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
+
+    args = hudinputcheck.fmr_il_input_check_cleansing(metroarea, year, key)
+    query = args[[1]]
+    year = args[[2]]
+    key = args[[3]]
+
+    error_urls = list()
+
+    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/fmr/data/"], query, ["?year="], year))
+    
+    # Make query calls for all queries.
+    result = pd.DataFrame()
+    
+    urls = []
+    for i in range(0, len(all_queries)):
+        urls.append(
+            all_queries[i][0] + 
+            all_queries[i][1] +
+            all_queries[i][2] +
+            all_queries[i][3]
+        )
+
+    for i in range(len(urls)):
+        url = urls[i]
+
+        headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
+        call = urllib3.http.request("GET", url, headers = headers, timeout = 30)
+
+        cont = json.loads(call.data.decode('utf-8'))    
+        cont = pd.json_normalize(cont) 
+
+        huddownloadbar.download_bar(i, len(urls))
+
+        if "error" in cont.columns:
+            error_urls.append(urls)
+        else:
+            result.append(cont["data"]["counties"])

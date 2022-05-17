@@ -4,7 +4,7 @@ import os
 from typing import Union
 from datetime import date
 import pandas as pd
-
+import hudinternetonline
 
 def crosswalk(data: pd.DataFrame,
               geoid: str,
@@ -90,6 +90,8 @@ def crosswalk(data: pd.DataFrame,
     #' @param key The key obtain from HUD USER website.
     #' @returns A dataframe containing the crosswalked dataset.
     """
+
+    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     args = hudinputcheck.crosswalk_a_dataset_input_check_cleansing(data, geoid, geoid_col,
                                             cw_geoid, cw_geoid_col, method,
