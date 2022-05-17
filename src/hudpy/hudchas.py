@@ -103,6 +103,7 @@ def hud_chas_state(state: Union[int, str, list: int, list: str, tuple: Union[int
             all_queries[i][3]
         )
 
+
     return huddoquerycalls.chas_do_query_calls(urls, key = key)
 
 def hud_chas_county(county: Union[int, str, list: int, list: str, tuple: Union[int, str]],
@@ -150,8 +151,30 @@ def hud_chas_county(county: Union[int, str, list: int, list: str, tuple: Union[i
     
     for i in range(0, len(state_fip)):
         if state_fip[i] not in hudpkgenv.pkg_env["states"]:
-            raise ValueError("There is no matching fips code for " + state_fip[i])
+            raise ValueError("\nThere is no matching fips code for " + state_fip[i])
 
+    for i in range(0, len(county_fip)):
+        if county_fip[i] not in hudpkgenv.pkg_env["states"]["fips_code"]:
+            raise ValueError("\nThere is no matching county FIPs code for",
+                             "one of the inputted counties")
+    
+    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=3&stateId="],
+                                         state_fip, ["&entityId="],
+                                         county_fip, ["&year="], year))
+    
+    urls = []
+    for i in range(0, len(all_queries)):
+        urls.append(
+            all_queries[i][0] + 
+            all_queries[i][1] +
+            all_queries[i][2] +
+            all_queries[i][3] +
+            all_queries[i][4] +
+            all_queries[i][5] 
+        )
+
+
+    return huddoquerycalls.chas_do_query_calls(urls, key = key)
 
 def hud_chas_state_mcd(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                        year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 

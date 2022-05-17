@@ -1,10 +1,12 @@
 import urllib3
 import pandas as pd
 import huddownloadbar
+from typing import Union 
 import json
 import hudinternetonline
+from distutils.log import warn
 
-def chas_do_query_calls(urls, key: str) -> pd.DataFrame:
+def chas_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
     """
     #' @name chas_do_query_calls
     #' @title chas_do_query_calls
@@ -17,8 +19,8 @@ def chas_do_query_calls(urls, key: str) -> pd.DataFrame:
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
-    list_res = list()
     error_urls = list()
+    res = pd.dataFrame()
 
     all_measurements = list("geoname", "sumlevel", "year",
                             "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9",
@@ -64,17 +66,35 @@ def chas_do_query_calls(urls, key: str) -> pd.DataFrame:
             not_measured = all_measurements[all_measurements not in cont[1].columns]
             # Check this CHAS data does not have data defined for
             # all expected fields. If so fill them in with NA's.
-        if len(not_measured) >= 1:
-            extra_mes = pd.repeat(None, len(not_measured))
-            extra_mes.names = not_measured
 
-            list_res[[i]] <- c(unlist(cont[[1]]), extra_mes)
-        else:
-            list_res[[i]] <- unlist(cont[[1]])
-        
+            if len(not_measured) >= 1:
+                extra_mes = pd.repeat(None, len(not_measured))
+                extra_mes.names = not_measured
+
+                res.append()
+            else:
+                res.append()
+            
     print("\n")
 
-def cw_do_query_calls() -> pd.DataFrame:
+    # Spit out error messages to user after all
+    # queries are done.
+    if (len(error_urls) != 0):
+        # Spit out error messages to user after all
+        # queries are done.
+
+        warn("Could not find data for queries: \n\n" +
+             " ".join(map(lambda x: "*" + x, error_urls)) +
+             "\n\nIt is possible that your key maybe invalid or " +
+             "there isn't any data for these parameters, " +
+             "If you think this is wrong please " +
+             "report it at https://github.com/etam4260/rhud/issues.")
+
+    return(res)
+
+
+def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
+                            secondary_geoid, key) -> pd.DataFrame:
     """
     #' @name cw_do_query_calls
     #' @title cw_do_query_calls
@@ -89,8 +109,48 @@ def cw_do_query_calls() -> pd.DataFrame:
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
+    error_urls = list()
+    res = pd.dataFrame()
 
-def misc_do_query_calls() -> pd.DataFrame:
+    for i in range(len(urls)):
+
+        url = urls[i]
+
+        headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
+        call = urllib3.http.request("GET", url, headers = headers, timeout = 30)
+
+        cont = json.loads(call.data.decode('utf-8'))    
+        cont = pd.json_normalize(cont) 
+
+        huddownloadbar.download_bar(i, len(urls))
+
+        if "error" in cont.columns or len(cont) == 0:
+            # Need to output a single error message instead of a bunch when
+            # something bad occurs. Append to list of errored urls.
+            error_urls = error_urls.append(url)
+        else:
+            
+    
+            
+    print("\n")
+
+    # Spit out error messages to user after all
+    # queries are done.
+    if (len(error_urls) != 0):
+        # Spit out error messages to user after all
+        # queries are done.
+
+        warn("Could not find data for queries: \n\n" +
+             " ".join(map(lambda x: "*" + x, error_urls)) +
+             "\n\nIt is possible that your key maybe invalid or " +
+             "there isn't any data for these parameters, " +
+             "If you think this is wrong please " +
+             "report it at https://github.com/etam4260/rhud/issues.")
+
+    return(res)
+
+
+def misc_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
     """
     #' @name misc_do_query_call
     #' @title misc_do_query_call
@@ -102,3 +162,44 @@ def misc_do_query_calls() -> pd.DataFrame:
     """    
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+
+    error_urls = list()
+    res = pd.DataFrame()
+
+
+    for i in range(len(urls)):
+
+        url = urls[i]
+
+        headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
+        call = urllib3.http.request("GET", url, headers = headers, timeout = 30)
+
+        cont = json.loads(call.data.decode('utf-8'))    
+        cont = pd.json_normalize(cont) 
+
+        huddownloadbar.download_bar(i, len(urls))
+
+        if "error" in cont.columns or len(cont) == 0:
+            # Need to output a single error message instead of a bunch when
+            # something bad occurs. Append to list of errored urls.
+            error_urls = error_urls.append(url)
+        else:
+            res.append(cont)
+   
+            
+    print("\n")
+
+    # Spit out error messages to user after all
+    # queries are done.
+    if (len(error_urls) != 0):
+        # Spit out error messages to user after all
+        # queries are done.
+
+        warn("Could not find data for queries: \n\n" +
+             " ".join(map(lambda x: "*" + x, error_urls)) +
+             "\n\nIt is possible that your key maybe invalid or " +
+             "there isn't any data for these parameters, " +
+             "If you think this is wrong please " +
+             "report it at https://github.com/etam4260/rhud/issues.")
+
+    return(res)

@@ -4,7 +4,6 @@ import hudpkgenv
 from typing import Union
 import hudinputcheck
 
-
 def chas_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                                year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                                key: str) -> list:
@@ -65,7 +64,6 @@ def chas_input_check_cleansing(query: Union[int, str, list: int, list: str, tupl
         return(list(query, year, key))    
     
     return(list(year, key))
-
 
 
 def cw_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple: Union[int, str]],
