@@ -13,19 +13,45 @@ def hud_fmr_state_metroareas(state: Union[int, str, list: int, list: str, tuple:
                              year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                              key: str) -> pd.DataFrame:
     """
-    #' @name hud_fmr_state_metroareas
-    #' @title hud_fmr_state_metroareas
-    #' @description This function queries for a state and returns the
-    #'   FMR calculation
-    #'   at a metroarea resolution for all metroareas in this state.
-    #' @param state The state to query for.
-    #' @param year Gets the year that this data was recorded.
-    #'   Can specify multiple years. Default is the
-    #'   previous year.
-    #' @param key The API key for this user. You must go to HUD and sign up
-    #'   for an account and request for an API key.
-    #' @keywords Fair Markets Rent API
-    #' @returns A data frame with fair markets rent for metro areas in states.
+    Function to query the Fair Markets Rent API provided by US
+    Department of Housing and Urban Development. This returns metroarea
+    FMR for state level queries.
+
+    Parameters
+    ----------
+
+    state : The state to query for. Can be abbreviation, fip code, or
+         full name.
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_fmr()
+    * hud_fmr_state_metroareas()
+    * hud_fmr_state_counties()
+    * hud_fmr_county_zip()
+    * hud_fmr_metroarea_zip()
+
+    Returns
+    -------
+
+    This returns a dataframe with metroarea
+    fair markets rent based on state level queries.
+
+    Examples
+    --------
+
+    >>> hud_fmr_state_metroareas("VA", year = c(2021))
+
+    >>> hud_fmr_state_metroareas("Alabama", year = c(2021))
+ 
+    >>> hud_fmr_state_metroareas("24", year = c(2021)))
     """  
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -84,19 +110,45 @@ def hud_fmr_state_counties(state: Union[int, str, list: int, list: str, tuple: U
                            year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                            key: str) -> pd.DataFrame:
     """
-    #' @name hud_fmr_state_counties
-    #' @title hud_fmr_state_counties
-    #' @description This function queries for a state and returns the
-    #'   FMR calculation
-    #'   at a county resolution for all counties in this state.
-    #' @param state The state to query for.
-    #' @param year Gets the year that this data was recorded.
-    #'   Can specify multiple years. Default is the
-    #'   previous year.
-    #' @param key The API key for this user. You must go to HUD and sign up
-    #'   for an account and request for an API key.
-    #' @keywords Fair Markets Rent API
-    #' @returns A data frame with fair markets rent for counties in states.
+    Function to query the Fair Markets Rent API provided by US
+    Department of Housing and Urban Development. This returns county
+    FMR for state level queries.
+
+    Parameters
+    ----------
+
+    state : The state to query for. Can be abbreviation, fip code, or
+         full name.
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+        
+    See Also
+    --------
+    
+    * hud_fmr()
+    * hud_fmr_state_metroareas()
+    * hud_fmr_state_counties()
+    * hud_fmr_county_zip()
+    * hud_fmr_metroarea_zip()
+
+    Returns
+    -------
+
+    This returns a dataframe with county
+    fair markets rent based on state level queries.
+
+    Examples
+    --------
+
+    >>> hud_fmr_state_counties("VA", year = c(2021))
+
+    >>> hud_fmr_state_counties("Alabama", year = c(2021))
+ 
+    >>> hud_fmr_state_counties("24", year = c(2021)))
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -154,29 +206,52 @@ def hud_fmr_county_zip(county: Union[int, str, list: int, list: str, tuple: Unio
                        year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                        key: str) -> pd.DataFrame:
     """
-    #' @name hud_fmr_county_zip
-    #' @title hud_fmr_county_zip
-    #' @description This function queries for a county and returns FMR calculation.
-    #'    If the county is not
-    #'    a small area, it will return only single
-    #'    measurement for that county. If the county is considered a small area,
-    #'    it will return data at a zip code level.
-    #' @param county A county to query for.
-    #' @param year Gets the year that this data was recorded.
-    #'   Can specify multiple years. Default is the
-    #'   previous year.
-    #' @param key The API key for this user. You must go to HUD and sign up
-    #'   for an account and request for an API key.
-    #' @keywords Fair Markets Rent API
-    #' @returns A data frame with fair markets rent for zip codes in counties.
+    Function to query the Fair Markets Rent API provided by US
+    Department of Housing and Urban Development. This returns zip code
+    FMR for county level queries.
+
+    Parameters
+    ----------
+
+    county : Counties to query for. Must be provided as a 5 digit fips code.
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+        
+    See Also
+    --------
+    
+    * hud_fmr()
+    * hud_fmr_state_metroareas()
+    * hud_fmr_state_counties()
+    * hud_fmr_county_zip()
+    * hud_fmr_metroarea_zip()
+
+    Returns
+    -------
+
+    This returns a dataframe with zip code level
+    fair markets rent based on county queries.
+
+    Examples
+    --------
+
+    >>> hud_fmr_county_zip("5100199999", year = c(2021))
+ 
+    >>> hud_fmr_county_zip("5100199999", year = c("2021"))
+ 
+    >>> hud_fmr_county_zip(5151099999, year = c(2021))
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     args = hudinputcheck.fmr_il_input_check_cleansing(county, year, key)
-    query = args[[1]]
-    year = args[[2]]
-    key = args[[3]]
+    query = args[1]
+    year = args[2]
+    key = args[3]
 
     error_urls = list()
 
@@ -215,30 +290,53 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list: str, tuple: str],
                           year: Union[str, list: str, tuple: str],
                           key: str) -> pd.DataFrame:
     """
-    #' @name hud_fmr_metroarea_zip
-    #' @title hud_fmr_metroarea_zip
-    #' @description This function queries for a metroarea and returns
-    #'    FMR calculation. If the metroarea is not
-    #'    a small area, it will return only single
-    #'    measurement for that metroarea. If the metrarea is considered a
-    #'    small area, it will return data at a zip code level.
-    #' @param metroarea A metroarea to query for.
-    #' @param year Gets the year that this data was recorded.
-    #'   Can specify multiple years. Default is the
-    #'   previous year.
-    #' @param key The API key for this user. You must go to HUD and sign up
-    #'   for an account and request for an API key.
-    #' @keywords Fair Markets Rent API
-    #' @returns A data frame with fair markets rent for zip codes in metro areas.
+    Function to query the Fair Markets Rent API provided by US
+    Department of Housing and Urban Development. This returns zip code
+    FMR for metroarea level queries.
+
+    Parameters
+    ----------
+
+    metroarea : Metroareas to query for.
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+        
+    See Also
+    --------
+    
+    * hud_fmr()
+    * hud_fmr_state_metroareas()
+    * hud_fmr_state_counties()
+    * hud_fmr_county_zip()
+    * hud_fmr_metroarea_zip()
+
+    Returns
+    -------
+
+    This returns a dataframe with zip code level
+    fair markets rent based on metroarea queries.
+
+    Examples
+    --------
+
+    >>> hud_fmr_metroarea_zip("METRO47900M47900", year = c(2018))
+ 
+    >>> hud_fmr_metroarea_zip("METRO29180N22001", year = c(2019))
+ 
+    >>> hud_fmr_metroarea_zip("METRO10380M10380", year = c(2020))
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
 
     args = hudinputcheck.fmr_il_input_check_cleansing(metroarea, year, key)
-    query = args[[1]]
-    year = args[[2]]
-    key = args[[3]]
+    query = args[1]
+    year = args[2]
+    key = args[3]
 
     error_urls = list()
 

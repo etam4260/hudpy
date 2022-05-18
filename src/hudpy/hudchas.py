@@ -11,21 +11,37 @@ import itertools
 def hud_chas_nation(year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
                     key: str = os.getenv("HUD_KEY")):
     """
-    #' @name hud_chas_nation
-    #' @title hud_chas_nation
-    #' @param year The years to query for.
-    #'  * year = "2014-2018"
-    #'  * year = "2013-2017"
-    #'  * year = "2012-2016"
-    #'  * year = "2011-2015"
-    #'  * year = "2010-2014"
-    #'  * year = "2009-2013"
-    #'  * year = "2008-2012"
-    #'  * year = "2007-2011"
-    #'  * year = "2006-2010"
-    #' @param key The key obtain from HUD USER website.
-    #' @description Returns CHAS data for the entire nation.
-    #' @returns Returns a dataframe with CHAS data for the entire nation.
+    Function to query Comprehensive Housing and Affordability (CHAS) API provided
+    by the US Department of Housing and Urban Development. This returns CHAS measurements
+    for the entire nation.
+
+    Parameters
+    ----------
+
+    year : The year(s) to query for.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_chas() 
+    * hud_chas_nation()
+    * hud_chas_state()
+    * hud_chas_county()
+    * hud_chas_place()
+    * hud_chas_mcd()
+
+    Returns
+    -------
+    This returns CHAS data for the entire nation.
+
+    Examples
+    --------
+
+    >>> hud_chas_nation()
+   
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -43,23 +59,44 @@ def hud_chas_state(state: Union[int, str, list: int, list: str, tuple: Union[int
                    year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
                    key: str = os.getenv("HUD_KEY")):
     """
-    #' @name hud_chas_state
-    #' @title hud_chas_state
-    #' @description Returns CHAS data for a state.
-    #' @param state The state to query for. Can supply as abbreviation, whole name,
-    #'   or as geoid.
-    #' @param year The years to query for.
-    #'  * year = "2014-2018"
-    #'  * year = "2013-2017"
-    #'  * year = "2012-2016"
-    #'  * year = "2011-2015"
-    #'  * year = "2010-2014"
-    #'  * year = "2009-2013"
-    #'  * year = "2008-2012"
-    #'  * year = "2007-2011"
-    #'  * year = "2006-2010"
-    #' @param key The key obtain from HUD USER website.
-    #' @returns Returns a dataframe with CHAS data for a particular state.
+    Function to query Comprehensive Housing and Affordability (CHAS) API provided
+    by the US Department of Housing and Urban Development. This returns CHAS measurements
+    for state(s)
+
+    Parameters
+    ----------
+
+    state : The state(s) to query for CHAS. Can be provided as the full name, fip code or
+        abbreviation.
+
+    year : The year(s) to query for.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_chas()
+    * hud_chas_nation()
+    * hud_chas_state()
+    * hud_chas_county()
+    * hud_chas_place()
+    * hud_chas_mcd()
+
+    Returns
+    -------
+    This returns CHAS data for state(s) query.
+
+    Examples
+    --------
+
+    >>> hud_chas_state("MD")
+   
+    >>> hud_chas_state("24")
+
+    >>> hud_chas_state("Maryland")
+
     """
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -110,24 +147,41 @@ def hud_chas_county(county: Union[int, str, list: int, list: str, tuple: Union[i
                     year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
                     key: str = os.getenv("HUD_KEY")):
     """
-    #' @name hud_chas_county
-    #' @title hud_chas_county
-    #' @description Returns CHAS data for counties.
-    #' @param county The county to query for. Must supply a geoid. 2 digit state fip
-    #'   + 3 digit county fip. hud_state_counties() will show an extra 99999 at the
-    #'   end. Just remove that.
-    #' @param year The years to query for.
-    #'  * year = "2014-2018"
-    #'  * year = "2013-2017"
-    #'  * year = "2012-2016"
-    #'  * year = "2011-2015"
-    #'  * year = "2010-2014"
-    #'  * year = "2009-2013"
-    #'  * year = "2008-2012"
-    #'  * year = "2007-2011"
-    #'  * year = "2006-2010"
-    #' @param key The key obtain from HUD USER website.
-    #' @returns Returns a dataframe with CHAS data for counties.
+    Function to query Comprehensive Housing and Affordability (CHAS) API provided
+    by the US Department of Housing and Urban Development. This returns CHAS measurements
+    for county(s).
+
+    Parameters
+    ----------
+
+    county : The county(s) to query for CHAS. Must be provided as a 5 digit fips code.
+
+    year : The year(s) to query for.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_chas()
+    * hud_chas_nation()
+    * hud_chas_state()
+    * hud_chas_county()
+    * hud_chas_place()
+    * hud_chas_mcd()
+
+    Returns
+    -------
+    This returns CHAS data for state(s) query.
+
+    Examples
+    --------
+
+    >>> hud_chas_county(county = c(06105, 06113))
+
+    >>> hud_chas_county(county = c("06105", "06113"), year = 2020)
+
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -180,22 +234,40 @@ def hud_chas_state_mcd(state: Union[int, str, list: int, list: str, tuple: Union
                        year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
                        key: str = os.getenv("HUD_KEY")):
     """
-    #' @name hud_chas_state_mcd
-    #' @title hud_chas_state_mcd
-    #' @description Returns CHAS data for all mcds in a state.
-    #' @param state The state name, abbreviation, or fips code.
-    #' @param year The years to query for.
-    #'  * year = "2014-2018"
-    #'  * year = "2013-2017"
-    #'  * year = "2012-2016"
-    #'  * year = "2011-2015"
-    #'  * year = "2010-2014"
-    #'  * year = "2009-2013"
-    #'  * year = "2008-2012"
-    #'  * year = "2007-2011"
-    #'  * year = "2006-2010"
-    #' @param key The key obtain from HUD USER website.
-    #' @returns Returns a dataframe with CHAS data for mcds.
+    Function to query Comprehensive Housing and Affordability (CHAS) API provided
+    by the US Department of Housing and Urban Development. This returns CHAS measurements
+    for minor civil divisions(s).
+
+    Parameters
+    ----------
+
+    state : The state(s) to query for CHAS. Can be provided as the full name, fip code or
+         abbreviation.
+
+    year : The year(s) to query for.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_chas()
+    * hud_chas_nation()
+    * hud_chas_state()
+    * hud_chas_county()
+    * hud_chas_place()
+    * hud_chas_mcd()
+
+    Returns
+    -------
+    This returns CHAS data minor civil division(s) for state(s) query.
+
+    Examples
+    --------
+
+    >>> hud_chas_state_mcd("VA", year = c("2014-2018","2013-2017"))
+
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -221,6 +293,41 @@ def hud_chas_state_place(state: Union[int, str, list: int, list: str, tuple: Uni
     #'  * year = "2006-2010"
     #' @param key The key obtain from HUD USER website.
     #' @returns Returns a dataframe with CHAS data for places.
+
+    Function to query Comprehensive Housing and Affordability (CHAS) API provided
+    by the US Department of Housing and Urban Development. This returns CHAS measurements
+    for place(s).
+
+    Parameters
+    ----------
+
+    state : The state(s) to query for CHAS. Can be provided as the full name, fip code or
+         abbreviation.
+
+    year : The year(s) to query for.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_chas()
+    * hud_chas_nation()
+    * hud_chas_state()
+    * hud_chas_county()
+    * hud_chas_place()
+    * hud_chas_mcd()
+
+    Returns
+    -------
+    This returns CHAS data in places for state(s) query.
+
+    Examples
+    --------
+
+    >>> hud_chas_state_place("VA", year = c("2014-2018","2013-2017"))
+
     """
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")

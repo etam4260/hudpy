@@ -3,24 +3,40 @@ import os
 
 def hud_get_key() -> str:
     """
-    #' @name hud_get_key
-    #' @title hud_get_key
-    #' @description  Return most recent key set in
-    #    the HUD_KEY environment variable.
-    #'   If no key is set, return "".
-    #' @returns Returns a string.
+    Get the current HUD_KEY environment variable.
+
+    Returns
+    -------
+
+    Returns a string containing the HUD_KEY environment variable.
+
+    See Also
+    --------
+    * hud_set_key()
+
+    Examples
+    --------
+    >>> hud_get_key()
     """
     
     return(os.getenv("HUD_KEY"))
 
 def hud_set_key(key:str):
     """
-    #' @name hud_set_key
-    #' @title hud_set_key
-    #' @description A wrapper around Sys.getenv() 
-    #'   to set HUD_KEY environment variable.
-    #' @param key key obtained at
-    #'   https://www.huduser.gov/hudapi/public/register?comingfrom=1
+    Function to set the HUD_KEY environment variable.
+
+    Parameters
+    ----------
+
+    key : The key obtained at https://www.huduser.gov/hudapi/public/register?comingfrom=1.
+
+    See Also
+    --------
+    * hud_get_key()
+
+    Examples
+    --------
+    >>> hud_set_key("DWKQOD442OLKDF3")
     """
 
     os.environ["HUD_KEY"] = key

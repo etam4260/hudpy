@@ -1,16 +1,28 @@
 import math
 from typing import Union
 
-def download_bar(done:int = None, total:int = None, percentage:float = None, current: Union[str, int] = None):
+def download_bar(done : int = None, total : int = None, percentage : float = None, current : Union[str, int] = None):
     """
-    #' @name download_bar
-    #' @title download_bar
-    #' @description A simple loading bar for the number of queries completed:
-    #'   prints the loading bar to the R console.
-    #' @param done The number of operations done.
-    #' @param total The number of total operations needed.
-    #' @param current The current item being worked on.
-    #' @param percentage Can supply a percentage instead of done and total.
+    Function to output a download bar to the terminal. If done and total are inputted, it will
+    calculate the percentage. The percentage is used to calculate the size of the current
+    download bar.
+
+    Parameters
+    ----------
+
+    done : The number of items completed.
+
+    total : The total number of items needed to be processed.
+
+    percentage : The percentage completed. 
+
+    current : The current working item.
+
+    Examples
+    --------
+
+    >>> download_bar(10, 20)
+
     """
 
     done_perc = done/total

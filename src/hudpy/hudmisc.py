@@ -10,16 +10,33 @@ import huddoquerycalls
 import hudinternetonline
 
 def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
-    """
-    #' @title hud_nation_states_territories
-    #' @description Get a list of state and US territories
-    #'   along with the corresponding fips code and
-    #'   abbreviation.
-    #' @param key The API key for this user. You must go to HUD and sign up for an
-    #'   account and request for an API key.
-    #' @keywords States Territories
-    #' @returns A dataframe containing details of all the states and territories
-    #'   in the US.
+    """ 
+    Function to query misc API provided by the US Department of Housing and Urban Development. This returns
+    all the states and territories in the US along with some associated metadata.
+
+    Parameters
+    ----------
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_nation_states_territories()
+    * hud_state_metropolitan()
+    * hud_state_counties()
+    * hud_state_places()
+    * hud_state_minor_civil_divisions()
+
+    Returns
+    -------
+    This returns all the states and territories in the US along with some associated metadata.  
+
+    Examples
+    --------
+
+    >>> hud_nation_states_territories()
+   
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -49,15 +66,37 @@ def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFra
 def hud_state_metropolitan(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                            key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
-    #' @name hud_state_metropolitan
-    #' @title hud_state_metropolitan
-    #' @description Get a list of all metropolitan areas for this state with its
-    #'   name and CBSA code.
-    #' @param state The state to get all the metropolitan areas.
-    #' @param key The API key for this user. You must go to HUD and sign up for an
-    #'   account and request for an API key.
-    #' @keywords CBSA
-    #' @returns A dataframe containing details of metropolitan areas in US.
+    Function to query misc API provided by the US Department of Housing and Urban Development. 
+    Get all metropolitan areas for queried states with their name and CBSA code.
+
+    Parameters
+    ----------
+
+    state : The states to query for metropolitan areas. Can be provided as the full name, fip code or
+        abbreviation.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_nation_states_territories()
+    * hud_state_metropolitan()
+    * hud_state_counties()
+    * hud_state_places()
+    * hud_state_minor_civil_divisions()
+
+    Returns
+    -------
+    
+    Returns a dataframe containing details of metropolitan areas from queried states.
+    
+    Examples
+    --------
+
+    >>> hud_state_metropolitan("VA")
+
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -141,14 +180,38 @@ def hud_state_metropolitan(state: Union[int, str, list: int, list: str, tuple: U
 def hud_state_counties(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                        key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
-    #' @name hud_state_counties
-    #' @title hud_state_counties
-    #' @description Get a list of all counties within a state.
-    #' @param state The state to get all counties.
-    #' @param key The API key for this user. You must go to HUD and sign up for
-    #'  an account and request for an API key.
-    #' @keywords Counties
-    #' @returns A dataframe containing all counties within a state
+    Function to query misc API provided by the US Department of Housing and Urban Development. 
+    Get all counties for queried states with their name and fips code.
+
+    Parameters
+    ----------
+
+    state : The states to query for counties. Can be provided as the full name, fip code or
+        abbreviation.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_nation_states_territories()
+    * hud_state_metropolitan()
+    * hud_state_counties()
+    * hud_state_places()
+    * hud_state_minor_civil_divisions()
+
+    Returns
+    -------
+    
+    Returns a dataframe containing details of counties from queried states.
+    
+    Examples
+    --------
+
+    >>> hud_state_counties("CA")
+    >>> hud_state_counties("Virginia")
+    >>> hud_state_counties("51")
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -209,14 +272,38 @@ def hud_state_counties(state: Union[int, str, list: int, list: str, tuple: Union
 def hud_state_places(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                      key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
-    #' @name hud_state_places
-    #' @title hud_state_places
-    #' @description Get a list of all places in a state.
-    #' @param state The state to get all places.
-    #' @param key The API key for this user. You must go to HUD and sign up for
-    #'  an account and request for an API key.
-    #' @keywords places.
-    #' @returns A dataframe containing details of places in a state.
+    Function to query misc API provided by the US Department of Housing and Urban Development. 
+    Get all places for queried states with their name and place code.
+
+    Parameters
+    ----------
+
+    state : The states to query for places. Can be provided as the full name, fip code or
+        abbreviation.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_nation_states_territories()
+    * hud_state_metropolitan()
+    * hud_state_counties()
+    * hud_state_places()
+    * hud_state_minor_civil_divisions()
+
+    Returns
+    -------
+    
+    Returns a dataframe containing details of places from queried states.
+    
+    Examples
+    --------
+
+    >>> hud_state_places("CA")
+    >>> hud_state_places("Virginia")
+    >>> hud_state_places("51")
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -277,15 +364,38 @@ def hud_state_places(state: Union[int, str, list: int, list: str, tuple: Union[i
 def hud_state_minor_civil_divisions(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                                     key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
-    #' @name hud_state_minor_civil_divisions
-    #' @title hud_state_minor_civil_divisions
-    #' @description Get a list of all minor civil divisions in a state
-    #' @param state The state to get all MCD.
-    #' @param key The API key for this user. You must go to HUD and sign up for
-    #'  an account and request for an API key.
-    #' @keywords CBSA
-    #' @returns A dataframe containing details of minor civil divisions in a state.
-    #' @examples
+    Function to query misc API provided by the US Department of Housing and Urban Development. 
+    Get all minor civil divisions for queried states with their name and mcd code.
+
+    Parameters
+    ----------
+
+    state : The states to query for mcds. Can be provided as the full name, fip code or
+        abbreviation.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    See Also
+    --------
+    
+    * hud_nation_states_territories()
+    * hud_state_metropolitan()
+    * hud_state_counties()
+    * hud_state_places()
+    * hud_state_minor_civil_divisions()
+
+    Returns
+    -------
+    
+    Returns a dataframe containing details of mcds from queried states.
+    
+    Examples
+    --------
+
+    >>> hud_state_minor_civil_divisions("CA")
+    >>> hud_state_minor_civil_divisions("Virginia")
+    >>> hud_state_minor_civil_divisions("51")
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")

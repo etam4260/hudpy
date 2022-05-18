@@ -8,13 +8,21 @@ from distutils.log import warn
 
 def chas_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
     """
-    #' @name chas_do_query_calls
-    #' @title chas_do_query_calls
-    #' @description Helper function for making the query calls to CHAS
-    #' API endpoint.
-    #' @param urls The urls to query for.
-    #' @param key The key obtain from HUD USER website.
-    #' @returns A dataframe of all the response bodies.
+    Helper function to query Comprehensive Housing and Affordability (CHAS) API from 
+    the US Department of Housing and Urban Development for 
+    all hud_chas() family of functions. 
+
+    Parameters
+    ----------
+    urls: The urls to query for.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    Returns
+    -------
+    This concatenates the response bodies from all urls call as a dataframe.
+
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -96,15 +104,32 @@ def chas_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
 def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
                             secondary_geoid, key) -> pd.DataFrame:
     """
-    #' @name cw_do_query_calls
-    #' @title cw_do_query_calls
-    #' @description Helper function for queries to the crosswalk API.
-    #' @param urls The url endpoints to query for.
-    #' @param primary_geoid The first geoid part of a function call. For example,
-    #'   hud_cw_zip_tract() has zip as first GEOID and tract as second GEOID.
-    #' @param secondary_geoid The second geoid part of a function call.
-    #' @param key The key needed to query the HUD API
-    #' @returns A data frame of all the results made from the query.
+    Helper function to query Crosswalk(cw) API from 
+    the US Department of Housing and Urban Development for 
+    all hud_cw() family of functions. 
+
+    Parameters
+    ----------
+    urls : The urls to query for.
+
+    query : The geoids to query for.
+
+    year : The years to query for.
+
+    quarter : The quarters in the year to query for
+
+    primary_geoid : The first geoid part of a function call. For example,
+        hud_cw_zip_tract() has zip as first GEOID and tract as second GEOID.
+
+    secondary_geoid : The second geoid part of a function call.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    Returns
+    -------
+    This concatenates the response bodies from all urls call as a dataframe.
+
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -152,13 +177,20 @@ def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
 
 def misc_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
     """
-    #' @name misc_do_query_call
-    #' @title misc_do_query_call
-    #' @description Make queries calls given a list of urlss
-    #' @param urls The urlss to query for.
-    #' @param key The API key for this user. You must go to HUD and sign up for
-    #'   an account and request for an API key.
-    #' @returns A dataframe containing all queried rows.
+    Helper function to query misc APIs from 
+    the US Department of Housing and Urban Development for 
+    all hudmisc.py family of functions. 
+
+    Parameters
+    ----------
+    urls: The urls to query for.
+
+    key : The API key for this user. You must go to HUD and sign up for an
+        account and request for an API key.
+
+    Returns
+    -------
+    This concatenates the response bodies from all urls call as a dataframe.
     """    
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")

@@ -8,15 +8,23 @@ def chas_input_check_cleansing(query: Union[int, str, list: int, list: str, tupl
                                year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                                key: str) -> list:
     """
-    #' @name chas_input_check_cleansing
-    #' @title chas_input_check_cleansing
-    #' @description Helper function used to clean user inputted variables for all
-    #'    decomposed CHAS functions.
-    #' @param query
-    #'   The inputted GEOID.
-    #' @param year The years to query for.
-    #' @param key The key obtain from HUD USER website.
-    #' @returns The cleansed input arguments.
+    Helper function to clean user inputted variables for all
+    CHAS (Comprehensive Housing and Affordability)[hud_chas] function calls.
+
+    Parameters
+    ----------
+
+    query : The inputted geoid. This is likely state, county, or place, or mcd geoids.
+
+    year : The year(s) input to query for.
+
+    key : The API key for this user. 
+
+    Returns
+    -------
+
+    This returns a list of the cleaned user inputs.
+
     """
     
     if not isinstance(query, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
@@ -71,16 +79,30 @@ def cw_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple:
                              quarter: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                              key: str) -> list:
     """
-    #' @name cw_input_check_cleansing
-    #' @title cw_input_check_cleansing
-    #' @description Helper function used to clean user inputted variables for all
-    #' Crosswalk functions.
-    #' @param query
-    #'   The inputted GEOID.
-    #' @param year The years to query for.
-    #' @param quarter The quarters to query for.
-    #' @param key The key obtain from HUD USER website.
-    #' @returns The cleansed input arguments.
+    Helper function to clean user inputted variables for all
+    crosswalk[hud_cw] function calls.
+
+    Parameters
+    ----------
+
+    query : The inputted geoid(s). This includes:
+        1) zipcode
+        2) tract
+        3) county
+        4) countsub
+        5) cbsa
+        6) cbsadiv
+
+    year : The year(s) input to query for.
+
+    quarter : The quarter(s) input to query for.
+
+    key : The API key for this user. 
+
+    Returns
+    -------
+
+    This returns a list of the cleaned user inputs.
     """
     
     if not isinstance(query, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
@@ -138,15 +160,22 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list: int, list: str, tu
                                  year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
                                  key: str) -> list:
     """
-    #' @name fmr_il_input_check_cleansing
-    #' @title fmr_il_input_check_cleansing
-    #' @description Helper function used to clean user inputted variables for all
-    #'   Fair markets rent and Income Limits datasets.
-    #' @param query
-    #'   The inputted GEOID.
-    #' @param year The years to query for.
-    #' @param key The key obtain from HUD USER website.
-    #' @returns The cleansed input arguments.
+    Helper function to clean user inputted variables for all
+    fair markets rent[hud_fmr] and income limits[hud_il] function calls.
+
+    Parameters
+    ----------
+
+    query : The inputted geoid. This is likely state, county, cbsa geoids.
+
+    year : The year(s) input to query for.
+
+    key : The API key for this user. 
+
+    Returns
+    -------
+
+    This returns a list of the cleaned user inputs.
     """
     if not isinstance(query, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
@@ -229,28 +258,41 @@ def crosswalk_a_dataset_input_check_cleansing(data,
                                               quarter: Union[int, str], 
                                               key: str) -> list:
     """
-    #' @name crosswalk_a_dataset_input_check_cleansing
-    #' @title crosswalk_a_dataset_input_check_cleansing
-    #' @description Helper function used to clean inputs for the
-    #'   crosswalk() function.
-    #' @param data A dataset with rows describing measurements at a zip, county,
-    #'   countysub, cd,
-    #'   tract, cbsa, or cbsadiv geographic level.
-    #' @param geoid The current geoid that the dataset is described in: must be zip,
-    #'   county, countysub, cd,
-    #'   tract, cbsa, or cbsadiv geographic level.
-    #' @param geoid_col The column containing the geographic identifier;
-    #'   must be zip, county, countysub, cd,
-    #'   tract, cbsa, or cbsadiv geographic level.
-    #'   Supply either the name of the column
-    #'   or the index.
-    #' @param cw_geoid The geoid to crosswalk the dataset to.
-    #' @param method The allocation method to use: residential,
-    #'   business, other, or total
-    #' @param year The year measurement was taken.
-    #' @param quarter The quarter of year measurement was taken.
-    #' @param key The key obtain from HUD USER website.
-    #' @returns The cleansed input arguments.
+    Helper function to clean user inputted variables for the crosswalk() function.
+
+    Parameters
+    ----------
+
+    data : A dataframe with rows describing measurements at a
+        zip, county, countysub, cd, tract,
+        cbsa, or cbsadiv geoid.
+
+    geoid : The current geoid that the dataset is described in: must be zip,
+        county, countysub, cd,
+        tract, cbsa, or cbsadiv geographic level.
+
+    geoid_col : The column containing the geographic identifier;
+        must be zip, county, countysub, cd,
+        tract, cbsa, or cbsadiv geographic level.
+        Supply either the name of the column
+        or the index.
+
+    cw_geoid : The geoid to crosswalk the dataset to.
+ 
+    method :  The allocation method to use: residential,
+        business, other, or total
+
+    year : The year(s) input to query for.
+
+    quarter : The quarter(s) input to query for.
+
+    key : The API key for this user. 
+
+    Returns
+    -------
+
+    This returns a list of the cleaned user inputs.
+
     """
 
     if len(geoid) > 1 or len(geoid_col) > 1 or \

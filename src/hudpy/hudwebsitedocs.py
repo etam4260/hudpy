@@ -5,16 +5,20 @@ from typing import Union
 
 def hudpy_website(website: Union[str, int, list: int, list: str, tuple: Union[int, str]] = ["github-pages", "github"]):
     """
-    #' @name hudpy_website
-    #' @title hudpy_website
-    #' @description Quickly get documentation 
-    #    for the hudpy package by opening up
-    #'   the websites associated with it. 
-    #    Currently supports Linux, Darwin 
-    #    and Windows OS.
-    #' @param website A list of websites.
-    #'   1) "github-pages"
-    #'   2) "github"
+    Function to quickly open the associated website documentation for the hudpy package.
+
+    Parameters
+    ----------
+
+    website : The websites to open in default browser.
+
+    Examples
+    --------
+    >>> rhud_website("github-pages")
+
+    >>> rhud_website("github")
+
+    >>> rhud_website()
     """ 
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")

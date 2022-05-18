@@ -17,7 +17,7 @@ def crosswalk(data: pd.DataFrame,
               key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to crosswalk a dataframe using the US Department of Housing and Urban Development 
-    crosswalk files. This function assumes data is well formed. For just getting the 
+    crosswalk files. This function assumes data is well formed. For just obtaining the 
     datasets used for crosswalking look at the hud_cw family of functions within this package.
 
     Parameters
@@ -74,9 +74,9 @@ def crosswalk(data: pd.DataFrame,
         3) tot
         4) oth
 
-    year : The year measurement was taken.
+    year : The year to query for
 
-    quarter : The quarter of year measurement was taken.
+    quarter : The quarter of year(s) to query for.
 
     key : The key obtain from HUD USER website.
 
