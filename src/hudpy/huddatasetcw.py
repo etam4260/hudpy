@@ -16,79 +16,112 @@ def crosswalk(data: pd.DataFrame,
               quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
               key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
-    #' @name crosswalk
-    #' @title crosswalk
-    #' @description Using the US Housing and Urban Development crosswalk files,
-    #'  crosswalk an entire dataset.
-    #'  Currently supported crosswalks:
-    #'   1) zip-tract
-    #'   2) zip-county
-    #'   3) zip-cbsa
-    #'   4) zip-cbsadiv (Available 4th Quarter 2017 onwards)
-    #'   5) zip-cd
-    #'   6) tract-zip
-    #'   7) county-zip
-    #'   8) cbsa-zip
-    #'   9) cbsadiv-zip (Available 4th Quarter 2017 onwards)
-    #'   10) cd-zip
-    #'   11) zip-countysub (Available 2nd Quarter 2018 onwards)
-    #'   12) countysub-zip (Available 2nd Quarter 2018 onwards)
-    #' @param data A dataset with rows describing measurements at a zip,
-    #'   county, county subdivision (countysub), congressional district (cd),
-    #'   census tract, core base statistical area (cbsa), or core based
-    #'   statistical area division (cbsadiv) geoid.
-    #'   1) zip
-    #'   2) tract
-    #'   3) county
-    #'   4) countysub
-    #'   5) cbsa
-    #'   6) cbsadiv
-    #'   7) cd
-    #' @param geoid The current geoid that the dataset is described in: must be
-    #'   zip, county, countysub, cd,
-    #'   tract, cbsa, or cbsadiv geographic id.
-    #'   1) zip
-    #'   2) tract
-    #'   3) county
-    #'   4) countysub
-    #'   5) cbsa
-    #'   6) cbsadiv
-    #'   7) cd
-    #' @param geoid_col The column containing the geographic identifier; must be
-    #'   zip, county, county subdivision (countysub), congressional district (cd),
-    #'   census tract, core base statistical area (cbsa), and core based
-    #'   statistical area division (cbsadiv) geoid.
-    #'   Supply either the name of the column or the index.
-    #'   All elements in this column must be numbers only at the proper length.
-    #'   For example, zip codes must be 5 digit numbers.
-    #' @param cw_geoid The geoid to crosswalk the dataset to; must be
-    #'   zip, county, county subdivision (countysub), congressional district (cd),
-    #'   census tract, core base statistical area (cbsa), or core based
-    #'   statistical area division (cbsadiv) geoid.
-    #'   1) zip
-    #'   2) tract
-    #'   3) county
-    #'   4) countysub
-    #'   5) cbsa
-    #'   6) cbsadiv
-    #'   7) cd
-    #' @param cw_geoid_col The columns in the dataset to distribute
-    #'   according to method ratio.
-    #'   If method is empty, no allocation method will be applied --
-    #'   the crosswalk file will just be merged to the dataset.
-    #'   All elements in these columns must be numbers only.
-    #' @param method The allocation method to use: residential,
-    #'   business, other, or total. If method is empty, no allocation
-    #'   method will be applied -- the crosswalk file will just be merged
-    #'   to the dataset.
-    #'   1) res
-    #'   2) bus
-    #'   3) tot
-    #'   4) oth
-    #' @param year The year measurement was taken.
-    #' @param quarter The quarter of year measurement was taken.
-    #' @param key The key obtain from HUD USER website.
-    #' @returns A dataframe containing the crosswalked dataset.
+    Function to crosswalk a dataframe using the US Department of Housing and Urban Development 
+    crosswalk files. This function assumes data is well formed. For just getting the 
+    datasets used for crosswalking look at the hud_cw family of functions within this package.
+
+    Parameters
+    ----------
+    data : A dataset with rows describing measurements at a zip,
+        county, county subdivision (countysub), congressional district (cd),
+        census tract, core base statistical area (cbsa), or core based
+        statistical area division (cbsadiv) geoid.
+        1) zip
+        2) tract
+        3) county
+        4) countysub
+        5) cbsa
+        6) cbsadiv
+        7) cd
+
+    geoid : The current geoid that the dataset is described in: must be
+        zip, county, countysub, cd,
+        tract, cbsa, or cbsadiv geographic id.
+        1) zip
+        2) tract
+        3) county
+        4) countysub
+        5) cbsa
+        6) cbsadiv
+        7) cd
+
+    geoid_col : The column containing the geographic identifier; must be
+        zip, county, county subdivision (countysub), congressional district (cd),
+        census tract, core base statistical area (cbsa), and core based
+        statistical area division (cbsadiv) geoid.
+        Supply either the name of the column or the index.
+        All elements in this column must be numbers only at the proper length.
+        For example, zip codes must be 5 digit numbers.
+
+    cw_geoid :  The geoid to crosswalk the dataset to; must be
+        zip, county, county subdivision (countysub), congressional district (cd),
+        census tract, core base statistical area (cbsa), or core based
+        statistical area division (cbsadiv) geoid.
+        1) zip
+        2) tract
+        3) county
+        4) countysub
+        5) cbsa
+        6) cbsadiv
+        7) cd
+
+    method : The allocation method to use: residential,
+        business, other, or total. If method is empty, no allocation
+        method will be applied -- the crosswalk file will just be merged
+        to the dataset.
+        1) res
+        2) bus
+        3) tot
+        4) oth
+
+    year : The year measurement was taken.
+
+    quarter : The quarter of year measurement was taken.
+
+    key : The key obtain from HUD USER website.
+
+    See Also
+    --------
+
+    * crosswalk()
+    * hud_cw_zip_tract()
+    * hud_cw_zip_county()
+    * hud_cw_zip_cbsa()
+    * hud_cw_zip_cbsadiv()
+    * hud_cw_zip_countysub()
+    * hud_cw_zip_cd()
+    * hud_cw_tract_zip()
+    * hud_cw_county_zip()
+    * hud_cw_cbsa_zip()
+    * hud_cw_cbsadiv_zip()
+    * hud_cw_cd_zip()
+    * hud_cw_countysub_zip()
+    * hud_cw()
+
+    Returns
+    --------
+    A dataframe with the crosswalked geoids if method or cw_geoid_col are set to None, else a 
+    dataframe containing the crosswalk geoids and cw_geoid_cols allocated based on method ratio.
+
+    Examples
+    --------
+    
+    >>> sample = data.frame(population = c(42134, 12413, 13132),
+                          county = c(24047, 24045, 24043))
+    
+    >>> crosswalk(data = sample, geoid = "county", geoid_col = "county",
+               cw_geoid = "zip")
+    
+    >>> crosswalk(data = sample, geoid = "county", geoid_col = "county",
+               cw_geoid = "zip", cw_geoid_col = "population", method = "res")
+    
+    >>> crosswalk(data = sample, geoid = "county", geoid_col = "county",
+               cw_geoid = "zip", cw_geoid_col = "population", method = "bus")
+    
+    >>> crosswalk(data = sample, geoid = "county", geoid_col = "county",
+               cw_geoid = "zip", cw_geoid_col = "population", method = "bus",
+               year = 2018, quarter = 1)
+
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
