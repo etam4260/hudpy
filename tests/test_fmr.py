@@ -1,16 +1,22 @@
 import hudpy
 import pytest
-
-def test_omni_fmr_state_query:
-
-
-def test_omni_fmr_county_query:
+import os
 
 
-def test_omni_fmr_small_area:
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+def test_omni_fmr_state_query():
 
 
-def test_omni_fmr_diff_years:
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+def test_omni_fmr_county_query():
+
+
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+def test_omni_fmr_small_area():
+
+
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+def test_omni_fmr_diff_years():
 
     
 

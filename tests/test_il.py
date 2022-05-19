@@ -3,7 +3,7 @@ import hudpy.hudmisc
 import pytest
 import os
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == 0, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
 def test_il_state_queries():
     va = hudpy.huduser.hud_il("VA", 2021)
     assert len(va) >= 1
@@ -46,7 +46,7 @@ def test_il_state_queries():
            all_state_num.equals(all_state_abbr) 
     
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == 0, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
 def test_il_county_queries():
     county = hudpy.huduser.hud_il("5100199999", 2020)
     assert len(county) >= 1 
@@ -64,7 +64,7 @@ def test_il_county_queries():
     assert len(all_md) == len(all_md_counties["fips_code"])
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == 0, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
 def test_il_small_area_queries():
     sa1 = hudpy.huduser.hud_il("METRO47900M47900", year = 2018)
     assert len(sa1) >= 1
@@ -81,7 +81,7 @@ def test_il_small_area_queries():
     assert len(all_md) == len(all_md_metro["cbsa_code"])
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == 0, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
 def test_il_diff_years():
     y1 = hudpy.huduser.hud_il("VA", 2021)
     assert len(y1) == 1

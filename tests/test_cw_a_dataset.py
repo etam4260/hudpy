@@ -2,7 +2,9 @@ import hudpy
 import pytest
 import hudpy.huddatasetcw
 import pandas as pd
+import os
 
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
 def test_simple_cw():
     sample = pd.DataFrame(mes = list(1232, 2453, 4564),
                           zip = list(21206, 21224, 20854))
@@ -126,7 +128,7 @@ def test_simple_cw():
                                 2018, 1)
     assert len(cw) >= 1
 
-
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
 def test_awkward_cw():
     sample = pd.DataFrame(mes = list(1232, 1232, 1232), zip = list(21206, 21206, 21206))
 
