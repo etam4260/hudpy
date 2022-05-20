@@ -9,13 +9,13 @@ def test_il_state_queries():
     assert len(va) >= 1
 
     md = hudpy.huduser.hud_il("MD", 2020)
-    assert len(va) >= 1
+    assert len(md) >= 1
     
     ca = hudpy.huduser.hud_il("CA", 2019)
-    assert len(va) >= 1
+    assert len(ca) >= 1
     
     al = hudpy.huduser.hud_il("AL", 2018)
-    assert len(va) >= 1
+    assert len(al) >= 1
     
 
     mult_state = hudpy.huduser.hud_il(["AL","MD","CA"], [2018, 2017, 2019])
