@@ -84,13 +84,18 @@ HUD USER
 
 ## Installation
 
-The repository can also be cloned and installed into a python distribution 
-using:
+The repository can be cloned first using...
 
 ```
->>> git clone https://github.com/etam4260/hudpy
->>> pip install hudpy
+git clone https://github.com/etam4260/hudpy
 ```
+
+and then installed into a python distribution using... 
+
+```
+pip install hudpy
+```
+
 ## Contributors
 
 -   Emmet Tam(<https://github.com/etam4260>)\[<emmet_tam@yahoo.com>\]
