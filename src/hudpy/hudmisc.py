@@ -1,5 +1,5 @@
 import os
-from typing import Union
+from typing import Union, List, Tuple
 import urllib3 
 import pandas as pd
 import hudpkgenv
@@ -63,7 +63,7 @@ def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFra
 
 
 
-def hud_state_metropolitan(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
+def hud_state_metropolitan(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
                            key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
@@ -177,7 +177,7 @@ def hud_state_metropolitan(state: Union[int, str, list: int, list: str, tuple: U
 
 
 
-def hud_state_counties(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
+def hud_state_counties(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
                        key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
@@ -269,7 +269,7 @@ def hud_state_counties(state: Union[int, str, list: int, list: str, tuple: Union
 
 
 
-def hud_state_places(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
+def hud_state_places(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
                      key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
@@ -361,7 +361,7 @@ def hud_state_places(state: Union[int, str, list: int, list: str, tuple: Union[i
 
 
 
-def hud_state_minor_civil_divisions(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
+def hud_state_minor_civil_divisions(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
                                     key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 

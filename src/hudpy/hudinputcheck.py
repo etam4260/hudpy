@@ -1,12 +1,12 @@
 from enum import unique
 from datetime import date
 import hudpkgenv
-from typing import Union
+from typing import Union, List, Tuple
 import hudinputcheck
 
-def chas_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                               year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                               key: str) -> list:
+def chas_input_check_cleansing(query: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                               year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                               key: str) -> List[List]:
     """
     Helper function to clean user inputted variables for all
     CHAS (Comprehensive Housing and Affordability)[hud_chas] function calls.
@@ -27,21 +27,20 @@ def chas_input_check_cleansing(query: Union[int, str, list: int, list: str, tupl
 
     """
     
-    if not isinstance(query, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(query, Union[int, str, List[int], List[str], Tuple[int], Tuple[str]].__args__) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
-    if not isinstance(year, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(year, Union[int, str, List[int], List[str], Tuple[int], Tuple[str]].__args__) :
         raise ValueError("\nYear should be int, str, or list or tuple of ints and strings.")
-
+    
+    if key == None:
+        raise ValueError("\nIt looks like the HUD_KEY was not set: use hud_set_key().")
+        
     if type(key) != str:
         raise ValueError("\nKey should be a string")
 
     year = [year] if isinstance(year, str) or isinstance(year, int) else year
     query = [query] if isinstance(query, str) or isinstance(query, int) else query
-
-
-    if(len(key) != 1):
-        raise ValueError("\nThere seems to be multiple keys specified.")
 
     if(key == ""):
         raise ValueError("\nDid you forget to set the key. Please go to " + 
@@ -51,8 +50,8 @@ def chas_input_check_cleansing(query: Union[int, str, list: int, list: str, tupl
                          "this to your environment using " +
                          "hud_set_key(your-key)")
 
-    key = unique(map(str.strip(), key))
-    year = unique(map(str.strip(), year))
+    key = list(set(map(lambda x: str.strip(x), key)))
+    year = list(set(map(lambda x: str.strip(x), year)))
 
     possible_years = list("2014-2018", "2013-2017",
                           "2012-2016", "2011-2015",
@@ -68,16 +67,16 @@ def chas_input_check_cleansing(query: Union[int, str, list: int, list: str, tupl
         if type(query) != list and type(query) != tuple:
             raise ValueError("")
 
-        query = unique(map(str.strip(), query))
+        query = map(lambda x: str.strip(x), query)
         return(list(query, year, key))    
     
-    return(list(year, key))
+    return([year, key])
 
 
-def cw_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                             year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                             quarter: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                             key: str) -> list:
+def cw_input_check_cleansing(query: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                             year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                             quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                             key: str) -> List[List]:
     """
     Helper function to clean user inputted variables for all
     crosswalk[hud_cw] function calls.
@@ -105,25 +104,26 @@ def cw_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple:
     This returns a list of the cleaned user inputs.
     """
     
-    if not isinstance(query, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(query, Union[int, str, List[int], List[str], Tuple[int], Tuple[str]].__args__) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
-    if not isinstance(year, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(year, Union[int, str, List[int], List[str], Tuple[int], Tuple[str]].__args__) :
         raise ValueError("\nYear should be int, str, or list or tuple of ints and strings.")
 
-    if not isinstance(quarter, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(quarter, Union[int, str, List[int], List[str], Tuple[int], Tuple[str]].__args__) :
         raise ValueError("\nQuarter should be int, str, or list or tuple of ints and strings.")
     
+    if key == None:
+        raise ValueError("\nIt looks like the HUD_KEY was not set: use hud_set_key().")
+        
     if type(key) != str:
         raise ValueError("\nKey should be a string")
-
+    
     query = [query] if isinstance(query, str) or isinstance(query, int) else query
     year = [year] if isinstance(year, str) or isinstance(year, int) else year
     quarter =  [quarter] if isinstance(quarter, str) or isinstance(quarter, int) else quarter
-
-    if(len(key) != 1):
-        raise ValueError("\nThere seems to be multiple keys specified.")
-
+    
+    
     if(key == ""):
         raise ValueError("\nDid you forget to set the key. Please go to " + 
                          "Please go to https://www.huduser.gov/" +
@@ -132,16 +132,15 @@ def cw_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple:
                          "this to your environment using " +
                          "hud_set_key(your-key)")
     
-    key = unique(map(str.strip(), key))
-    year = unique(map(str.strip(), year))
-    quarter = unique(map(str.strip(), quarter))
-    query = unique(map(str.strip(), query))
+    year = list(set(map(lambda x: str.strip(x), year)))
+    query = list(set(map(lambda x: str.strip(x), query)))
+    quarter = list(set(map(lambda x: str.strip(x), quarter)))
 
-    if False in map(str.isdecimal(), query):
+    if False in map(lambda x: str.isdecimal(x), query):
         raise ValueError("\nGeoid query input must only be numbers")
-    if False in map(str.isdecimal(), year):
+    if False in map(lambda x: str.isdecimal(x), year):
         raise ValueError("\nYear input must only be numbers")
-    if False in map(str.isdecimal(), quarter):
+    if False in map(lambda x: str.isdecimal(x), quarter):
         raise ValueError("\nQuarter input must only be numbers")
 
     for i in range(1, len(quarter)):
@@ -152,13 +151,13 @@ def cw_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple:
         if year[i] > date.year:
             raise ValueError("\nA year seems to be in the future?")
 
-    return(list(query, year, quarter, key))
+    return([query, year, quarter, key])
 
 
 
-def fmr_il_input_check_cleansing(query: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                                 year: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                                 key: str) -> list:
+def fmr_il_input_check_cleansing(query: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                                 year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                                 key: str) -> List[List]:
     """
     Helper function to clean user inputted variables for all
     fair markets rent[hud_fmr] and income limits[hud_il] function calls.
@@ -182,7 +181,10 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list: int, list: str, tu
 
     if not isinstance(year, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
         raise ValueError("\nYear should be int, str, or list or tuple of ints and strings.")
-
+    
+    if key == None:
+        raise ValueError("\nIt looks like the HUD_KEY was not set: use hud_set_key().")
+       
     if type(key) != str:
         raise ValueError("\nKey should be a string")
 
@@ -196,9 +198,6 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list: int, list: str, tu
     if not isinstance(year, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
         raise ValueError("\nYear should be int, str, or list or tuple of ints and strings.")
 
-    if(len(key) != 1):
-        raise ValueError("\nThere seems to be multiple keys specified.")
-
     if(key == ""):
         raise ValueError("\nDid you forget to set the key. Please go to " + 
                          "Please go to https://www.huduser.gov/" +
@@ -207,23 +206,23 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list: int, list: str, tu
                          "this to your environment using " +
                          "hud_set_key(your-key)")
     
-    key = unique(map(str.strip(), key))
-    year = unique(map(str.strip(), year))
-    query = unique(map(str.strip(), query))
+    key = list(set(map(lambda x: str.strip(x), key)))
+    year = list(set(map(lambda x: str.strip(x), year)))
+    query = list(set(map(lambda x: str.strip(x), query)))
 
-    if False in map(str.isdecimal(), query):
+    if False in map(lambda x: str.isdecimal(x), query):
         raise ValueError("\nGeoid query input must only be numbers")
-    if False in map(str.isdecimal(), year):
+    if False in map(lambda x: str.isdecimal(x), year):
         raise ValueError("\nYear input must only be numbers")
 
     for i in range(1, len(year)):
         if year[i] > date.year:
             raise ValueError("\nA year seems to be in the future?")
 
-    if all(map(len() == 2, query)):
-        query = map(str.upper(), query)
-    elif all(map(len() > 2, query)):
-        query = map(str.capitalize(), query)
+    if all(map(lambda x: len(x) == 2, query)):
+        query = map(lambda x: str.upper(x), query)
+    elif all(map(lambda x: len(x) > 2, query)):
+        query = map(lambda x: str.capitalize(x), query)
 
     if hudpkgenv.pkg_env["states"] == None:
         hudpkgenv.pkg_env["states"] = hudinputcheck.hud_nation_states_territories(key = key)
@@ -235,16 +234,16 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list: int, list: str, tu
     if len(set.intersection(query, hudpkgenv.pkg_env["states"]["state_num"])) != 0:  
         query = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_num"].isin(query))[2]
 
-    if all(map(len() == 10, query)):
+    if all(map(lambda x: len(x) == 10, query)):
         querytype = "county"
-    elif all(map(len() == 2, query)):
+    elif all(map(lambda x: len(x) == 2, query)):
         querytype = "state"
-    elif all(map(len() == 16), query):
+    elif all(map(lambda x: len(x) == 16), query):
         querytype = "cbsa"
     else:
         raise ValueError("\nThere is no matching fips code for one of the inputted states")
 
-    return(list(query, year, key, [querytype]))
+    return([query, year, key, [querytype]])
 
 
 
@@ -256,7 +255,7 @@ def crosswalk_a_dataset_input_check_cleansing(data,
                                               method: str, 
                                               year: Union[int, str], 
                                               quarter: Union[int, str], 
-                                              key: str) -> list:
+                                              key: str) -> List[List]:
     """
     Helper function to clean user inputted variables for the crosswalk() function.
 
@@ -298,12 +297,11 @@ def crosswalk_a_dataset_input_check_cleansing(data,
     if len(geoid) > 1 or len(geoid_col) > 1 or \
        len(year) > 1 or len(quarter) > 1:
         raise ValueError("\nMake sure geoid, geoid_col, year, and quarter arguments are of length 1.")
-
+    if key == None:
+        raise ValueError("\nIt looks like the HUD_KEY was not set: use hud_set_key().")
+       
     if type(key) != str:
         raise ValueError("\nKey should be a string")
-
-    if(len(key) != 1):
-        raise ValueError("\nThere seems to be multiple keys specified.")
 
     if(key == ""):
         raise ValueError("\nDid you forget to set the key. Please go to " + 
@@ -319,6 +317,6 @@ def crosswalk_a_dataset_input_check_cleansing(data,
                                     key = key
                                     )
 
-    return(list(geoid, geoid_col, cw_geoid, cw_geoid_col, method, 
-                args[2], args[3], args[4]))
+    return([geoid, geoid_col, cw_geoid, cw_geoid_col, method, 
+                args[2], args[3], args[4]])
     

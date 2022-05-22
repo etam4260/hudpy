@@ -1,19 +1,19 @@
 import hudinputcheck
 import hudcw
 import os
-from typing import Union
-from datetime import date
+from typing import Union, List, Tuple
+from datetime import date, timedelta
 import pandas as pd
 import hudinternetonline
 
 def crosswalk(data: pd.DataFrame,
               geoid: str,
-              geoid_col: Union[int, str, list:int, list:str, None],
+              geoid_col: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
               cw_geoid: str,
-              cw_geoid_col: Union[int, str, list:int, list:str, None] = None, 
+              cw_geoid_col: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = None, 
               method: Union[str, None] = None,
-              year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-              quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+              year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+              quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
               key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to crosswalk a dataframe using the US Department of Housing and Urban Development 

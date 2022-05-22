@@ -1,1 +1,1 @@
-pkg_env = dict()
+pkg_env = dict(states = None, pool_manager = None)

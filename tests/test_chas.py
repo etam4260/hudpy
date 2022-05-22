@@ -3,7 +3,7 @@ import pytest
 import os
 import hudpy.huduser
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
 def test_chas_all_types():
     
     # Nation
@@ -27,7 +27,7 @@ def test_chas_all_types():
     assert len(city) == 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
 def test_chas_diff_years():
     # Only checking entire Nation CHAS and varying different year inputs.
 
@@ -56,7 +56,4 @@ def test_chas_diff_years():
     y5 = hudpy.huduser.hud_chas(1, year = ["2014-2018", "2013-2017"])
     assert len(y5) == 2
 
-
-if __name__ == '__main__':
-    pytest.main()
 

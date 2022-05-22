@@ -1,16 +1,17 @@
-from datetime import date
+from datetime import date, timedelta
 import os
 import itertools
-from typing import Union
+from typing import Union, List, Tuple
 import pandas as pd
 import hudinputcheck
 import hudinternetonline
+import huddoquerycalls
 
-def hud_cw_zip_tract(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                     year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                     quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_zip_tract(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                     year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                     quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                      minimal: bool = False,
-                     key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                     key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -59,26 +60,29 @@ def hud_cw_zip_tract(zip: Union[int, str, list: int, list: str, tuple: Union[int
     Examples
     --------
 
-    >>> hud_cw_zip_tract(zip = '35213', year = c('2010'), quarter = c('1'))
+    >>> hud_cw_zip_tract(zip = '35213', year = '2010', quarter = '1')
     
-    >>> hud_cw_zip_tract(zip = '35213', year = c('2010'), quarter = c('1'),
+    >>> hud_cw_zip_tract(zip = '35213', year = '2010', quarter = '1',
         minimal = TRUE)
 
     """
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
+    
     primary_geoid = "zip"
     secondary_geoid = "tract"
 
     args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
-    zip = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
-
-
-    if any(len(zip) != 5):
+    zip = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
+    
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -89,34 +93,34 @@ def hud_cw_zip_tract(zip: Union[int, str, list: int, list: str, tuple: Union[int
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
-            "&query" +
-            all_queries[i, 1] +
-            "&year" +
-            all_queries[i, 2] +
-            "&quarter" +
-            all_queries[i, 3] 
+            "&query=" +
+            all_queries[i][0] +
+            "&year=" +
+            all_queries[i][1] +
+            "&quarter=" +
+            all_queries[i][2] 
         )
+    
 
-
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
 
-def hud_cw_zip_county(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                      year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                      quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_zip_county(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                      year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                      quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                       minimal: bool = False,
-                      key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                      key: str = None) -> pd.DataFrame:
     """ 
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -173,18 +177,21 @@ def hud_cw_zip_county(zip: Union[int, str, list: int, list: str, tuple: Union[in
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     primary_geoid = "zip"
     secondary_geoid = "county"
 
     args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
-    zip = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    zip = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(zip) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
     all_queries = list(itertools.product(zip, year, quarter))
@@ -195,32 +202,32 @@ def hud_cw_zip_county(zip: Union[int, str, list: int, list: str, tuple: Union[in
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
-def hud_cw_zip_cbsa(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                    year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                    quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_zip_cbsa(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                    year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                    quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                     minimal: bool = False,
-                    key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                    key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -242,6 +249,7 @@ def hud_cw_zip_cbsa(zip: Union[int, str, list: int, list: str, tuple: Union[int,
 
     key : The API key for this user. You must go to HUD and sign up for an
         account and request for an API key.
+        
     See Also
     --------
     
@@ -276,18 +284,21 @@ def hud_cw_zip_cbsa(zip: Union[int, str, list: int, list: str, tuple: Union[int,
     """
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     primary_geoid = "zip"
     secondary_geoid = "cbsa"
 
     args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
-    zip = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    zip = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(zip) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -300,32 +311,32 @@ def hud_cw_zip_cbsa(zip: Union[int, str, list: int, list: str, tuple: Union[int,
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
-def hud_cw_zip_cbsadiv(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                       year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                       quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_zip_cbsadiv(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                       year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                       quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                        minimal: bool = False,
-                       key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                       key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -381,18 +392,21 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str, list: int, list: str, tuple: Union[i
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     primary_geoid = "zip"
     secondary_geoid = "cbsadiv"
 
     args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
-    zip = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    zip = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(zip) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -405,33 +419,33 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str, list: int, list: str, tuple: Union[i
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["tract"]
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key)
 
 
-def hud_cw_zip_cd(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                  year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                  quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_zip_cd(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                  year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                  quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                   minimal: bool = False,
-                  key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                  key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -487,18 +501,21 @@ def hud_cw_zip_cd(zip: Union[int, str, list: int, list: str, tuple: Union[int, s
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     primary_geoid = "zip"
     secondary_geoid = "cd"
 
     args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
-    zip = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    zip = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(zip) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -511,32 +528,32 @@ def hud_cw_zip_cd(zip: Union[int, str, list: int, list: str, tuple: Union[int, s
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
-def hud_cw_zip_countysub(zip: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                         year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                         quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_zip_countysub(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                         year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                         quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                          minimal: bool = False,
-                         key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                         key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -592,18 +609,21 @@ def hud_cw_zip_countysub(zip: Union[int, str, list: int, list: str, tuple: Union
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     primary_geoid = "zip"
     secondary_geoid = "countysub"
 
     args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
-    zip = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    zip = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(zip) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -616,32 +636,32 @@ def hud_cw_zip_countysub(zip: Union[int, str, list: int, list: str, tuple: Union
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
-def hud_cw_tract_zip(tract: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                     year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                     quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_tract_zip(tract: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                     year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                     quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                      minimal: bool = False,
-                     key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                     key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -698,17 +718,21 @@ def hud_cw_tract_zip(tract: Union[int, str, list: int, list: str, tuple: Union[i
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
+    
     primary_geoid = "tract"
     secondary_geoid = "zip"
 
     args = hudinputcheck.cw_input_check_cleansing(tract, year, quarter, key)
-    tract = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    tract = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(zip) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -721,33 +745,33 @@ def hud_cw_tract_zip(tract: Union[int, str, list: int, list: str, tuple: Union[i
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
   
 
-def hud_cw_county_zip(county: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                      year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                      quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_county_zip(county: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                      year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                      quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                       minimal: bool = False,
-                      key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                      key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -804,17 +828,20 @@ def hud_cw_county_zip(county: Union[int, str, list: int, list: str, tuple: Union
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     primary_geoid = "county"
     secondary_geoid = "zip"
 
     args = hudinputcheck.cw_input_check_cleansing(county, year, quarter, key)
-    county = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    county = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(zip) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -827,32 +854,32 @@ def hud_cw_county_zip(county: Union[int, str, list: int, list: str, tuple: Union
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
-def hud_cw_cbsa_zip(cbsa: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                    year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                    quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_cbsa_zip(cbsa: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                    year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                    quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                     minimal: bool = False,
-                    key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                    key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -909,18 +936,21 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, list: int, list: str, tuple: Union[int
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+    
     primary_geoid = "cbsa"
     secondary_geoid = "zip"
 
     args = hudinputcheck.cw_input_check_cleansing(cbsa, year, quarter, key)
-    cbsa = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    cbsa = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(cbsa) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -933,33 +963,33 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, list: int, list: str, tuple: Union[int
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
 
-def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                       year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                       quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                       year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                       quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                        minimal: bool = False,
-                       key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                       key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -1017,17 +1047,20 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list: int, list: str, tuple: Uni
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     primary_geoid = "cbsadiv"
     secondary_geoid = "zip"
 
     args = hudinputcheck.cw_input_check_cleansing(cbsadiv, year, quarter, key)
-    cbsadiv = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    cbsadiv = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(cbsadiv) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -1040,33 +1073,33 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list: int, list: str, tuple: Uni
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
 
-def hud_cw_cd_zip(cd: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                  year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                  quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_cd_zip(cd: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                  year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                  quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                   minimal: bool = False,
-                  key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                  key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -1123,18 +1156,21 @@ def hud_cw_cd_zip(cd: Union[int, str, list: int, list: str, tuple: Union[int, st
     """
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     primary_geoid = "cd"
     secondary_geoid = "zip"
 
     args = hudinputcheck.cw_input_check_cleansing(cd, year, quarter, key)
-    cd = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    cd = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(cd) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -1147,33 +1183,33 @@ def hud_cw_cd_zip(cd: Union[int, str, list: int, list: str, tuple: Union[int, st
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))
 
 
-def hud_cw_countysub_zip(countysub: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-                         year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-                         quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+def hud_cw_countysub_zip(countysub: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                         year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                         quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
                          minimal: bool = False,
-                         key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                         key: str = None) -> pd.DataFrame:
     """
     Function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This returns the crosswalk for
@@ -1231,18 +1267,21 @@ def hud_cw_countysub_zip(countysub: Union[int, str, list: int, list: str, tuple:
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     primary_geoid = "countysub"
     secondary_geoid = "zip"
 
     args = hudinputcheck.cw_input_check_cleansing(countysub, year, quarter, key)
-    countysub = args[1]
-    year = args[2]
-    quarter = args[3]
-    key = args[4]
+    countysub = args[0]
+    year = args[1]
+    quarter = args[2]
+    key = args[3]
 
 
-    if any(len(countysub) != 5):
+    if any(list(map(lambda x: len(x) != 5, zip))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -1255,23 +1294,23 @@ def hud_cw_countysub_zip(countysub: Union[int, str, list: int, list: str, tuple:
             "https://www.huduser.gov/hudapi/public/usps?type=" +
             "1" +
             "&query" +
-            all_queries[i, 1] +
+            all_queries[i][0] +
             "&year" +
-            all_queries[i, 2] +
+            all_queries[i][1] +
             "&quarter" +
-            all_queries[i, 3] 
+            all_queries[i][2] 
         )
 
 
-    if minimal == False:
-        return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    if minimal == True:
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"])
 
-    return(hudinputcheck.cw_do_query_calls(urls, all_queries[1],
-                                all_queries[2], all_queries[3],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+                                [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key))

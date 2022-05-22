@@ -1,5 +1,5 @@
-from typing import Union
-from datetime import date
+from typing import Union, List, Tuple
+from datetime import date, timedelta
 import os 
 import hudinternetonline
 import hudinputcheck
@@ -8,7 +8,7 @@ import hudpkgenv
 import hudmisc
 import itertools
 
-def hud_chas_nation(year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
+def hud_chas_nation(year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
                     key: str = os.getenv("HUD_KEY")):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
@@ -55,8 +55,8 @@ def hud_chas_nation(year: Union[int, str, list: int, list: str, tuple: Union[int
     return(huddoquerycalls.chas_do_query_calls(urls, key = key))
 
 
-def hud_chas_state(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                   year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
+def hud_chas_state(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                   year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
                    key: str = os.getenv("HUD_KEY")):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
@@ -143,8 +143,8 @@ def hud_chas_state(state: Union[int, str, list: int, list: str, tuple: Union[int
 
     return huddoquerycalls.chas_do_query_calls(urls, key = key)
 
-def hud_chas_county(county: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                    year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
+def hud_chas_county(county: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                    year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
                     key: str = os.getenv("HUD_KEY")):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
@@ -178,9 +178,9 @@ def hud_chas_county(county: Union[int, str, list: int, list: str, tuple: Union[i
     Examples
     --------
 
-    >>> hud_chas_county(county = c(06105, 06113))
+    >>> hud_chas_county(county = [06105, 06113])
 
-    >>> hud_chas_county(county = c("06105", "06113"), year = 2020)
+    >>> hud_chas_county(county = ["06105", "06113"], year = 2020)
 
     """
 
@@ -230,8 +230,8 @@ def hud_chas_county(county: Union[int, str, list: int, list: str, tuple: Union[i
 
     return huddoquerycalls.chas_do_query_calls(urls, key = key)
 
-def hud_chas_state_mcd(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                       year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
+def hud_chas_state_mcd(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                       year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
                        key: str = os.getenv("HUD_KEY")):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
@@ -272,8 +272,8 @@ def hud_chas_state_mcd(state: Union[int, str, list: int, list: str, tuple: Union
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
-def hud_chas_state_place(state: Union[int, str, list: int, list: str, tuple: Union[int, str]],
-                         year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"), 
+def hud_chas_state_place(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+                         year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
                          key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_chas_state_place

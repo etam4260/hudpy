@@ -3,7 +3,7 @@ import pytest
 import os
 import hudpy.hudchas
 import hudpy.hudmisc
-@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
 def test_chas_nation():
     # First make simple query call to hud_chas_nation() with no arguments.
     # Will choose default 2014-2018.
@@ -23,7 +23,7 @@ def test_chas_nation():
         hudpy.hudchas.hud_chas_nation(year = [2018, 2019])
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
 def test_chas_state():
     # Try querying for a state using abbreviation...
     # Try lowercase too... Try uppercase too...
@@ -68,7 +68,7 @@ def test_chas_state():
     assert len(all_state_num) == 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
 def test_chas_county():
     test = hudpy.hudchas.hud_chas_county(county = "06105")
     assert len(test) == 1
@@ -94,7 +94,7 @@ def test_chas_county():
     assert len(all_md) >= 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
 def test_chas_mcd():
 
     # This will take a while...
@@ -102,6 +102,3 @@ def test_chas_mcd():
 
     assert len(all_md) == 1
 
-
-    if __name__ == '__main__':
-        pytest.main()

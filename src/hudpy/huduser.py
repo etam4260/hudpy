@@ -1,17 +1,17 @@
 import os
 from datetime import date
-from typing import Union
-from pandas import DataFrame
+from typing import Union, List, Tuple
+import pandas as pd
 import hudinternetonline
 import hudinputcheck
 import hudfmr
 
 def hud_cw(type: Union[str, int],
-           query: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-           year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-           quarter: Union[int, str, list:, list: str, tuple: Union[int, str]] = 1,
+           query: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = None,
+           year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - 365).strftime("%Y"),
+           quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
            minimal: bool = False,
-           key: str = os.getenv("HUD_KEY")) -> DataFrame:
+           key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Omni-function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This follows closely 
@@ -118,9 +118,9 @@ def hud_cw(type: Union[str, int],
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
 
-def hud_fmr(query: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-            year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-            key: str = os.getenv("HUD_KEY")) -> DataFrame:
+def hud_fmr(query: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = None,
+            year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - 365).strftime("%Y"),
+            key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
     Department of Housing and Urban Development. This function encapsulated
@@ -196,9 +196,9 @@ def hud_fmr(query: Union[int, str, list: int, list: str, tuple: Union[int, str]]
     
 
 
-def hud_il(query: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-           year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-           key: str = os.getenv("HUD_KEY")) -> DataFrame:
+def hud_il(query: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = None,
+           year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - 365).strftime("%Y"),
+           key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query the Income Limits API provided by US
     Department of Housing and Urban Development. Measurements are provided at 
@@ -236,10 +236,10 @@ def hud_il(query: Union[int, str, list: int, list: str, tuple: Union[int, str]] 
 
 
 def hud_chas(type: Union[str, int],
-             state_id: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-             entity_id: Union[int, str, list: int, list: str, tuple: Union[int, str]] = None,
-             year: Union[int, str, list: int, list: str, tuple: Union[int, str]] = (date.today() - 365).strftime("%Y"),
-             key: str = os.getenv("HUD_KEY")) -> DataFrame:
+             state_id: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = None,
+             entity_id: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = None,
+             year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - 365).strftime("%Y"),
+             key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
     by the US Department of Housing and Urban Development. This returns CHAS measurements

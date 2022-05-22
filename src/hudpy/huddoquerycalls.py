@@ -1,12 +1,13 @@
 import urllib3
 import pandas as pd
 import huddownloadbar
-from typing import Union 
+from typing import Union, List, Tuple
 import json
 import hudinternetonline
 from distutils.log import warn
+import hudpkgenv
 
-def chas_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
+def chas_do_query_calls(urls: Union[str, List[str]], key: str) -> pd.DataFrame:
     """
     Helper function to query Comprehensive Housing and Affordability (CHAS) API from 
     the US Department of Housing and Urban Development for 
@@ -25,10 +26,8 @@ def chas_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
 
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
     error_urls = list()
-    res = pd.dataFrame()
+    res = pd.DataFrame()
 
     all_measurements = list("geoname", "sumlevel", "year",
                             "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9",
@@ -54,22 +53,25 @@ def chas_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
                             "J1", "J2", "J4", "J5", "J7", "J8", "J10",
                             "J11", "J13", "J14", "J16")
 
+    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    
     for i in range(len(urls)):
 
         url = urls[i]
-
+        
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = urllib3.http.request("GET", url, headers = headers, timeout = 30)
+        
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers, timeout = 30)
 
         cont = json.loads(call.data.decode('utf-8'))    
         cont = pd.json_normalize(cont) 
 
-        huddownloadbar.download_bar(i, len(urls))
+        huddownloadbar.download_bar(i + 1, len(urls))
 
         if "error" in cont.columns or len(cont) == 0:
             # Need to output a single error message instead of a bunch when
             # something bad occurs. Append to list of errored urls.
-            error_urls = error_urls.append(url)
+            error_urls.append(url)
         else:
             not_measured = all_measurements[all_measurements not in cont[1].columns]
             # Check this CHAS data does not have data defined for
@@ -79,9 +81,9 @@ def chas_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
                 extra_mes = pd.repeat(None, len(not_measured))
                 extra_mes.names = not_measured
 
-                res.append()
+                res = pd.concat([res, cont])
             else:
-                res.append()
+                res = pd.concat([res, cont])
             
     print("\n")
 
@@ -132,33 +134,36 @@ def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
 
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
     error_urls = list()
-    res = pd.dataFrame()
-
+    res = pd.DataFrame()
+  
+    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    
     for i in range(len(urls)):
 
         url = urls[i]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = urllib3.http.request("GET", url, headers = headers, timeout = 30)
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers, timeout = 30)
 
         cont = json.loads(call.data.decode('utf-8'))    
-        cont = pd.json_normalize(cont) 
+        cont = pd.json_normalize(cont["data"]["results"]) 
 
-        huddownloadbar.download_bar(i, len(urls))
+        huddownloadbar.download_bar(i + 1, len(urls))
 
         if "error" in cont.columns or len(cont) == 0:
             # Need to output a single error message instead of a bunch when
             # something bad occurs. Append to list of errored urls.
-            error_urls = error_urls.append(url)
+            error_urls.append(url)
         else:
-            
+            cont["query"] = [item for item in query for i in range(len(cont))]
+            cont["year"] = [item for item in year for i in range(len(cont))]
+            cont["quarter"] = [item for item in quarter for i in range(len(cont))]
+            res = pd.concat([res, cont])
     
             
     print("\n")
-
+    
     # Spit out error messages to user after all
     # queries are done.
     if (len(error_urls) != 0):
@@ -175,7 +180,7 @@ def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
     return(res)
 
 
-def misc_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
+def misc_do_query_calls(urls: Union[str, List[str]], key: str) -> pd.DataFrame:
     """
     Helper function to query misc APIs from 
     the US Department of Housing and Urban Development for 
@@ -192,31 +197,33 @@ def misc_do_query_calls(urls: Union[list: str, str], key: str) -> pd.DataFrame:
     -------
     This concatenates the response bodies from all urls call as a dataframe.
     """    
-    
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     error_urls = list()
     res = pd.DataFrame()
 
 
+    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    
+    
     for i in range(len(urls)):
 
         url = urls[i]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = urllib3.http.request("GET", url, headers = headers, timeout = 30)
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers, timeout = 30)
 
         cont = json.loads(call.data.decode('utf-8'))    
         cont = pd.json_normalize(cont) 
 
-        huddownloadbar.download_bar(i, len(urls))
+        huddownloadbar.download_bar(i + 1, len(urls))
 
         if "error" in cont.columns or len(cont) == 0:
             # Need to output a single error message instead of a bunch when
             # something bad occurs. Append to list of errored urls.
-            error_urls = error_urls.append(url)
+            error_urls.append(url)
         else:
-            res.append(cont)
+           
+            res = pd.concat([res, cont])
    
             
     print("\n")

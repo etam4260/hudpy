@@ -14,8 +14,11 @@ def internet_on() -> bool:
     --------
     >>> internet_on()
     """
-    try:
-        urllib3.urlopen('http://216.58.192.142', timeout=1)
+    http = urllib3.PoolManager()
+    r = http.request('GET', 'https://github.com')
+    r.status
+    
+    if(r.status == 200):
         return True
-    except urllib3.URLError as err: 
+    else:
         return False

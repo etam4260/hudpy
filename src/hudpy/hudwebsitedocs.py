@@ -1,9 +1,9 @@
 import os
 import platform
 import hudinternetonline
-from typing import Union
+from typing import Union, Tuple, List
 
-def hudpy_website(website: Union[str, int, list: int, list: str, tuple: Union[int, str]] = ["github-pages", "github"]):
+def hudpy_website(website: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = ["github-pages", "github"]):
     """
     Function to quickly open the associated website documentation for the hudpy package.
 

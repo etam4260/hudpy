@@ -24,7 +24,6 @@ def download_bar(done : int = None, total : int = None, percentage : float = Non
     >>> download_bar(10, 20)
 
     """
-
     done_perc = done/total
     remain_perc = (total-done)/total
 
@@ -36,8 +35,8 @@ def download_bar(done : int = None, total : int = None, percentage : float = Non
         remain_bar = "-" * math.floor(remain_perc * 50)
     
     # Create the entire loading bar
-    loading = "Downloading\t" + "[" + done_bars + remain_bars + "]\t" + \
-                round(done_perc * 100, 0), "%\t" + done + "/" + total
+    loading = "Downloading\t" + "[" + str(done_bars) + str(remain_bars) + "]\t" + \
+                str(round(done_perc * 100, 0)) + "%\t" + str(done) + "/" + str(total)
 
     # Print to the same line over and over again in the terminal. 
-    print("\r" + loading, end = "")
+    print("\r" + str(loading), end = "")
