@@ -1,13 +1,17 @@
-import os
-from typing import Union, List, Tuple
+from __future__ import annotations
+from typing import Union
+
 import urllib3 
 import pandas as pd
-import hudpkgenv
+
+import os
 import re
 import json
 import itertools
-import huddoquerycalls
-import hudinternetonline
+
+from hudpy import hudpkgenv
+from hudpy import huddoquerycalls
+from hudpy import hudinternetonline
 
 def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """ 
@@ -63,7 +67,7 @@ def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFra
 
 
 
-def hud_state_metropolitan(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                            key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
@@ -101,7 +105,7 @@ def hud_state_metropolitan(state: Union[int, str, List[int], List[str], Tuple[in
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
-    if not isinstance(state, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(state, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
     state = [state] if isinstance(state, str) or isinstance(state, int) else state
@@ -151,10 +155,10 @@ def hud_state_metropolitan(state: Union[int, str, List[int], List[str], Tuple[in
     cont["metro_state"] = parsed_state
     cont["classifications"] = classifications
 
-    if all(map(len() == 2, state)):
-        state = map(str.upper(), state)
-    elif all(map(len() > 2, state)):
-        state = map(str.capitalize(), state)
+    if all(list(map(lambda x: len(x) == 2), state)):
+        state = list(map(lambda x: str.upper(x), state))
+    elif all(list(map(lambda x: len(x) > 2), state)):
+        state = list(map(lambda x: str.capitalize(x), state))
 
     if hudpkgenv.pkg_env["states"] == None:
         hudpkgenv.pkg_env["states"] = hud_nation_states_territories(key = key)
@@ -177,7 +181,7 @@ def hud_state_metropolitan(state: Union[int, str, List[int], List[str], Tuple[in
 
 
 
-def hud_state_counties(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+def hud_state_counties(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                        key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
@@ -216,7 +220,7 @@ def hud_state_counties(state: Union[int, str, List[int], List[str], Tuple[int], 
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
-    if not isinstance(state, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(state, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
     state = [state] if isinstance(state, str) or isinstance(state, int) else state
@@ -269,7 +273,7 @@ def hud_state_counties(state: Union[int, str, List[int], List[str], Tuple[int], 
 
 
 
-def hud_state_places(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                      key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
@@ -308,7 +312,7 @@ def hud_state_places(state: Union[int, str, List[int], List[str], Tuple[int], Tu
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
-    if not isinstance(state, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(state, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
     state = [state] if isinstance(state, str) or isinstance(state, int) else state
@@ -361,7 +365,7 @@ def hud_state_places(state: Union[int, str, List[int], List[str], Tuple[int], Tu
 
 
 
-def hud_state_minor_civil_divisions(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
+def hud_state_minor_civil_divisions(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                                     key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
@@ -400,7 +404,7 @@ def hud_state_minor_civil_divisions(state: Union[int, str, List[int], List[str],
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
-    if not isinstance(state, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(state, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
     state = [state] if isinstance(state, str) or isinstance(state, int) else state

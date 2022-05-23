@@ -1,9 +1,13 @@
+from __future__ import annotations
+from typing import Union
+
 import os
 import platform
-import hudinternetonline
-from typing import Union, Tuple, List
 
-def hudpy_website(website: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = ["github-pages", "github"]):
+from hudpy import hudinternetonline
+
+def hudpy_website(website: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = ["github-pages", "github"]):
+    
     """
     Function to quickly open the associated website documentation for the hudpy package.
 

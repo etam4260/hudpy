@@ -1,12 +1,14 @@
-from enum import unique
-from datetime import date
-import hudpkgenv
-from typing import Union, List, Tuple
-import hudinputcheck
+from __future__ import annotations
 
-def chas_input_check_cleansing(query: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                               year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                               key: str) -> List[List]:
+from datetime import date
+from typing import Union
+
+from hudpy import hudpkgenv
+from hudpy import hudinputcheck
+
+def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                               year: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                               key: str) -> list[list]:
     """
     Helper function to clean user inputted variables for all
     CHAS (Comprehensive Housing and Affordability)[hud_chas] function calls.
@@ -27,10 +29,10 @@ def chas_input_check_cleansing(query: Union[int, str, List[int], List[str], Tupl
 
     """
     
-    if not isinstance(query, Union[int, str, List[int], List[str], Tuple[int], Tuple[str]].__args__) :
+    if not isinstance(query, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
-    if not isinstance(year, Union[int, str, List[int], List[str], Tuple[int], Tuple[str]].__args__) :
+    if not isinstance(year, (int, str, list)) :
         raise ValueError("\nYear should be int, str, or list or tuple of ints and strings.")
     
     if key == None:
@@ -39,8 +41,8 @@ def chas_input_check_cleansing(query: Union[int, str, List[int], List[str], Tupl
     if type(key) != str:
         raise ValueError("\nKey should be a string")
 
-    year = [year] if isinstance(year, str) or isinstance(year, int) else year
-    query = [query] if isinstance(query, str) or isinstance(query, int) else query
+    year = [str(year)] if isinstance(year, str) or isinstance(year, int) else list(map(lambda x: str(x), year))
+    query = [str(query)] if isinstance(query, str) or isinstance(query, int) else list(map(lambda x: str(x), query))
 
     if(key == ""):
         raise ValueError("\nDid you forget to set the key. Please go to " + 
@@ -50,7 +52,6 @@ def chas_input_check_cleansing(query: Union[int, str, List[int], List[str], Tupl
                          "this to your environment using " +
                          "hud_set_key(your-key)")
 
-    key = list(set(map(lambda x: str.strip(x), key)))
     year = list(set(map(lambda x: str.strip(x), year)))
 
     possible_years = list("2014-2018", "2013-2017",
@@ -59,8 +60,8 @@ def chas_input_check_cleansing(query: Union[int, str, List[int], List[str], Tupl
                           "2008-2012", "2007-2011",
                           "2006-2010")
 
-    for i in range(1, len(year)):
-        if year[i] not in possible_years:
+    for i in range(0, len(year)):
+        if int(year[i]) not in possible_years:
             raise ValueError("\nOne of the years does not fall into the values" +
                              "expected")
     if query is not None:
@@ -73,10 +74,10 @@ def chas_input_check_cleansing(query: Union[int, str, List[int], List[str], Tupl
     return([year, key])
 
 
-def cw_input_check_cleansing(query: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                             year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                             quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                             key: str) -> List[List]:
+def cw_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                             year: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                             quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                             key: str) -> list[list]:
     """
     Helper function to clean user inputted variables for all
     crosswalk[hud_cw] function calls.
@@ -88,7 +89,7 @@ def cw_input_check_cleansing(query: Union[int, str, List[int], List[str], Tuple[
         1) zipcode
         2) tract
         3) county
-        4) countsub
+        4) countysub
         5) cbsa
         6) cbsadiv
 
@@ -104,13 +105,13 @@ def cw_input_check_cleansing(query: Union[int, str, List[int], List[str], Tuple[
     This returns a list of the cleaned user inputs.
     """
     
-    if not isinstance(query, Union[int, str, List[int], List[str], Tuple[int], Tuple[str]].__args__) :
+    if not isinstance(query, (int, str, list)):
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
-    if not isinstance(year, Union[int, str, List[int], List[str], Tuple[int], Tuple[str]].__args__) :
+    if not isinstance(year, (int, str, list)) :
         raise ValueError("\nYear should be int, str, or list or tuple of ints and strings.")
 
-    if not isinstance(quarter, Union[int, str, List[int], List[str], Tuple[int], Tuple[str]].__args__) :
+    if not isinstance(quarter, (int, str, list)) :
         raise ValueError("\nQuarter should be int, str, or list or tuple of ints and strings.")
     
     if key == None:
@@ -119,9 +120,9 @@ def cw_input_check_cleansing(query: Union[int, str, List[int], List[str], Tuple[
     if type(key) != str:
         raise ValueError("\nKey should be a string")
     
-    query = [query] if isinstance(query, str) or isinstance(query, int) else query
-    year = [year] if isinstance(year, str) or isinstance(year, int) else year
-    quarter =  [quarter] if isinstance(quarter, str) or isinstance(quarter, int) else quarter
+    query = [str(query)] if isinstance(query, str) or isinstance(query, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), query))))
+    year = [str(year)] if isinstance(year, str) or isinstance(year, int) else list(map(lambda x: str(x), year))
+    quarter =  [str(quarter)] if isinstance(quarter, str) or isinstance(quarter, int) else list(map(lambda x: str(x), quarter))
     
     
     if(key == ""):
@@ -143,21 +144,21 @@ def cw_input_check_cleansing(query: Union[int, str, List[int], List[str], Tuple[
     if False in map(lambda x: str.isdecimal(x), quarter):
         raise ValueError("\nQuarter input must only be numbers")
 
-    for i in range(1, len(quarter)):
+    for i in range(0, len(quarter)):
         if int(quarter[i]) > 4 or int(quarter[i]) < 1:
             raise ValueError("\nQuarters must be from 1 to 4")
 
-    for i in range(1, len(year)):
-        if year[i] > date.year:
+    for i in range(0, len(year)):
+        if int(year[i]) > int(date.today().strftime("%Y")):
             raise ValueError("\nA year seems to be in the future?")
 
     return([query, year, quarter, key])
 
 
 
-def fmr_il_input_check_cleansing(query: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                                 year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                                 key: str) -> List[List]:
+def fmr_il_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                                 year: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                                 key: str) -> list[list]:
     """
     Helper function to clean user inputted variables for all
     fair markets rent[hud_fmr] and income limits[hud_il] function calls.
@@ -176,10 +177,10 @@ def fmr_il_input_check_cleansing(query: Union[int, str, List[int], List[str], Tu
 
     This returns a list of the cleaned user inputs.
     """
-    if not isinstance(query, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(query, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
-    if not isinstance(year, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
+    if not isinstance(year, (int, str, list)) :
         raise ValueError("\nYear should be int, str, or list or tuple of ints and strings.")
     
     if key == None:
@@ -188,15 +189,9 @@ def fmr_il_input_check_cleansing(query: Union[int, str, List[int], List[str], Tu
     if type(key) != str:
         raise ValueError("\nKey should be a string")
 
-    query = [query] if isinstance(query, str) or isinstance(query, int) else query
-    year = [year] if isinstance(year, str) or isinstance(year, int) else year
+    query = [str(query)] if isinstance(query, str) or isinstance(query, int) else list(map(lambda x: str(x), query))
+    year = [str(year)] if isinstance(year, str) or isinstance(year, int) else list(map(lambda x: str(x), year))
 
-
-    if not isinstance(query, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
-        raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
-
-    if not isinstance(year, Union[int, str, list: int, list: str, tuple: Union[int, str]].__args__) :
-        raise ValueError("\nYear should be int, str, or list or tuple of ints and strings.")
 
     if(key == ""):
         raise ValueError("\nDid you forget to set the key. Please go to " + 
@@ -215,8 +210,8 @@ def fmr_il_input_check_cleansing(query: Union[int, str, List[int], List[str], Tu
     if False in map(lambda x: str.isdecimal(x), year):
         raise ValueError("\nYear input must only be numbers")
 
-    for i in range(1, len(year)):
-        if year[i] > date.year:
+    for i in range(0, len(year)):
+        if int(year[i]) > int(date.today().strftime("%Y")):
             raise ValueError("\nA year seems to be in the future?")
 
     if all(map(lambda x: len(x) == 2, query)):
@@ -255,7 +250,7 @@ def crosswalk_a_dataset_input_check_cleansing(data,
                                               method: str, 
                                               year: Union[int, str], 
                                               quarter: Union[int, str], 
-                                              key: str) -> List[List]:
+                                              key: str) -> list[list]:
     """
     Helper function to clean user inputted variables for the crosswalk() function.
 

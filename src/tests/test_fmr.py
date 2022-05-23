@@ -1,10 +1,9 @@
-import hudpy
 import pytest
 import os
 import hudpy.huduser
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_omni_fmr_state_query():
     
     va = hudpy.huduser.hud_fmr("VA", year = [2021])
@@ -20,7 +19,7 @@ def test_omni_fmr_state_query():
     assert len(al) >= 1
     
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_omni_fmr_county_query():
    
     c1 = hudpy.huduser.hud_fmr("5100199999", year = [2021])
@@ -33,7 +32,7 @@ def test_omni_fmr_county_query():
     assert len(c3) >= 1
     
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_omni_fmr_small_area():
     
     sa1 = hudpy.huduser.hud_fmr("METRO47900M47900", year = [2018])
@@ -46,7 +45,7 @@ def test_omni_fmr_small_area():
     assert len(sa3) >= 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_omni_fmr_diff_years():
     
     y1 = hudpy.huduser.hud_fmr("AL", year = [2020])

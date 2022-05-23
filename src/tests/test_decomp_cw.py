@@ -1,11 +1,10 @@
-from numpy import count_nonzero
 import hudpy
 import pytest
 import os
 import hudpy.hudcw
 import hudpy.hudmisc
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_zip_tract():
     res = hudpy.hudcw.hud_cw_zip_tract(zip = "35213",
                                 year = ["2010"], quarter = ["1"])
@@ -24,11 +23,12 @@ def test_cw_zip_tract():
     assert len(res) >= 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_zip_county():
 
     res = hudpy.hudcw.hud_cw_zip_county(zip = 35213, year = ["2020"], quarter = ["2"])
     assert len(res) >= 1
+
     with pytest.raises(ValueError) as e_info:
         hudpy.hudcw.hud_cw_zip_county(zip = "3521334",
                                     year = ["2010"], quarter = ["1"])
@@ -41,7 +41,7 @@ def test_cw_zip_county():
     assert len(res) >= 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_zip_cbsa():
     
     res = hudpy.hudcw.hud_cw_zip_cbsa(zip = 35213, year = ["2020"], quarter = ["2"])
@@ -58,24 +58,25 @@ def test_cw_zip_cbsa():
     assert len(res) >= 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_zip_cbsadiv():
 
-    res = hudpy.hudcw.hud_cw_zip_cbsadiv(zip = 35213, year = ["2020"], quarter = ["2"])
+    res = hudpy.hudcw.hud_cw_zip_cbsadiv(zip = 22031, year = ["2020"], quarter = ["2"])
     assert len(res) >= 1
+    
     with pytest.raises(ValueError) as e_info:
         hudpy.hudcw.hud_cw_zip_cbsadiv(zip = "3521334",
-                                    year = ["2010"], quarter = ["1"])
+                                    year = ["2018"], quarter = ["1"])
     with pytest.raises(ValueError) as e_info:
         hudpy.hudcw.hud_cw_zip_cbsadiv(zip = ["3521334", "32133"],
-                                    year = ["2010"], quarter = ["1"])
+                                    year = ["2018"], quarter = ["1"])
 
-    res = hudpy.hudcw.hud_cw_zip_cbsadiv(zip = "35213", year = ["2010"],
-                            quarter = ["1"], minimal = True)
+    res = hudpy.hudcw.hud_cw_zip_cbsadiv(zip = "22031", year = ["2020"],
+                            quarter = ["2"], minimal = True)
     assert len(res) >= 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_zip_cd():
     
     res = hudpy.hudcw.hud_cw_zip_cd(zip = 35213, year = ["2020"], quarter = ["2"])
@@ -92,7 +93,7 @@ def test_cw_zip_cd():
     assert len(res) >= 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_tract_zip():
     
     res = hudpy.hudcw.hud_cw_tract_zip(tract = 48201223100, year = ["2020"], quarter = ["2"])
@@ -110,7 +111,7 @@ def test_cw_tract_zip():
     assert len(res) >= 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_county_zip():
 
     res = hudpy.hudcw.hud_cw_county_zip(county = "22031", year = ["2010"], quarter = ["1"])
@@ -124,7 +125,7 @@ def test_cw_county_zip():
         hudpy.hudcw.hud_cw_county_zip(county = ["3521334", "32133"],
                                  year = ["2010"], quarter = ["1"])
 
-    res <- hudpy.hudcw.hud_cw_county_zip(county = "22031", year = ["2010"],
+    res = hudpy.hudcw.hud_cw_county_zip(county = "22031", year = ["2010"],
                            quarter = ["1"], minimal = True)
     
     assert len(res) >= 1
@@ -136,7 +137,7 @@ def test_cw_county_zip():
     
     assert len(all_md >= 1)
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_cbsa_zip():
 
     res = hudpy.hudcw.hud_cw_cbsa_zip(cbsa = "10140", year = ["2010"], quarter = ["1"])
@@ -150,31 +151,31 @@ def test_cw_cbsa_zip():
         hudpy.hudcw.hud_cw_cbsa_zip(cbsa = ["3521334", "32133"],
                                  year = ["2010"], quarter = ["1"])
 
-    res <- hudpy.hudcw.hud_cw_cbsa_zip(cbsa = "10140", year = ["2010"],
+    res = hudpy.hudcw.hud_cw_cbsa_zip(cbsa = "10140", year = ["2010"],
                            quarter = ["1"], minimal = True)
     
     assert len(res) >= 1
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_cbsadiv_zip():
 
-    res = hudpy.hudcw.hud_cw_cbsadiv_zip(cbsadiv = "10380", year = ["2010"], quarter = ["1"])
+    res = hudpy.hudcw.hud_cw_cbsadiv_zip(cbsadiv = "10380", year = ["2017"], quarter = ["4"])
     assert len(res) >= 1
 
     with pytest.raises(ValueError) as e_info:
         hudpy.hudcw.hud_cw_cbsadiv_zip(cbsadiv = "3521334",
-                                 year = ["2010"], quarter = ["1"])
+                                 year = ["2017"], quarter = ["4"])
 
     with pytest.raises(ValueError) as e_info:
         hudpy.hudcw.hud_cw_cbsadiv_zip(cbsadiv = ["3521334", "32133"],
-                                 year = ["2010"], quarter = ["1"])
+                                 year = ["2017"], quarter = ["4"])
 
-    res <- hudpy.hudcw.hud_cw_cbsadiv_zip(cbsa = 10380, year = ["2010"],
-                           quarter = ["1"], minimal = True)
+    res = hudpy.hudcw.hud_cw_cbsadiv_zip(cbsadiv = 10380, year = ["2017"],
+                           quarter = ["4"], minimal = True)
     
     assert len(res) >= 1
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_cd_zip():
     
     res = hudpy.hudcw.hud_cw_cd_zip(cd= "2202", year = ["2010"], quarter = ["1"])
@@ -193,10 +194,10 @@ def test_cw_cd_zip():
     
     assert len(res) >= 1
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_zip_countysub():
     res = hudpy.hudcw.hud_cw_zip_countysub(zip = "35213",
-                                year = ["2010"], quarter = ["1"])
+                                year = ["2019"], quarter = ["1"])
     assert len(res) >= 1
     
     with pytest.raises(ValueError) as e_info:
@@ -207,14 +208,14 @@ def test_cw_zip_countysub():
         hudpy.hudcw.hud_cw_zip_countysub(zip = ["3521334", "32133"],
                                 year = ["2010"], quarter = ["1"])
 
-    res = hudpy.hudcw.hud_cw_zip_countysub(zip = "35213", year = ["2010"],
+    res = hudpy.hudcw.hud_cw_zip_countysub(zip = "35213", year = ["2019"],
                            quarter = ["1"], minimal = True)          
     assert len(res) >= 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_countysub_zip():
-    res = hudpy.hudcw.hud_cw_countysub_zip(countysub = "4606720300 ", year = ["2010"], quarter = ["1"])
+    res = hudpy.hudcw.hud_cw_countysub_zip(countysub = "4606720300 ", year = ["2019"], quarter = ["1"])
     assert len(res) >= 1
 
     with pytest.raises(ValueError) as e_info:
@@ -225,7 +226,7 @@ def test_cw_countysub_zip():
         hudpy.hudcw.hud_cw_countysub_zip(countysub = ["3521334", "32133"],
                                  year = ["2010"], quarter = ["1"])
 
-    res = hudpy.hudcw.hud_cw_countysub_zip(countysub = 4606720300, year = ["2010"],
+    res = hudpy.hudcw.hud_cw_countysub_zip(countysub = 4606720300, year = ["2019"],
                            quarter = ["1"], minimal = True)
     
     assert len(res) >= 1

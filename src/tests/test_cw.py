@@ -1,10 +1,9 @@
-import hudpy
 import pytest
 import os
 import hudpy.huduser
 import hudpy.hudmisc
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_all_types():
 
     # Lets try a ZIP code in Alabama for now for 1 -> 5 as well as 11.
@@ -96,7 +95,7 @@ def test_cw_all_types():
     assert len(countysub_zip) >= 1
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_diff_years():
     # Error when years are in the future
     with pytest.raises(ValueError) as e_info:
@@ -110,7 +109,7 @@ def test_cw_diff_years():
                          year = ["2010", "2011"],
                          quarter = ["1", "2", "3", "4", "5"])
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == "", "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == "", reason="HUD_KEY not available.")
 def test_cw_wrong_query():
     with pytest.raises(ValueError) as e_info:
         hudpy.huduser.hud_cw(type = 7, query = "22031241231",
@@ -124,7 +123,7 @@ def test_cw_wrong_query():
                         quarter = ["1", "1", "2", "3", "4"])
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_not_convert_int():
     # Character arguments that aren"t numbers in any of them. Throws errors.
     hudpy.huduser.hud_cw(type = "dwqji", query = "22031",

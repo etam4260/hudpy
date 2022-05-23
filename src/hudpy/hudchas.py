@@ -1,14 +1,17 @@
-from typing import Union, List, Tuple
+from __future__ import annotations
+from typing import Union
+
 from datetime import date, timedelta
 import os 
-import hudinternetonline
-import hudinputcheck
-import huddoquerycalls
-import hudpkgenv
-import hudmisc
 import itertools
 
-def hud_chas_nation(year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+from hudpy import hudinternetonline
+from hudpy import hudinputcheck
+from hudpy import huddoquerycalls
+from hudpy import hudpkgenv
+from hudpy import hudmisc
+
+def hud_chas_nation(year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
                     key: str = os.getenv("HUD_KEY")):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
@@ -55,8 +58,8 @@ def hud_chas_nation(year: Union[int, str, List[int], List[str], Tuple[int], Tupl
     return(huddoquerycalls.chas_do_query_calls(urls, key = key))
 
 
-def hud_chas_state(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                   year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
+def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                   year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
                    key: str = os.getenv("HUD_KEY")):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
@@ -143,8 +146,8 @@ def hud_chas_state(state: Union[int, str, List[int], List[str], Tuple[int], Tupl
 
     return huddoquerycalls.chas_do_query_calls(urls, key = key)
 
-def hud_chas_county(county: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                    year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
+def hud_chas_county(county: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                    year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
                     key: str = os.getenv("HUD_KEY")):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
@@ -230,8 +233,8 @@ def hud_chas_county(county: Union[int, str, List[int], List[str], Tuple[int], Tu
 
     return huddoquerycalls.chas_do_query_calls(urls, key = key)
 
-def hud_chas_state_mcd(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                       year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
+def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                       year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
                        key: str = os.getenv("HUD_KEY")):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
@@ -272,8 +275,8 @@ def hud_chas_state_mcd(state: Union[int, str, List[int], List[str], Tuple[int], 
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
-def hud_chas_state_place(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                         year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
+def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                         year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
                          key: str = os.getenv("HUD_KEY")):
     """
     #' @name hud_chas_state_place

@@ -1,6 +1,5 @@
 import os
 
-
 def hud_get_key() -> str:
     """
     Get the current HUD_KEY environment variable.

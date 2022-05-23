@@ -1,15 +1,19 @@
+from __future__ import annotations
+from typing import Union
+
 from datetime import date, timedelta
+import pandas as pd
+
 import os
 import itertools
-from typing import Union, List, Tuple
-import pandas as pd
-import hudinputcheck
-import hudinternetonline
-import huddoquerycalls
 
-def hud_cw_zip_tract(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                     year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                     quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+from hudpy import hudinputcheck
+from hudpy import hudinternetonline
+from hudpy import huddoquerycalls
+
+def hud_cw_zip_tract(zip: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                     year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                     quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                      minimal: bool = False,
                      key: str = None) -> pd.DataFrame:
     """
@@ -107,18 +111,18 @@ def hud_cw_zip_tract(zip: Union[int, str, List[int], List[str], Tuple[int], Tupl
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["tract"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key).reset_index())
 
 
-def hud_cw_zip_county(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                      year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                      quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_zip_county(zip: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                      year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                      quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                       minimal: bool = False,
                       key: str = None) -> pd.DataFrame:
     """ 
@@ -200,12 +204,12 @@ def hud_cw_zip_county(zip: Union[int, str, List[int], List[str], Tuple[int], Tup
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "2" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
@@ -215,17 +219,17 @@ def hud_cw_zip_county(zip: Union[int, str, List[int], List[str], Tuple[int], Tup
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["county"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key).reset_index())
 
-def hud_cw_zip_cbsa(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                    year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                    quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_zip_cbsa(zip: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                    year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                    quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                     minimal: bool = False,
                     key: str = None) -> pd.DataFrame:
     """
@@ -309,12 +313,12 @@ def hud_cw_zip_cbsa(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "3" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
@@ -324,17 +328,17 @@ def hud_cw_zip_cbsa(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["cbsa"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key).reset_index())
 
-def hud_cw_zip_cbsadiv(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                       year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                       quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_zip_cbsadiv(zip: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                       year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                       quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                        minimal: bool = False,
                        key: str = None) -> pd.DataFrame:
     """
@@ -417,33 +421,33 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str, List[int], List[str], Tuple[int], Tu
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "4" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
 
     if minimal == True:
-        return huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"]
+                                key)["cbsadiv"].reset_index())
 
-    return huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)
+                                key))
 
 
-def hud_cw_zip_cd(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                  year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                  quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_zip_cd(zip: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                  year: Union[int, str, list[int], List[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                  quarter: Union[int, str, list[int], List[str], tuple[int], tuple[str]] = 1,
                   minimal: bool = False,
                   key: str = None) -> pd.DataFrame:
     """
@@ -526,12 +530,12 @@ def hud_cw_zip_cd(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[s
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "5" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
@@ -541,17 +545,17 @@ def hud_cw_zip_cd(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[s
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["cd"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key).reset_index())
 
-def hud_cw_zip_countysub(zip: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                         year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                         quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_zip_countysub(zip: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                         year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                         quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                          minimal: bool = False,
                          key: str = None) -> pd.DataFrame:
     """
@@ -634,12 +638,12 @@ def hud_cw_zip_countysub(zip: Union[int, str, List[int], List[str], Tuple[int], 
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "11" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
@@ -649,17 +653,17 @@ def hud_cw_zip_countysub(zip: Union[int, str, List[int], List[str], Tuple[int], 
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["countysub"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key).reset_index())
 
-def hud_cw_tract_zip(tract: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                     year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                     quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_tract_zip(tract: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                     year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                     quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                      minimal: bool = False,
                      key: str = None) -> pd.DataFrame:
     """
@@ -732,7 +736,7 @@ def hud_cw_tract_zip(tract: Union[int, str, List[int], List[str], Tuple[int], Tu
     key = args[3]
 
 
-    if any(list(map(lambda x: len(x) != 5, zip))):
+    if any(list(map(lambda x: len(x) != 11, tract))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -743,12 +747,12 @@ def hud_cw_tract_zip(tract: Union[int, str, List[int], List[str], Tuple[int], Tu
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "6" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
@@ -758,18 +762,18 @@ def hud_cw_tract_zip(tract: Union[int, str, List[int], List[str], Tuple[int], Tu
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["zip"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key).reset_index())
   
 
-def hud_cw_county_zip(county: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                      year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                      quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_county_zip(county: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                      year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                      quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                       minimal: bool = False,
                       key: str = None) -> pd.DataFrame:
     """
@@ -841,7 +845,7 @@ def hud_cw_county_zip(county: Union[int, str, List[int], List[str], Tuple[int], 
     key = args[3]
 
 
-    if any(list(map(lambda x: len(x) != 5, zip))):
+    if any(list(map(lambda x: len(x) != 5, county))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -852,12 +856,12 @@ def hud_cw_county_zip(county: Union[int, str, List[int], List[str], Tuple[int], 
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "7" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
@@ -867,17 +871,17 @@ def hud_cw_county_zip(county: Union[int, str, List[int], List[str], Tuple[int], 
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["zip"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key).reset_index())
 
-def hud_cw_cbsa_zip(cbsa: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                    year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                    quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_cbsa_zip(cbsa: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                    year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                    quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                     minimal: bool = False,
                     key: str = None) -> pd.DataFrame:
     """
@@ -950,7 +954,7 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, List[int], List[str], Tuple[int], Tupl
     key = args[3]
 
 
-    if any(list(map(lambda x: len(x) != 5, zip))):
+    if any(list(map(lambda x: len(x) != 5, cbsa))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -961,12 +965,12 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, List[int], List[str], Tuple[int], Tupl
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "8" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
@@ -976,18 +980,18 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, List[int], List[str], Tuple[int], Tupl
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["zip"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key).reset_index())
 
 
-def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                       year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                       quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                       year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                       quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                        minimal: bool = False,
                        key: str = None) -> pd.DataFrame:
     """
@@ -1060,7 +1064,7 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, List[int], List[str], Tuple[int]
     key = args[3]
 
 
-    if any(list(map(lambda x: len(x) != 5, zip))):
+    if any(list(map(lambda x: len(x) != 5, cbsadiv))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -1071,12 +1075,12 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, List[int], List[str], Tuple[int]
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "9" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
@@ -1086,7 +1090,7 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, List[int], List[str], Tuple[int]
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["zip"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
@@ -1095,9 +1099,9 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, List[int], List[str], Tuple[int]
                                 key))
 
 
-def hud_cw_cd_zip(cd: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                  year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                  quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_cd_zip(cd: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                  year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                  quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                   minimal: bool = False,
                   key: str = None) -> pd.DataFrame:
     """
@@ -1170,7 +1174,7 @@ def hud_cw_cd_zip(cd: Union[int, str, List[int], List[str], Tuple[int], Tuple[st
     key = args[3]
 
 
-    if any(list(map(lambda x: len(x) != 5, zip))):
+    if any(list(map(lambda x: len(x) != 4, cd))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -1181,12 +1185,12 @@ def hud_cw_cd_zip(cd: Union[int, str, List[int], List[str], Tuple[int], Tuple[st
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "10" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
@@ -1196,18 +1200,18 @@ def hud_cw_cd_zip(cd: Union[int, str, List[int], List[str], Tuple[int], Tuple[st
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["zip"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key).reset_index())
 
 
-def hud_cw_countysub_zip(countysub: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                         year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                         quarter: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+def hud_cw_countysub_zip(countysub: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                         year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                         quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                          minimal: bool = False,
                          key: str = None) -> pd.DataFrame:
     """
@@ -1281,7 +1285,7 @@ def hud_cw_countysub_zip(countysub: Union[int, str, List[int], List[str], Tuple[
     key = args[3]
 
 
-    if any(list(map(lambda x: len(x) != 5, zip))):
+    if any(list(map(lambda x: len(x) != 10, countysub))):
          raise ValueError("Query input is not of length 5")
 
 
@@ -1292,12 +1296,12 @@ def hud_cw_countysub_zip(countysub: Union[int, str, List[int], List[str], Tuple[
     for i in range(len(all_queries)):
         urls.append(
             "https://www.huduser.gov/hudapi/public/usps?type=" +
-            "1" +
-            "&query" +
+            "12" +
+            "&query=" +
             all_queries[i][0] +
-            "&year" +
+            "&year=" +
             all_queries[i][1] +
-            "&quarter" +
+            "&quarter=" +
             all_queries[i][2] 
         )
 
@@ -1307,10 +1311,10 @@ def hud_cw_countysub_zip(countysub: Union[int, str, List[int], List[str], Tuple[
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key)["tract"])
+                                key)["zip"].reset_index())
 
     return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
-                                key))
+                                key).reset_index())

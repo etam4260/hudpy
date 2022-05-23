@@ -1,8 +1,8 @@
-import hudpy.hudmisc
 import pytest
 import os
+import hudpy.hudmisc
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_misc_mcd_in_state():
     mcd = hudpy.hudmisc.hud_state_minor_civil_divisions("CA")
     assert len(mcd) > 1
@@ -28,7 +28,7 @@ def test_misc_mcd_in_state():
         hudpy.hudmisc.hud_state_minor_civil_divisions("CA", "qdqdwq")
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_misc_cities_in_state():
     cities = hudpy.hudmisc.hud_state_places("NY")
     assert len(cities) >= 1
@@ -52,7 +52,7 @@ def test_misc_cities_in_state():
         hudpy.hudmisc.hud_state_places("CA", "qdqdwq")
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_misc_nation_states():
 
     states = hudpy.hudmisc.hud_nation_states_territories()
@@ -63,7 +63,7 @@ def test_misc_nation_states():
         hudpy.hudmisc.hud_nation_states_territories("CA", "qdqdwq")
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_misc_counties_in_state():
     
     counties = hudpy.hudmisc.hud_state_counties("MD")   
@@ -88,7 +88,7 @@ def test_misc_counties_in_state():
         hudpy.hudmisc.hud_state_counties("CA", "qdqdwq")
 
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == None, "HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_misc_small_areas_in_state():
 
     metro = hudpy.hudmisc.hud_state_metropolitan("CA")

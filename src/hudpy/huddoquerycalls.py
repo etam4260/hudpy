@@ -1,13 +1,16 @@
+from __future__ import annotations
+from typing import Union
+
 import urllib3
 import pandas as pd
-import huddownloadbar
-from typing import Union, List, Tuple
-import json
-import hudinternetonline
-from distutils.log import warn
-import hudpkgenv
 
-def chas_do_query_calls(urls: Union[str, List[str]], key: str) -> pd.DataFrame:
+import json
+from distutils.log import warn
+
+from hudpy import huddownloadbar
+from hudpy import hudpkgenv
+
+def chas_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
     """
     Helper function to query Comprehensive Housing and Affordability (CHAS) API from 
     the US Department of Housing and Urban Development for 
@@ -61,7 +64,7 @@ def chas_do_query_calls(urls: Union[str, List[str]], key: str) -> pd.DataFrame:
         
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
         
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers, timeout = 30)
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
 
         cont = json.loads(call.data.decode('utf-8'))    
         cont = pd.json_normalize(cont) 
@@ -144,21 +147,24 @@ def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
         url = urls[i]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers, timeout = 30)
-
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
+    
         cont = json.loads(call.data.decode('utf-8'))    
         cont = pd.json_normalize(cont["data"]["results"]) 
-
+        
         huddownloadbar.download_bar(i + 1, len(urls))
-
+        
         if "error" in cont.columns or len(cont) == 0:
             # Need to output a single error message instead of a bunch when
             # something bad occurs. Append to list of errored urls.
             error_urls.append(url)
         else:
-            cont["query"] = [item for item in query for i in range(len(cont))]
-            cont["year"] = [item for item in year for i in range(len(cont))]
-            cont["quarter"] = [item for item in quarter for i in range(len(cont))]
+    
+            cont.rename(columns = {'geoid': secondary_geoid}, inplace = True)
+            cont["query"] = [query[i] for j in range(0, cont.shape[0])]
+            cont["year"] = [year[i] for j in range(0, cont.shape[0])]
+            cont["quarter"] = [quarter[i] for j in range(0, cont.shape[0])]
+            
             res = pd.concat([res, cont])
     
             
@@ -180,7 +186,7 @@ def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
     return(res)
 
 
-def misc_do_query_calls(urls: Union[str, List[str]], key: str) -> pd.DataFrame:
+def misc_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
     """
     Helper function to query misc APIs from 
     the US Department of Housing and Urban Development for 
@@ -210,7 +216,7 @@ def misc_do_query_calls(urls: Union[str, List[str]], key: str) -> pd.DataFrame:
         url = urls[i]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers, timeout = 30)
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
 
         cont = json.loads(call.data.decode('utf-8'))    
         cont = pd.json_normalize(cont) 

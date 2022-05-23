@@ -1,16 +1,22 @@
+from __future__ import annotations
 from distutils.log import warn
-from sqlite3 import DatabaseError
-from typing import Union, List, Tuple
-import hudinputcheck
+from typing import Union
+
+import os
 import itertools
 import urllib3
 import pandas as pd
 import json
-import huddownloadbar
-import hudinternetonline
 
-def hud_fmr_state_metroareas(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
-                             year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = 1,
+from datetime import date
+from datetime import timedelta
+
+from hudpy import huddownloadbar
+from hudpy import hudinternetonline
+from hudpy import hudinputcheck
+
+def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
+                             year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                              key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
@@ -106,8 +112,8 @@ def hud_fmr_state_metroareas(state: Union[int, str, List[int], List[str], Tuple[
     return(result)
 
 
-def hud_fmr_state_counties(state: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                           year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                           year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
                            key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
@@ -202,8 +208,8 @@ def hud_fmr_state_counties(state: Union[int, str, List[int], List[str], Tuple[in
 
     return(result)
 
-def hud_fmr_county_zip(county: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]],
-                       year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                       year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
                        key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
@@ -286,8 +292,8 @@ def hud_fmr_county_zip(county: Union[int, str, List[int], List[str], Tuple[int],
             result.append(cont["data"]["counties"])
 
 
-def hud_fmr_metroarea_zip(metroarea: Union[str, List[str], Tuple[str]],
-                          year: Union[int, str, List[int], List[str], Tuple[int], Tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
+                          year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
                           key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
