@@ -64,10 +64,10 @@ def hud_cw_zip_tract(zip: Union[int, str, list[int], list[str], tuple[int], tupl
     Examples
     --------
 
-    >>> hud_cw_zip_tract(zip = '35213', year = '2010', quarter = '1')
+    >>> hud_cw_zip_tract(zip = "35213", year = "2010", quarter = "1")
     
-    >>> hud_cw_zip_tract(zip = '35213', year = '2010', quarter = '1',
-        minimal = TRUE)
+    >>> hud_cw_zip_tract(zip = "35213", year = "2010", quarter = "1",
+        minimal = True)
 
     """
     
@@ -76,7 +76,7 @@ def hud_cw_zip_tract(zip: Union[int, str, list[int], list[str], tuple[int], tupl
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
         
-    
+
     primary_geoid = "zip"
     secondary_geoid = "tract"
 
@@ -173,10 +173,10 @@ def hud_cw_zip_county(zip: Union[int, str, list[int], list[str], tuple[int], tup
     Examples
     --------
 
-    >>> hud_cw_zip_county(zip = '35213', year = c('2010'), quarter = c('1'))
+    >>> hud_cw_zip_county(zip = "35213", year = "2010", quarter = "1")
     
-    >>> hud_cw_zip_county(zip = '35213', year = c('2010'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_zip_county(zip = "35213", year = "2010", quarter = "1"),
+        minimal = True)
 
     """
 
@@ -281,10 +281,10 @@ def hud_cw_zip_cbsa(zip: Union[int, str, list[int], list[str], tuple[int], tuple
     Examples
     --------
 
-    >>> hud_cw_zip_cbsa(zip = '35213', year = c('2018'), quarter = c('1'))
+    >>> hud_cw_zip_cbsa(zip = "35213", year = "2018", quarter = "1")
     
-    >>> hud_cw_zip_cbsa(zip = '35213', year = c('2018'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_zip_cbsa(zip = '35213', year = "2018", quarter = "1",
+        minimal = True)
     """
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -389,10 +389,10 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str, list[int], list[str], tuple[int], tu
     Examples
     --------
 
-    >>> hud_cw_zip_cbsadiv(zip = '35213', year = c('2018'), quarter = c('1'))
+    >>> hud_cw_zip_cbsadiv(zip = "35213", year = "2018", quarter = "1")
     
-    >>> hud_cw_zip_cbsadiv(zip = '35213', year = c('2018'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_zip_cbsadiv(zip = "35213", year = "2018", quarter = "1",
+        minimal = True)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -498,10 +498,10 @@ def hud_cw_zip_cd(zip: Union[int, str, list[int], list[str], tuple[int], tuple[s
     Examples
     --------
 
-    >>> hud_cw_zip_cd(zip = '35213', year = c('2018'), quarter = c('1'))
+    >>> hud_cw_zip_cd(zip = "35213", year = "2018", quarter = "1")
     
-    >>> hud_cw_zip_cd(zip = '35213', year = c('2018'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_zip_cd(zip = "35213", year = "2018", quarter = "1",
+        minimal = True)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -606,10 +606,10 @@ def hud_cw_zip_countysub(zip: Union[int, str, list[int], list[str], tuple[int], 
     Examples
     --------
 
-    >>> hud_cw_zip_cd(zip = '35213', year = c('2018'), quarter = c('1'))
+    >>> hud_cw_zip_cd(zip = "35213", year = "2018", quarter = "1")
     
-    >>> hud_cw_zip_cd(zip = '35213', year = c('2018'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_zip_cd(zip = "35213", year = "2018", quarter = "1",
+        minimal = True)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -714,10 +714,10 @@ def hud_cw_tract_zip(tract: Union[int, str, list[int], list[str], tuple[int], tu
     Examples
     --------
 
-    >>> hud_cw_tract_zip(zip = '35213', year = c('2018'), quarter = c('1'))
+    >>> hud_cw_tract_zip(zip = "35213", year = "2018", quarter = "1")
     
-    >>> hud_cw_tract_zip(zip = '35213', year = c('2018'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_tract_zip(zip = "35213", year = "2018", quarter = "1",
+        minimal = True)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -824,10 +824,10 @@ def hud_cw_county_zip(county: Union[int, str, list[int], list[str], tuple[int], 
     Examples
     --------
 
-    >>> hud_cw_county_zip(zip = '35213', year = c('2018'), quarter = c('1'))
+    >>> hud_cw_county_zip(zip = "35213", year = "2018", quarter = "1")
     
-    >>> hud_cw_county_zip(zip = '35213', year = c('2018'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_county_zip(zip = "35213", year = "2018", quarter = "1",
+        minimal = True)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -933,10 +933,10 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, list[int], list[str], tuple[int], tupl
     Examples
     --------
 
-    >>> hud_cw_cbsa_zip(zip = '35213', year = c('2018'), quarter = c('1'))
+    >>> hud_cw_cbsa_zip(zip = "35213", year = "2018", quarter = "1")
     
-    >>> hud_cw_cbsa_zip(zip = '35213', year = c('2018'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_cbsa_zip(zip = "35213", year = "2018", quarter = "1",
+        minimal = True)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -1043,10 +1043,10 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list[int], list[str], tuple[int]
     Examples
     --------
 
-    >>> hud_cw_cbsadiv_zip(zip = '35213', year = c('2018'), quarter = c('1'))
+    >>> hud_cw_cbsadiv_zip(zip = "35213", year = "2018", quarter = "1")
     
-    >>> hud_cw_cbsadiv_zip(zip = '35213', year = c('2018'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_cbsadiv_zip(zip = "35213", year = "2018", quarter = "1",
+        minimal = True)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -1153,10 +1153,10 @@ def hud_cw_cd_zip(cd: Union[int, str, list[int], list[str], tuple[int], tuple[st
     Examples
     --------
 
-    >>> hud_cw_cd_zip(zip = '35213', year = c('2018'), quarter = c('1'))
+    >>> hud_cw_cd_zip(zip = "35213", year = "2018", quarter = "1")
     
-    >>> hud_cw_cd_zip(zip = '35213', year = c('2018'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_cd_zip(zip = "35213", year = "2018", quarter = "1",
+        minimal = True)
     """
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -1264,10 +1264,10 @@ def hud_cw_countysub_zip(countysub: Union[int, str, list[int], list[str], tuple[
     Examples
     --------
 
-    >>> hud_cw_countysub_zip(zip = '35213', year = c('2018'), quarter = c('1'))
+    >>> hud_cw_countysub_zip(zip = "35213", year = "2018", quarter = "1")
     
-    >>> hud_cw_countysub_zip(zip = '35213', year = c('2018'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw_countysub_zip(zip = "35213", year = "2018", quarter = "1",
+        minimal = True)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
