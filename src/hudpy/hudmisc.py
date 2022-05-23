@@ -172,6 +172,7 @@ def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[in
 
     if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hud_nation_states_territories(key = key)
+        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
     
     for i in range(0, len(state)):
         if state[i] not in hudpkgenv.pkg_env["states"].values:
@@ -256,6 +257,7 @@ def hud_state_counties(state: Union[int, str, list[int], list[str], tuple[int], 
 
     if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hud_nation_states_territories(key = key)
+        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
     
     for i in range(0, len(state)):
         if state[i] not in hudpkgenv.pkg_env["states"].values:
@@ -351,7 +353,8 @@ def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tu
 
     if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hud_nation_states_territories(key = key)
-    
+        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+        
     for i in range(0, len(state)):
         if state[i] not in hudpkgenv.pkg_env["states"].values:
             raise ValueError("There is no matching fips code for " + state[i])
@@ -447,7 +450,8 @@ def hud_state_minor_civil_divisions(state: Union[int, str, list[int], list[str],
 
     if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hud_nation_states_territories(key = key)
-    
+        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+        
     for i in range(0, len(state)):
         if state[i] not in hudpkgenv.pkg_env["states"].values:
             raise ValueError("There is no matching fips code for " + state[i])

@@ -59,7 +59,7 @@ def test_misc_nation_states():
     
     assert len(states) >= 1
 
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(TypeError) as e_info:
         hudpy.hudmisc.hud_nation_states_territories("CA", "qdqdwq")
 
 
@@ -111,5 +111,5 @@ def test_misc_small_areas_in_state():
     metro = hudpy.hudmisc.hud_state_metropolitan(["Ohio"])
     assert len(metro) >= 1
 
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(KeyError) as e_info:
         hudpy.hudmisc.hud_state_metropolitan("CA", "qdqdwq")
