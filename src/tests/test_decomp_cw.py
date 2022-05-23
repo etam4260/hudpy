@@ -132,10 +132,10 @@ def test_cw_county_zip():
 
 
     all_md_counties = hudpy.hudmisc.hud_state_counties("md")
-    all_md = hudpy.hudcw.hud_cw_county_zip(county = map(lambda x: x[0:4], all_md_counties["fips_code"]),
+    all_md = hudpy.hudcw.hud_cw_county_zip(county = list(map(lambda x: x[0:5], all_md_counties["fips_code"])),
                               year = ["2010"], quarter = ["1"])
     
-    assert len(all_md >= 1)
+    assert len(all_md) >= 1
 
 @pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_cbsa_zip():
