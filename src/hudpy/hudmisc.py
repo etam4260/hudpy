@@ -13,7 +13,7 @@ from hudpy import hudpkgenv
 from hudpy import huddoquerycalls
 from hudpy import hudinternetonline
 
-def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+def hud_nation_states_territories(key: str = None) -> pd.DataFrame:
     """ 
     Function to query misc API provided by the US Department of Housing and Urban Development. This returns
     all the states and territories in the US along with some associated metadata.
@@ -42,7 +42,10 @@ def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFra
     >>> hud_nation_states_territories()
    
     """
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")    
+    
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if type(key) != str:
@@ -58,7 +61,10 @@ def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFra
 
     urls = "https://www.huduser.gov/hudapi/public/fmr/listStates"
     headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-    call = urllib3.http.request("GET", urls, headers = headers, timeout = 30)
+    
+    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    
+    call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
 
     cont = json.loads(call.data.decode('utf-8'))    
     cont = pd.json_normalize(cont) 
@@ -68,7 +74,7 @@ def hud_nation_states_territories(key: str = os.getenv("HUD_KEY")) -> pd.DataFra
 
 
 def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                           key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                           key: str = None) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
     Get all metropolitan areas for queried states with their name and CBSA code.
@@ -102,7 +108,9 @@ def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[in
     >>> hud_state_metropolitan("VA")
 
     """
-
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if not isinstance(state, (int, str, list)) :
@@ -119,12 +127,13 @@ def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[in
                             "sign up and get a token. Save " +
                             "this to your environment using " +
                             "hud_set_key(your-key)")
-
-    http = urllib3.PoolManager()
     
     urls = "https://www.huduser.gov/hudapi/public/fmr/listMetroAreas"
     headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-    call = http.request("GET", urls, headers = headers, timeout = 30)
+    
+    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    
+    call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
     
     cont = json.loads(call.data.decode('utf-8'))    
     cont = pd.json_normalize(cont) 
@@ -155,34 +164,34 @@ def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[in
     cont["metro_state"] = parsed_state
     cont["classifications"] = classifications
 
-    if all(list(map(lambda x: len(x) == 2), state)):
+    if all(list(map(lambda x: len(x) == 2, state))):
         state = list(map(lambda x: str.upper(x), state))
-    elif all(list(map(lambda x: len(x) > 2), state)):
+    elif all(list(map(lambda x: len(x) > 2, state))):
         state = list(map(lambda x: str.capitalize(x), state))
 
-    if hudpkgenv.pkg_env["states"] == None:
+    if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hud_nation_states_territories(key = key)
     
     for i in range(0, len(state)):
-        if state[i] not in hudpkgenv.pkg_env["states"]:
+        if state[i] not in hudpkgenv.pkg_env["states"].values:
+        
             raise ValueError("There is no matching fips code for " + state[i])
 
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_name"])) != 0: 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
         # Not sure if this is right syntax... need to test it...
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_name"].isin(state))[2]
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_code"])) != 0:   
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_code"].isin(state))[2]
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_num"])) != 0:  
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_num"].isin(state))[2]
-
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_code"])
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_code"]) 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_code"])   
     cont = cont[cont["metro_state"].isin(state)]
 
-    return(cont)
+    return(cont.reset_index())
 
 
 
 def hud_state_counties(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                       key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                       key: str = None) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
     Get all counties for queried states with their name and fips code.
@@ -217,7 +226,10 @@ def hud_state_counties(state: Union[int, str, list[int], list[str], tuple[int], 
     >>> hud_state_counties("Virginia")
     >>> hud_state_counties("51")
     """
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+    
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if not isinstance(state, (int, str, list)) :
@@ -235,25 +247,26 @@ def hud_state_counties(state: Union[int, str, list[int], list[str], tuple[int], 
                             "this to your environment using " +
                             "hud_set_key(your-key)")
 
-    if all(map(len() == 2, state)):
-        state = map(str.upper(), state)
-    elif all(map(len() > 2, state)):
-        state = map(str.capitalize(), state)
+    if all(list(map(lambda x: len(x) == 2, state))):
+        state = list(map(lambda x: str.upper(x), state))
+    elif all(list(map(lambda x: len(x) > 2, state))):
+        state = list(map(lambda x: str.capitalize(x), state))
 
-    if hudpkgenv.pkg_env["states"] == None:
+
+    if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hud_nation_states_territories(key = key)
     
     for i in range(0, len(state)):
-        if state[i] not in hudpkgenv.pkg_env["states"]:
+        if state[i] not in hudpkgenv.pkg_env["states"].values:
             raise ValueError("There is no matching fips code for " + state[i])
 
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_name"])) != 0: 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
         # Not sure if this is right syntax... need to test it...
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_name"].isin(state))[2]
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_code"])) != 0:   
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_code"].isin(state))[2]
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_num"])) != 0:  
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_num"].isin(state))[2]
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_code"])
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_code"]) 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_code"])   
 
     all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/fmr/listCounties/"], state))
     
@@ -264,17 +277,17 @@ def hud_state_counties(state: Union[int, str, list[int], list[str], tuple[int], 
             all_queries[i][1]
         )
 
-    counties = huddoquerycalls.misc_do_query_call(urls, key)
+    counties = huddoquerycalls.misc_do_query_calls(urls, key)
 
     if (len(counties) > 1):
-        return(counties)
+        return(counties.reset_index())
     
     raise ValueError("Your key might be invalid or could not find counties for this state.")
 
 
 
 def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                     key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                     key: str = None) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
     Get all places for queried states with their name and place code.
@@ -309,7 +322,9 @@ def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tu
     >>> hud_state_places("Virginia")
     >>> hud_state_places("51")
     """
-
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if not isinstance(state, (int, str, list)) :
@@ -327,26 +342,26 @@ def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tu
                             "this to your environment using " +
                             "hud_set_key(your-key)")
                             
-    if all(map(len() == 2, state)):
-        state = map(str.upper(), state)
-    elif all(map(len() > 2, state)):
-        state = map(str.capitalize(), state)
+    if all(list(map(lambda x: len(x) == 2, state))):
+        state = list(map(lambda x: str.upper(x), state))
+    elif all(list(map(lambda x: len(x) > 2, state))):
+        state = list(map(lambda x: str.capitalize(x), state))
 
-    if hudpkgenv.pkg_env["states"] == None:
+
+    if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hud_nation_states_territories(key = key)
     
     for i in range(0, len(state)):
-        if state[i] not in hudpkgenv.pkg_env["states"]:
+        if state[i] not in hudpkgenv.pkg_env["states"].values:
             raise ValueError("There is no matching fips code for " + state[i])
 
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_name"])) != 0: 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
         # Not sure if this is right syntax... need to test it...
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_name"].isin(state))[2]
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_code"])) != 0:   
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_code"].isin(state))[2]
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_num"])) != 0:  
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_num"].isin(state))[2]
-
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_code"])
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_code"]) 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_code"])   
     all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/fmr/listCities/"], state))
     
     urls = []
@@ -356,17 +371,17 @@ def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tu
             all_queries[i][1]
         )
 
-    places = huddoquerycalls.misc_do_query_call(urls, key)
+    places = huddoquerycalls.misc_do_query_calls(urls, key)
 
     if (len(places) > 1):
-        return(places)
+        return(places.reset_index())
     
     raise ValueError("Your key might be invalid or could not find places for this state.")
 
 
 
 def hud_state_minor_civil_divisions(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                                    key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                                    key: str = None) -> pd.DataFrame:
     """
     Function to query misc API provided by the US Department of Housing and Urban Development. 
     Get all minor civil divisions for queried states with their name and mcd code.
@@ -401,7 +416,10 @@ def hud_state_minor_civil_divisions(state: Union[int, str, list[int], list[str],
     >>> hud_state_minor_civil_divisions("Virginia")
     >>> hud_state_minor_civil_divisions("51")
     """
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if not isinstance(state, (int, str, list)) :
@@ -418,27 +436,28 @@ def hud_state_minor_civil_divisions(state: Union[int, str, list[int], list[str],
                             "sign up and get a token. Save " +
                             "this to your environment using " +
                             "hud_set_key(your-key)")
-                            
-    if all(map(len() == 2, state)):
-        state = map(str.upper(), state)
-    elif all(map(len() > 2, state)):
-        state = map(str.capitalize(), state)
+                    
+            
+    if all(list(map(lambda x: len(x) == 2, state))):
+        state = list(map(lambda x: str.upper(x), state))
+    elif all(list(map(lambda x: len(x) > 2, state))):
+        state = list(map(lambda x: str.capitalize(x), state))
 
-    if hudpkgenv.pkg_env["states"] == None:
+
+    if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hud_nation_states_territories(key = key)
     
     for i in range(0, len(state)):
-        if state[i] not in hudpkgenv.pkg_env["states"]:
+        if state[i] not in hudpkgenv.pkg_env["states"].values:
             raise ValueError("There is no matching fips code for " + state[i])
 
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_name"])) != 0: 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
         # Not sure if this is right syntax... need to test it...
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_name"].isin(state))[2]
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_code"])) != 0:   
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_code"].isin(state))[2]
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_num"])) != 0:  
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_num"].isin(state))[2]
-
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_code"])
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_code"]) 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_code"])   
     all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/fmr/listMCDs/"], state))
     
     urls = []
@@ -448,9 +467,9 @@ def hud_state_minor_civil_divisions(state: Union[int, str, list[int], list[str],
             all_queries[i][1]
         )
 
-    mcd = huddoquerycalls.misc_do_query_call(urls, key)
+    mcd = huddoquerycalls.misc_do_query_calls(urls, key)
 
     if (len(mcd) > 1):
-        return(mcd)
+        return(mcd.reset_index())
     
     raise ValueError("Your key might be invalid or could not find mcds for this state.")

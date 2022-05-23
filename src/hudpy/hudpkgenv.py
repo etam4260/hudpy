@@ -1,1 +1,3 @@
-pkg_env = dict(states = None, pool_manager = None)
+import pandas as pd
+
+pkg_env = dict(states = pd.DataFrame(), pool_manager = None)

@@ -210,7 +210,6 @@ def misc_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
 
     if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
     
-    
     for i in range(len(urls)):
 
         url = urls[i]
