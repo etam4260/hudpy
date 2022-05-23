@@ -358,18 +358,18 @@ def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tu
 
     if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
         # Not sure if this is right syntax... need to test it...
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_code"])
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_num"])
     if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_code"]) 
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_num"]) 
     if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_code"])   
-    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/fmr/listCities/"], state))
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
+    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas/listCities/"], state))
     
     urls = []
     for i in range(0, len(all_queries)):
         urls.append(
             all_queries[i][0] + 
-            all_queries[i][1]
+            str(int(float(all_queries[i][1])))
         )
 
     places = huddoquerycalls.misc_do_query_calls(urls, key)
