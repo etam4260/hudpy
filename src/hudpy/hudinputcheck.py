@@ -5,6 +5,7 @@ from typing import Union
 
 from hudpy import hudpkgenv
 from hudpy import hudinputcheck
+from hudpy import hudmisc 
 
 def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                                year: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
@@ -43,7 +44,7 @@ def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tupl
 
     year = [str(year)] if isinstance(year, str) or isinstance(year, int) else list(map(lambda x: str(x), year))
     query = [str(query)] if isinstance(query, str) or isinstance(query, int) else list(map(lambda x: str(x), query))
-
+    
     if(key == ""):
         raise ValueError("\nDid you forget to set the key. Please go to " + 
                          "Please go to https://www.huduser.gov/" +
@@ -53,6 +54,8 @@ def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tupl
                          "hud_set_key(your-key)")
 
     year = list(set(map(lambda x: str.strip(x), year)))
+    query = list(set(map(lambda x: str.strip(x), query)))
+
 
     possible_years = list("2014-2018", "2013-2017",
                           "2012-2016", "2011-2015",
@@ -177,6 +180,7 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list[int], list[str], tu
 
     This returns a list of the cleaned user inputs.
     """
+   
     if not isinstance(query, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
@@ -192,7 +196,6 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list[int], list[str], tu
     query = [str(query)] if isinstance(query, str) or isinstance(query, int) else list(map(lambda x: str(x), query))
     year = [str(year)] if isinstance(year, str) or isinstance(year, int) else list(map(lambda x: str(x), year))
 
-
     if(key == ""):
         raise ValueError("\nDid you forget to set the key. Please go to " + 
                          "Please go to https://www.huduser.gov/" +
@@ -201,13 +204,10 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list[int], list[str], tu
                          "this to your environment using " +
                          "hud_set_key(your-key)")
     
-    key = list(set(map(lambda x: str.strip(x), key)))
     year = list(set(map(lambda x: str.strip(x), year)))
     query = list(set(map(lambda x: str.strip(x), query)))
 
-    if False in map(lambda x: str.isdecimal(x), query):
-        raise ValueError("\nGeoid query input must only be numbers")
-    if False in map(lambda x: str.isdecimal(x), year):
+    if False in list(map(lambda x: str.isdecimal(x), year)):
         raise ValueError("\nYear input must only be numbers")
 
     for i in range(0, len(year)):
@@ -215,26 +215,29 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list[int], list[str], tu
             raise ValueError("\nA year seems to be in the future?")
 
     if all(map(lambda x: len(x) == 2, query)):
-        query = map(lambda x: str.upper(x), query)
+        query = list(map(lambda x: str.upper(x), query))
     elif all(map(lambda x: len(x) > 2, query)):
-        query = map(lambda x: str.capitalize(x), query)
+        query = list(map(lambda x: str.capitalize(x), query))
 
-    if hudpkgenv.pkg_env["states"] == None:
-        hudpkgenv.pkg_env["states"] = hudinputcheck.hud_nation_states_territories(key = key)
-    
-    if len(set.intersection(query, hudpkgenv.pkg_env["states"]["state_name"])) != 0: 
-        query = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_name"].isin(query))[2]
-    if len(set.intersection(query, hudpkgenv.pkg_env["states"]["state_code"])) != 0:   
-        query = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_code"].isin(query))[2]
-    if len(set.intersection(query, hudpkgenv.pkg_env["states"]["state_num"])) != 0:  
-        query = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_num"].isin(query))[2]
-
-    if all(map(lambda x: len(x) == 10, query)):
+    if hudpkgenv.pkg_env["states"].empty:
+        hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
+        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+        
+    if len(set(query).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
+        # Not sure if this is right syntax... need to test it...
+        query = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(query)]["state_code"])
+    if len(set(query).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
+        query = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(query)]["state_code"]) 
+    if len(set(query).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
+        query = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(query)]["state_code"])   
+ 
+    if all(list(map(lambda x: len(x) == 10, query))):
         querytype = "county"
-    elif all(map(lambda x: len(x) == 2, query)):
+    elif all(list(map(lambda x: len(x) == 2, query))):
         querytype = "state"
-    elif all(map(lambda x: len(x) == 16), query):
+    elif all(list(map(lambda x: len(x) == 16, query))):
         querytype = "cbsa"
+        query = list(map(lambda x: str.upper(x), query))
     else:
         raise ValueError("\nThere is no matching fips code for one of the inputted states")
 

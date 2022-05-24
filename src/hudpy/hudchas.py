@@ -118,7 +118,8 @@ def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tupl
 
     if hudpkgenv.pkg_env["states"] == None:
         hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
-    
+        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+        
     for i in range(0, len(state)):
         if state[i] not in hudpkgenv.pkg_env["states"]:
             raise ValueError("There is no matching fips code for " + state[i])
@@ -205,7 +206,9 @@ def hud_chas_county(county: Union[int, str, list[int], list[str], tuple[int], tu
 
     if hudpkgenv.pkg_env["states"] == None:
         hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
-    
+        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+        
+        
     for i in range(0, len(state_fip)):
         if state_fip[i] not in hudpkgenv.pkg_env["states"]:
             raise ValueError("\nThere is no matching fips code for " + state_fip[i])

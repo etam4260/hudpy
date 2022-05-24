@@ -46,13 +46,15 @@ def hud_nation_states_territories(key: str = None) -> pd.DataFrame:
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")    
     
+    print(key)
+    
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if type(key) != str:
         raise ValueError("\nKey should be a string")
 
     if(key == ""):
-        raise ValueError("\nDid you forget to set the key. Please go to " + 
+        raise ValueError("\nDid you forget to set the key. " + 
                          "Please go to https://www.huduser.gov/" +
                          "hudapi/public/register?comingfrom=1 to " +
                          "sign up and get a token. Save " +
@@ -121,7 +123,7 @@ def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[in
     if type(key) != str:
         raise ValueError("\nKey should be a string")
     if(key == ""):
-        raise ValueError("Did you forget to set the key. Please go to " + 
+        raise ValueError("Did you forget to set the key. " + 
                             "Please go to https://www.huduser.gov/" +
                             "hudapi/public/register?comingfrom=1 to " +
                             "sign up and get a token. Save " +
@@ -242,7 +244,7 @@ def hud_state_counties(state: Union[int, str, list[int], list[str], tuple[int], 
     if type(key) != str:
         raise ValueError("\nKey should be a string")
     if(key == ""):
-        raise ValueError("Did you forget to set the key. Please go to " + 
+        raise ValueError("Did you forget to set the key. " + 
                             "Please go to https://www.huduser.gov/" +
                             "hudapi/public/register?comingfrom=1 to " +
                             "sign up and get a token. Save " +
@@ -338,7 +340,7 @@ def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tu
     if type(key) != str:
         raise ValueError("\nKey should be a string")
     if(key == ""):
-        raise ValueError("Did you forget to set the key. Please go to " + 
+        raise ValueError("Did you forget to set the key. " + 
                             "Please go to https://www.huduser.gov/" +
                             "hudapi/public/register?comingfrom=1 to " +
                             "sign up and get a token. Save " +
@@ -434,7 +436,7 @@ def hud_state_minor_civil_divisions(state: Union[int, str, list[int], list[str],
     if type(key) != str:
         raise ValueError("\nKey should be a string")
     if(key == ""):
-        raise ValueError("Did you forget to set the key. Please go to " + 
+        raise ValueError("Did you forget to set the key. " + 
                             "Please go to https://www.huduser.gov/" +
                             "hudapi/public/register?comingfrom=1 to " +
                             "sign up and get a token. Save " +

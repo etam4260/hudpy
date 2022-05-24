@@ -14,10 +14,11 @@ from datetime import timedelta
 from hudpy import huddownloadbar
 from hudpy import hudinternetonline
 from hudpy import hudinputcheck
+from hudpy import hudpkgenv
 
 def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
                              year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
-                             key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                             key: str = None) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
     Department of Housing and Urban Development. This returns metroarea
@@ -53,19 +54,23 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
     Examples
     --------
 
-    >>> hud_fmr_state_metroareas("VA", year = c(2021))
+    >>> hud_fmr_state_metroareas(state = "VA", year = 2021)
 
-    >>> hud_fmr_state_metroareas("Alabama", year = c(2021))
+    >>> hud_fmr_state_metroareas(state = "Alabama", year = 2021)
  
-    >>> hud_fmr_state_metroareas("24", year = c(2021)))
+    >>> hud_fmr_state_metroareas(state = "24", year = 2021)
     """  
     
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
     
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     args = hudinputcheck.fmr_il_input_check_cleansing(state, year, key)
-    query = args[1]
-    year = args[2]
-    key = args[3]
+    query = args[0]
+    year = args[1]
+    key = args[2]
+    querytype = args[3]
 
     error_urls = list()
 
@@ -74,27 +79,31 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
 
     # Make query calls for all queries.
     result = pd.DataFrame()
-
+   
+    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    
     for i in range(len(all_queries)):
         urls = "https://www.huduser.gov/hudapi/public/fmr/" + \
                "statedata/" + \
-               all_queries[i, 1] + \
+               all_queries[i][0] + \
                "?year=" + \
-               all_queries[i, 2]
+               all_queries[i][1]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = urllib3.http.request("GET", urls, headers = headers, timeout = 30)
-                            
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
+                               
         cont = json.loads(call.data.decode('utf-8'))
+        cont = pd.json_normalize(cont["data"]["metroareas"]) 
         
-        huddownloadbar.download_bar(i, len(all_queries))
+        huddownloadbar.download_bar(i + 1, len(all_queries))
 
         if "error" in cont.columns:
             error_urls.append(urls)
         else:
-            result.append(cont["data"]["metroareas"])
+            cont["year"] = [all_queries[i][1] for j in range(0, cont.shape[0])]
+            result = pd.concat([result, cont])
 
-   # Just print a newline
+    # Just print a newline
     print()
 
     if len(error_urls) != 0:
@@ -109,12 +118,12 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
 
         warn(warn_msg)
 
-    return(result)
+    return(result.reset_index())
 
 
 def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                            year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                           key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                           key: str = None) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
     Department of Housing and Urban Development. This returns county
@@ -150,20 +159,24 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
     Examples
     --------
 
-    >>> hud_fmr_state_counties("VA", year = c(2021))
+    >>> hud_fmr_state_counties(state = "VA", year = 2021)
 
-    >>> hud_fmr_state_counties("Alabama", year = c(2021))
+    >>> hud_fmr_state_counties(state = "Alabama", year = 2021)
  
-    >>> hud_fmr_state_counties("24", year = c(2021)))
+    >>> hud_fmr_state_counties(state = "24", year = 2021)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     args = hudinputcheck.fmr_il_input_check_cleansing(state, year, key)
-    query = args[1]
-    year = args[2]
-    key = args[3]
-
+    query = args[0]
+    year = args[1]
+    key = args[2]
+    querytype = args[3]
+    
     error_urls = list()
 
     # Create all combinations of query and year...
@@ -171,27 +184,32 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
 
     # Make query calls for all queries.
     result = pd.DataFrame()
-
+    
+    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+  
     for i in range(len(all_queries)):
         urls = "https://www.huduser.gov/hudapi/public/fmr/" + \
                "statedata/" + \
-               all_queries[i, 1] + \
+               all_queries[i][0] + \
                "?year=" + \
-               all_queries[i, 2]
+               all_queries[i][1]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = urllib3.http.request("GET", urls, headers = headers, timeout = 30)
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
                             
         cont = json.loads(call.data.decode('utf-8'))
+        cont = pd.json_normalize(cont["data"]["counties"]) 
         
-        huddownloadbar.download_bar(i, len(all_queries))
+        huddownloadbar.download_bar(i + 1, len(all_queries))
 
         if "error" in cont.columns:
             error_urls.append(urls)
         else:
-            result.append(cont["data"]["counties"])
+           
+            cont["year"] = [all_queries[i][1] for j in range(0, cont.shape[0])]
+            result = pd.concat([result, cont])
 
-   # Just print a newline
+    # Just print a newline
     print()
 
     if len(error_urls) != 0:
@@ -206,11 +224,12 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
 
         warn(warn_msg)
 
-    return(result)
+    return(result.reset_index())
+
 
 def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                        year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                       key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                       key: str = None) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
     Department of Housing and Urban Development. This returns zip code
@@ -245,19 +264,23 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
     Examples
     --------
 
-    >>> hud_fmr_county_zip("5100199999", year = c(2021))
+    >>> hud_fmr_county_zip(county = "5100199999", year = 2021)
  
-    >>> hud_fmr_county_zip("5100199999", year = c("2021"))
+    >>> hud_fmr_county_zip(county = "5100199999", year = "2021")
  
-    >>> hud_fmr_county_zip(5151099999, year = c(2021))
+    >>> hud_fmr_county_zip(county = 5151099999, year = 2021)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     args = hudinputcheck.fmr_il_input_check_cleansing(county, year, key)
-    query = args[1]
-    year = args[2]
-    key = args[3]
+    query = args[0]
+    year = args[1]
+    key = args[2]
+    querytype = args[3]
 
     error_urls = list()
 
@@ -274,27 +297,83 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
             all_queries[i][2] +
             all_queries[i][3]
         )
-
+ 
+    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    
     for i in range(len(urls)):
         url = urls[i]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = urllib3.http.request("GET", url, headers = headers, timeout = 30)
-
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
+                         
         cont = json.loads(call.data.decode('utf-8'))    
-        cont = pd.json_normalize(cont) 
+        content = pd.json_normalize(cont["data"]) 
+        
+    
+        huddownloadbar.download_bar(i + 1, len(urls))
 
-        huddownloadbar.download_bar(i, len(urls))
-
-        if "error" in cont.columns:
+        if "error" in content.columns:
             error_urls.append(urls)
         else:
-            result.append(cont["data"]["counties"])
+        
+            # The structure of data depends on small area.
+            if int(content["smallarea_status"]) == 0:
+                content.insert(0, "zip", [None])
+                
+                content.rename(columns={"basicdata.year": "year",
+                                        "basicdata.Efficiency": "Efficiency",
+                                        "basicdata.One-Bedroom": "One-Bedroom",
+                                        "basicdata.Two-Bedroom": "Two-Bedroom",
+                                        "basicdata.Three-Bedroom": "Three-Bedroom",
+                                        "basicdata.Four-Bedroom": "Four-Bedroom"
+                                       }, inplace = True)
+                
+                content["county"] = [all_queries[i][1] for j in range(0, content.shape[0])]
+                
+                result = pd.concat([result, content])
+             
+                
+            elif int(content["smallarea_status"]) == 1:
+                basicdata = pd.json_normalize(cont["data"]["basicdata"]) 
+                content = pd.concat([content] * basicdata.shape[0], ignore_index=True)
+                content.drop('basicdata', axis=1, inplace=True)
+                
+                
+                merged = pd.concat([content, basicdata], axis = 1)
+                zip = merged["zip_code"] 
+                merged.drop("zip_code", axis=1, inplace=True)
+                merged.insert(0, "zip", zip)
+                
+                year = merged["year"] 
+                merged.drop("year", axis=1, inplace=True)
+                merged["year"] = year
+                merged["county"] = [all_queries[i][1] for j in range(0, merged.shape[0])]
+                
+                # drop zip and move it
+                result = pd.concat([result, merged])
+
+            
+    if len(error_urls) != 0:
+        # Print all error urls
+        # Construct warning message...
+        
+        warn_msg = "Could not find data for queries: \n\n" + \
+                    "\n".join(error_urls) +  "\n" + \
+                    "It is possible that your key is invalid or there isn't \
+                    any data for these parameters. If you think this is wrong please \
+                    report it at https://github.com/etam4260/hudpy/issues"    
+
+
+        warn(warn_msg)       
+            
+            
+    return(result.reset_index())
+
 
 
 def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
                           year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                          key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+                          key: str = None) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
     Department of Housing and Urban Development. This returns zip code
@@ -329,20 +408,23 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
     Examples
     --------
 
-    >>> hud_fmr_metroarea_zip("METRO47900M47900", year = c(2018))
+    >>> hud_fmr_metroarea_zip(metroarea = "METRO47900M47900", year = 2018)
  
-    >>> hud_fmr_metroarea_zip("METRO29180N22001", year = c(2019))
+    >>> hud_fmr_metroarea_zip(metroarea = "METRO29180N22001", year = 2019)
  
-    >>> hud_fmr_metroarea_zip("METRO10380M10380", year = c(2020))
+    >>> hud_fmr_metroarea_zip(metroarea = "METRO10380M10380", year = 2020)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     args = hudinputcheck.fmr_il_input_check_cleansing(metroarea, year, key)
-    query = args[1]
-    year = args[2]
-    key = args[3]
+    query = args[0]
+    year = args[1]
+    key = args[2]
+    querytype = args[3]
 
     error_urls = list()
 
@@ -359,19 +441,72 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
             all_queries[i][2] +
             all_queries[i][3]
         )
-
+        
+    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    
     for i in range(len(urls)):
         url = urls[i]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = urllib3.http.request("GET", url, headers = headers, timeout = 30)
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
 
-        cont = json.loads(call.data.decode('utf-8'))    
-        cont = pd.json_normalize(cont) 
+        cont = json.loads(call.data.decode('utf-8'))  
+        content = pd.json_normalize(cont["data"]) 
+    
+        huddownloadbar.download_bar(i + 1, len(urls))
 
-        huddownloadbar.download_bar(i, len(urls))
-
-        if "error" in cont.columns:
+        if "error" in content.columns:
             error_urls.append(urls)
         else:
-            result.append(cont["data"]["counties"])
+            
+            # The structure of data depends on small area.
+            if int(content["smallarea_status"]) == 0:
+                content.insert(0, "zip", [None])
+                
+                content.rename(columns={"basicdata.year": "year",
+                                        "basicdata.Efficiency": "Efficiency",
+                                        "basicdata.One-Bedroom": "One-Bedroom",
+                                        "basicdata.Two-Bedroom": "Two-Bedroom",
+                                        "basicdata.Three-Bedroom": "Three-Bedroom",
+                                        "basicdata.Four-Bedroom": "Four-Bedroom"
+                                       }, inplace = True)
+                
+                content["metroarea"] = [all_queries[i][1] for j in range(0, content.shape[0])]
+                
+                result = pd.concat([result, content])
+                
+            elif int(content["smallarea_status"]) == 1:
+                basicdata = pd.json_normalize(cont["data"]["basicdata"]) 
+                content = pd.concat([content] * basicdata.shape[0], ignore_index=True)
+                content.drop('basicdata', axis=1, inplace=True)
+                
+                
+                merged = pd.concat([content, basicdata], axis = 1)
+                zip = merged["zip_code"] 
+                merged.drop("zip_code", axis=1, inplace=True)
+                merged.insert(0, "zip", zip)
+                
+                year = merged["year"] 
+                merged.drop("year", axis=1, inplace=True)
+                merged["year"] = year
+                merged["metroarea"] = [all_queries[i][1] for j in range(0, merged.shape[0])]
+                
+                # drop zip and move it
+                result = pd.concat([result, merged])
+    
+    
+    if len(error_urls) != 0:
+        # Print all error urls
+        # Construct warning message...
+        
+        warn_msg = "Could not find data for queries: \n\n" + \
+                    "\n".join(error_urls) +  "\n" + \
+                    "It is possible that your key is invalid or there isn't \
+                    any data for these parameters. If you think this is wrong please \
+                    report it at https://github.com/etam4260/hudpy/issues"    
+
+
+        warn(warn_msg)               
+            
+            
+    return(result.reset_index())
