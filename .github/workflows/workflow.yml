@@ -17,6 +17,8 @@ jobs:
     - name: Generate Report
       run: |
         pip install coverage
+        pip install pandas
+        pip install urllib3
         pip install pytest
         coverage run -m pytest
     - name: Upload Coverage to Codecov
