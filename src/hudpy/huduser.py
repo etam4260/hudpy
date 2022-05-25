@@ -5,13 +5,18 @@ import os
 from datetime import date
 import pandas as pd
 
+from datetime import date
+from datetime import timedelta
+
 from hudpy import hudinternetonline
 from hudpy import hudinputcheck
 from hudpy import hudfmr
+from hudpy import hudcw
+
 
 def hud_cw(type: Union[str, int],
            query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = None,
-           year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - 365).strftime("%Y"),
+           year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
            quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
            minimal: bool = False,
            key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
@@ -112,17 +117,141 @@ def hud_cw(type: Union[str, int],
     Examples
     --------
 
-    >>> hud_cw(type = 1, zip = '35213', year = c('2010'), quarter = c('1'))
+    >>> hud_cw(type = 1, zip = "35213", year = "2010", quarter = "1")
     
-    >>> hud_cw(type = 1, zip = '35213', year = c('2010'), quarter = c('1'),
-        minimal = TRUE)
+    >>> hud_cw(type = 1, zip = "35213", year = "2010", quarter = "1",
+        minimal = True)
+
+
+
+    >>> hud_cw(type = "2", query = "35213", year = ["2016", "2020"],
+       quarter = c("2"))
+
+    >>> hud_cw(type = "2", query = "35213", year = ["2016", "2020"],
+       quarter = c("2"), minimal = True)
+
+
+
+    >>> hud_cw(type = 3, query = 35213, year = ["2012", "2011"],
+       quarter = "3")
+
+    >>> hud_cw(type = 3, query = 35213, year = ["2012", "2011"],
+       quarter = "3", minimal = True)
+
+
+
+    >>> hud_cw(type = 4, query = "22031", year = c("2017", "2019"),
+       quarter = c("4"))
+       
+    >>> hud_cw(type = 4, query = "22031", year = c("2017", "2019"),
+       quarter = c("4"))
+
+
+
+    >>> hud_cw(type = "5", query = "35213", year = c(2011, "2012"),
+       quarter = c("1", "2"))
+
+    >>> hud_cw(type = "5", query = "35213", year = c(2011, "2012"),
+       quarter = c("1", "2"))
+
+
+
+    >>> hud_cw(type = 6, query = "48201223100", year = c("2017", "2010"),
+       quarter = c("1", "2", "3"))
+
+    >>> hud_cw(type = 6, query = "48201223100", year = c("2017", "2010"),
+       quarter = c("1", "2", "3"))
+
+
+
+    >>> hud_cw(type = 7, query = "22031", year = c("2010", "2011"),
+       quarter = c("1", "2", "3"))
+
+    >>> hud_cw(type = 7, query = "22031", year = c("2010", "2011"),
+       quarter = c("1", "2", "3"))
+
+
+
+    >>> hud_cw(type = 8, query = "10140", year = c("2010", "2011"),
+       quarter = c("1", "2"))
+
+    >>> hud_cw(type = 8, query = "10140", year = c("2010", "2011"),
+       quarter = c("1", "2"))
+
+
+
+    >>> hud_cw(type = 9, query = "10380", year = c("2017"),
+       quarter = c("1", "2", "3"))
+
+    >>> hud_cw(type = 9, query = "10380", year = c("2017"),
+       quarter = c("1", "2", "3"))
+
+
+
+    >>> hud_cw(type = 10, query = "2202", year = c("2010", "2011"),
+       quarter = c("4", "3"))
+
+    >>> hud_cw(type = 10, query = "2202", year = c("2010", "2011"),
+       quarter = c("4", "3"))
+
+
+
+    >>> hud_cw(type = 11, query = "35213", year = c("2019", "2020"),
+       quarter = c("2", "3"))
+       
+    >>> hud_cw(type = 11, query = "35213", year = c("2019", "2020"),
+       quarter = c("2", "3"))
+
+
+
+    >>> hud_cw(type = 12, query = "4606720300 ", year = c("2019", "2019", "2019"),
+       quarter = c("4", "4"))
+    >>> hud_cw(type = 12, query = "4606720300 ", year = c("2019", "2019", "2019"),
+       quarter = c("4", "4"))
+
     """
-
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    # Call the appropriate decomposed function depending on type specified
+    if type == 1 or type == "1" or type == "zip-tract" :
+        return(hudcw.hud_cw_zip_tract(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+    
+    elif type == 2 or type == "2" or type == "zip-county":
+        return(hudcw.hud_cw_zip_county(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+    
+    elif type == 3 or type == "3" or type == "zip-cbsa":
+        return(hudcw.hud_cw_zip_cbsa(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+    
+    elif type == 4 or type == "4" or type == "zip-cbsadiv":
+        return(hudcw.hud_cw_zip_cbsadiv(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+    
+    elif type == 5 or type == "5" or type == "zip-cd":
+        return(hudcw.hud_cw_zip_cd(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+    
+    elif type == 6 or type == "6" or type == "tract-zip":    
+        return(hudcw.hud_cw_tract_zip(tract = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        
+    elif type == 7 or type == "7" or type == "county-zip":
+        return(hudcw.hud_cw_county_zip(county = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        
+    elif type == 8 or type == "8" or type == "cbsa-zip":
+        return(hudcw.hud_cw_cbsa_zip(cbsa = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        
+    elif type == 9 or type == "9" or type == "cbsadiv-zip":
+        return(hudcw.hud_cw_cbsadiv_zip(cbsadiv = query, year = year, quarter = quarter, minimal = minimal, key = key))
+    elif type == 10 or type == "10" or type == "cd-zip":
+        return(hudcw.hud_cw_cd_zip(cd = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        
+    elif type == 11 or type == "11" or type == "zip-countysub": 
+        return(hudcw.hud_cw_zip_countysub(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))     
+    elif type == 12 or type == "12" or type == "countysub-zip":
+        return(hudcw.hud_cw_countysub_zip(countysub = query, year = year, quarter = quarter, minimal = minimal, key = key))
+    else:
+        raise ValueError("\nPlease check if the type argument is valid.")
+    
+    
 
 def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = None,
-            year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - 365).strftime("%Y"),
+            year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
             key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
@@ -176,31 +305,33 @@ def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
     args = hudinputcheck.fmr_il_input_check_cleansing(query, year, key)
 
-    query = args[1]
-    year = args[2]
-    key = args[3]
-    querytype = args[4]
+    query = args[0]
+    year = args[1]
+    key = args[2]
+    querytype = args[3]
 
     # If state query, will provide data at metro and county level
     # Call helper functions...
-    if (querytype == "state"):
+    if (querytype == ["state"]):
         # Merge county level data with metroarea data.
-        return(list(counties = hudfmr.hud_fmr_state_counties(query, year, key),
-                    metroareas = hudfmr.hud_fmr_state_metroareas(query, year, key)))
-    elif querytype == "cbsa":
+        return({"counties": hudfmr.hud_fmr_state_counties(query, year, key),
+                    "metroareas": hudfmr.hud_fmr_state_metroareas(query, year, key)})
+    elif querytype == ["cbsa"]:
         # Returns zip level data.
         return(hudfmr.hud_fmr_metroarea_zip(query, year, key))
-    elif querytype == "county":
+    elif querytype == ["county"]:
         # Returns zip level data.
         return(hudfmr.hud_fmr_county_zip(query, year, key))
     
 
-
 def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = None,
-           year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - 365).strftime("%Y"),
+           year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
            key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query the Income Limits API provided by US
@@ -237,11 +368,15 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
+    
+    
+    
+    
 
 def hud_chas(type: Union[str, int],
              state_id: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = None,
              entity_id: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = None,
-             year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - 365).strftime("%Y"),
+             year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
              key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided

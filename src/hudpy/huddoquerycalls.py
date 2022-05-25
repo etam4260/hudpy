@@ -67,16 +67,18 @@ def chas_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
         call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
 
         cont = json.loads(call.data.decode('utf-8'))    
-        cont = pd.json_normalize(cont) 
-
+       
         huddownloadbar.download_bar(i + 1, len(urls))
 
-        if "error" in cont.columns or len(cont) == 0:
+        if "error" in pd.json_normalize(cont).columns:
             # Need to output a single error message instead of a bunch when
             # something bad occurs. Append to list of errored urls.
             error_urls.append(url)
         else:
+            cont = pd.json_normalize(cont["data"]["results"]) 
+         
             not_measured = all_measurements[all_measurements not in cont[1].columns]
+              
             # Check this CHAS data does not have data defined for
             # all expected fields. If so fill them in with NA's.
 
@@ -97,11 +99,12 @@ def chas_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
         # queries are done.
 
         warn("Could not find data for queries: \n\n" +
-             " ".join(map(lambda x: "*" + x, error_urls)) +
+             "\n".join(map(lambda x: "*" + x, error_urls)) +
              "\n\nIt is possible that your key maybe invalid or " +
              "there isn't any data for these parameters, " +
              "If you think this is wrong please " +
-             "report it at https://github.com/etam4260/rhud/issues.")
+             "report it at https://github.com/etam4260/hudpy/issues.")
+
 
     return(res)
 
@@ -150,16 +153,17 @@ def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
         call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
     
         cont = json.loads(call.data.decode('utf-8'))    
-        cont = pd.json_normalize(cont["data"]["results"]) 
-        
+    
         huddownloadbar.download_bar(i + 1, len(urls))
-        
-        if "error" in cont.columns or len(cont) == 0:
+
+        if "error" in pd.json_normalize(cont).columns:
+            
             # Need to output a single error message instead of a bunch when
             # something bad occurs. Append to list of errored urls.
             error_urls.append(url)
         else:
-    
+            cont = pd.json_normalize(cont["data"]["results"]) 
+        
             cont.rename(columns = {'geoid': secondary_geoid}, inplace = True)
             cont["query"] = [query[i] for j in range(0, cont.shape[0])]
             cont["year"] = [year[i] for j in range(0, cont.shape[0])]
@@ -173,15 +177,16 @@ def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
     # Spit out error messages to user after all
     # queries are done.
     if (len(error_urls) != 0):
+        
         # Spit out error messages to user after all
         # queries are done.
-
         warn("Could not find data for queries: \n\n" +
-             " ".join(map(lambda x: "*" + x, error_urls)) +
+             "\n".join(map(lambda x: "*" + x, error_urls)) +
              "\n\nIt is possible that your key maybe invalid or " +
              "there isn't any data for these parameters, " +
              "If you think this is wrong please " +
-             "report it at https://github.com/etam4260/rhud/issues.")
+             "report it at https://github.com/etam4260/hudpy/issues.")
+
 
     return(res)
 
@@ -222,7 +227,7 @@ def misc_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
 
         huddownloadbar.download_bar(i + 1, len(urls))
 
-        if "error" in cont.columns or len(cont) == 0:
+        if "error" in pd.json_normalize(cont).columns:
             # Need to output a single error message instead of a bunch when
             # something bad occurs. Append to list of errored urls.
             error_urls.append(url)
@@ -240,10 +245,10 @@ def misc_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
         # queries are done.
 
         warn("Could not find data for queries: \n\n" +
-             " ".join(map(lambda x: "*" + x, error_urls)) +
+             "\n".join(map(lambda x: "*" + x, error_urls)) +
              "\n\nIt is possible that your key maybe invalid or " +
              "there isn't any data for these parameters, " +
              "If you think this is wrong please " +
-             "report it at https://github.com/etam4260/rhud/issues.")
+             "report it at https://github.com/etam4260/hudpy/issues.")
 
     return(res)

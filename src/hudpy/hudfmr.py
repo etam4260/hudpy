@@ -16,8 +16,8 @@ from hudpy import hudinternetonline
 from hudpy import hudinputcheck
 from hudpy import hudpkgenv
 
-def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
-                             year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
+def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+                             year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
                              key: str = None) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
@@ -79,7 +79,7 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
 
     # Make query calls for all queries.
     result = pd.DataFrame()
-   
+
     if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
     
     for i in range(len(all_queries)):
