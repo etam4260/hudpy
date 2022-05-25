@@ -93,13 +93,14 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
         call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
                                
         cont = json.loads(call.data.decode('utf-8'))
-        cont = pd.json_normalize(cont["data"]["metroareas"]) 
         
         huddownloadbar.download_bar(i + 1, len(all_queries))
 
-        if "error" in cont.columns:
+        if "error" in pd.json_normalize(cont).columns:
             error_urls.append(urls)
         else:
+            cont = pd.json_normalize(cont["data"]["metroareas"]) 
+        
             cont["year"] = [all_queries[i][1] for j in range(0, cont.shape[0])]
             result = pd.concat([result, cont])
 
@@ -109,14 +110,12 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
     if len(error_urls) != 0:
         # Print all error urls
         # Construct warning message... 
-        warn_msg = "Could not find data for queries: \n\n" + \
-                    "\n".join(error_urls) +  "\n" + \
-                    "It is possible that your key is invalid or there isn't \
-                    any data for these parameters. If you think this is wrong please \
-                    report it at https://github.com/etam4260/hudpy/issues"    
-
-
-        warn(warn_msg)
+        warn("Could not find data for queries: \n\n" +
+             "\n".join(map(lambda x: "*" + x, error_urls)) +
+             "\n\nIt is possible that your key maybe invalid or " +
+             "there isn't any data for these parameters, " +
+             "If you think this is wrong please " +
+             "report it at https://github.com/etam4260/hudpy/issues.")
 
     return(result.reset_index())
 
@@ -198,14 +197,14 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
         call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
                             
         cont = json.loads(call.data.decode('utf-8'))
-        cont = pd.json_normalize(cont["data"]["counties"]) 
         
         huddownloadbar.download_bar(i + 1, len(all_queries))
 
-        if "error" in cont.columns:
+        if "error" in pd.json_normalize(cont).columns:
             error_urls.append(urls)
         else:
-           
+            cont = pd.json_normalize(cont["data"]["counties"]) 
+        
             cont["year"] = [all_queries[i][1] for j in range(0, cont.shape[0])]
             result = pd.concat([result, cont])
 
@@ -215,14 +214,13 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
     if len(error_urls) != 0:
         # Print all error urls
         # Construct warning message... 
-        warn_msg = "Could not find data for queries: \n\n" + \
-                    "\n".join(error_urls) +  "\n" + \
-                    "It is possible that your key is invalid or there isn't \
-                    any data for these parameters. If you think this is wrong please \
-                    report it at https://github.com/etam4260/hudpy/issues"    
+        warn("Could not find data for queries: \n\n" +
+             "\n".join(map(lambda x: "*" + x, error_urls)) +
+             "\n\nIt is possible that your key maybe invalid or " +
+             "there isn't any data for these parameters, " +
+             "If you think this is wrong please " +
+             "report it at https://github.com/etam4260/hudpy/issues.")
 
-
-        warn(warn_msg)
 
     return(result.reset_index())
 
@@ -307,17 +305,18 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
         call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
                          
         cont = json.loads(call.data.decode('utf-8'))    
-        content = pd.json_normalize(cont["data"]) 
-        
     
         huddownloadbar.download_bar(i + 1, len(urls))
 
-        if "error" in content.columns:
+        if "error" in pd.json_normalize(cont).columns:
             error_urls.append(urls)
         else:
+            
+            content = pd.json_normalize(cont["data"]) 
         
             # The structure of data depends on small area.
             if int(content["smallarea_status"]) == 0:
+                
                 content.insert(0, "zip", [None])
                 
                 content.rename(columns={"basicdata.year": "year",
@@ -334,6 +333,7 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
              
                 
             elif int(content["smallarea_status"]) == 1:
+                
                 basicdata = pd.json_normalize(cont["data"]["basicdata"]) 
                 content = pd.concat([content] * basicdata.shape[0], ignore_index=True)
                 content.drop('basicdata', axis=1, inplace=True)
@@ -357,14 +357,12 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
         # Print all error urls
         # Construct warning message...
         
-        warn_msg = "Could not find data for queries: \n\n" + \
-                    "\n".join(error_urls) +  "\n" + \
-                    "It is possible that your key is invalid or there isn't \
-                    any data for these parameters. If you think this is wrong please \
-                    report it at https://github.com/etam4260/hudpy/issues"    
-
-
-        warn(warn_msg)       
+        warn("Could not find data for queries: \n\n" +
+             "\n".join(map(lambda x: "*" + x, error_urls)) +
+             "\n\nIt is possible that your key maybe invalid or " +
+             "there isn't any data for these parameters, " +
+             "If you think this is wrong please " +
+             "report it at https://github.com/etam4260/hudpy/issues.") 
             
             
     return(result.reset_index())
@@ -451,14 +449,15 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
         call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
 
         cont = json.loads(call.data.decode('utf-8'))  
-        content = pd.json_normalize(cont["data"]) 
-    
+        
         huddownloadbar.download_bar(i + 1, len(urls))
 
-        if "error" in content.columns:
+        if "error" in pd.json_normalize(cont).columns:
             error_urls.append(urls)
         else:
             
+            content = pd.json_normalize(cont["data"]) 
+    
             # The structure of data depends on small area.
             if int(content["smallarea_status"]) == 0:
                 content.insert(0, "zip", [None])
@@ -499,14 +498,11 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
         # Print all error urls
         # Construct warning message...
         
-        warn_msg = "Could not find data for queries: \n\n" + \
-                    "\n".join(error_urls) +  "\n" + \
-                    "It is possible that your key is invalid or there isn't \
-                    any data for these parameters. If you think this is wrong please \
-                    report it at https://github.com/etam4260/hudpy/issues"    
-
-
-        warn(warn_msg)               
-            
+        warn("Could not find data for queries: \n\n" +
+             "\n".join(map(lambda x: "*" + x, error_urls)) +
+             "\n\nIt is possible that your key maybe invalid or " +
+             "there isn't any data for these parameters, " +
+             "If you think this is wrong please " +
+             "report it at https://github.com/etam4260/hudpy/issues.")
             
     return(result.reset_index())

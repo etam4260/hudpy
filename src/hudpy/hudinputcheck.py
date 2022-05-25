@@ -46,7 +46,7 @@ def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tupl
     query = [str(query)] if isinstance(query, str) or isinstance(query, int) else list(map(lambda x: str(x), query))
     
     if(key == ""):
-        raise ValueError("\nDid you forget to set the key. Please go to " + 
+        raise ValueError("\nDid you forget to set the key. " + 
                          "Please go to https://www.huduser.gov/" +
                          "hudapi/public/register?comingfrom=1 to " +
                          "sign up and get a token. Save " +
@@ -129,7 +129,7 @@ def cw_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[
     
     
     if(key == ""):
-        raise ValueError("\nDid you forget to set the key. Please go to " + 
+        raise ValueError("\nDid you forget to set the key. " + 
                          "Please go to https://www.huduser.gov/" +
                          "hudapi/public/register?comingfrom=1 to " +
                          "sign up and get a token. Save " +
@@ -197,7 +197,7 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list[int], list[str], tu
     year = [str(year)] if isinstance(year, str) or isinstance(year, int) else list(map(lambda x: str(x), year))
 
     if(key == ""):
-        raise ValueError("\nDid you forget to set the key. Please go to " + 
+        raise ValueError("\nDid you forget to set the key. " + 
                          "Please go to https://www.huduser.gov/" +
                          "hudapi/public/register?comingfrom=1 to " +
                          "sign up and get a token. Save " +
@@ -302,7 +302,7 @@ def crosswalk_a_dataset_input_check_cleansing(data,
         raise ValueError("\nKey should be a string")
 
     if(key == ""):
-        raise ValueError("\nDid you forget to set the key. Please go to " + 
+        raise ValueError("\nDid you forget to set the key. " + 
                          "Please go to https://www.huduser.gov/" +
                          "hudapi/public/register?comingfrom=1 to " +
                          "sign up and get a token. Save " +
