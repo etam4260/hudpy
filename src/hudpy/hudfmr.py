@@ -61,8 +61,12 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
     >>> hud_fmr_state_metroareas(state = "24", year = 2021)
     """  
     
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-    
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
         
@@ -165,9 +169,13 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
     >>> hud_fmr_state_counties(state = "24", year = 2021)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-    
-    if(key == None and os.getenv("HUD_KEY") != None):
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+    if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
         
     args = hudinputcheck.fmr_il_input_check_cleansing(state, year, key)
@@ -269,8 +277,12 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
     >>> hud_fmr_county_zip(county = 5151099999, year = 2021)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-    
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
         
@@ -413,8 +425,13 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
     >>> hud_fmr_metroarea_zip(metroarea = "METRO10380M10380", year = 2020)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-    
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+          
+        
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
 

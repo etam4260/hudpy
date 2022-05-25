@@ -47,8 +47,7 @@ def hud_chas_nation(year: Union[int, str, list[int], list[str], tuple[int], tupl
    
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-    
+
     args = hudinputcheck.chas_input_check_cleansing(year = year, key = key)
     year = args[[1]]
     key = args[[2]]
@@ -102,8 +101,6 @@ def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tupl
 
     """
     
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
     args = hudinputcheck.chas_input_check_cleansing(state, year, key)
     state = args[[1]]
     year = args[[2]]
@@ -187,8 +184,6 @@ def hud_chas_county(county: Union[int, str, list[int], list[str], tuple[int], tu
     >>> hud_chas_county(county = ["06105", "06113"], year = 2020)
 
     """
-
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     args = hudinputcheck.chas_input_check_cleansing(county, year, key)
     county = args[[1]]
@@ -276,7 +271,6 @@ def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], 
 
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
 def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                          year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
@@ -336,4 +330,3 @@ def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int]
 
     """
     
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")

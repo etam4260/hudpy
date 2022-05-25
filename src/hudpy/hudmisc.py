@@ -43,17 +43,21 @@ def hud_nation_states_territories(key: str = None) -> pd.DataFrame:
    
     """
     
-    if(key == None and os.getenv("HUD_KEY") != None):
+    if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")    
     
-    print(key)
     
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+            
     if type(key) != str:
         raise ValueError("\nKey should be a string")
 
-    if(key == ""):
+    if key == "":
         raise ValueError("\nDid you forget to set the key. " + 
                          "Please go to https://www.huduser.gov/" +
                          "hudapi/public/register?comingfrom=1 to " +
@@ -68,9 +72,10 @@ def hud_nation_states_territories(key: str = None) -> pd.DataFrame:
     
     call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
 
-    cont = json.loads(call.data.decode('utf-8'))    
+    cont = json.loads(call.data.decode('utf-8'))   
     cont = pd.json_normalize(cont) 
-
+    cont["state_num"] = list(map(lambda x: int(float(x)), cont["state_num"]))
+    
     return(cont)
 
 
@@ -113,8 +118,14 @@ def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[in
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
         
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+        
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+            
     if not isinstance(state, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
@@ -122,7 +133,7 @@ def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[in
 
     if type(key) != str:
         raise ValueError("\nKey should be a string")
-    if(key == ""):
+    if key == "":
         raise ValueError("Did you forget to set the key. " + 
                             "Please go to https://www.huduser.gov/" +
                             "hudapi/public/register?comingfrom=1 to " +
@@ -231,11 +242,15 @@ def hud_state_counties(state: Union[int, str, list[int], list[str], tuple[int], 
     >>> hud_state_counties("51")
     """
     
-    if(key == None and os.getenv("HUD_KEY") != None):
+    if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
     
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
     if not isinstance(state, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
@@ -243,7 +258,7 @@ def hud_state_counties(state: Union[int, str, list[int], list[str], tuple[int], 
 
     if type(key) != str:
         raise ValueError("\nKey should be a string")
-    if(key == ""):
+    if key == "":
         raise ValueError("Did you forget to set the key. " + 
                             "Please go to https://www.huduser.gov/" +
                             "hudapi/public/register?comingfrom=1 to " +
@@ -284,7 +299,7 @@ def hud_state_counties(state: Union[int, str, list[int], list[str], tuple[int], 
 
     counties = huddoquerycalls.misc_do_query_calls(urls, key)
 
-    if (len(counties) > 1):
+    if len(counties) > 1:
         return(counties.reset_index())
     
     raise ValueError("Your key might be invalid or could not find counties for this state.")
@@ -327,11 +342,17 @@ def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tu
     >>> hud_state_places("Virginia")
     >>> hud_state_places("51")
     """
-    if(key == None and os.getenv("HUD_KEY") != None):
+    if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
         
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+        
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+            
     if not isinstance(state, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
@@ -339,7 +360,7 @@ def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tu
 
     if type(key) != str:
         raise ValueError("\nKey should be a string")
-    if(key == ""):
+    if key == "":
         raise ValueError("Did you forget to set the key. " + 
                             "Please go to https://www.huduser.gov/" +
                             "hudapi/public/register?comingfrom=1 to " +
@@ -379,7 +400,7 @@ def hud_state_places(state: Union[int, str, list[int], list[str], tuple[int], tu
 
     places = huddoquerycalls.misc_do_query_calls(urls, key)
 
-    if (len(places) > 1):
+    if len(places) > 1:
         return(places.reset_index())
     
     raise ValueError("Your key might be invalid or could not find places for this state.")
@@ -423,11 +444,17 @@ def hud_state_minor_civil_divisions(state: Union[int, str, list[int], list[str],
     >>> hud_state_minor_civil_divisions("51")
     """
     
-    if(key == None and os.getenv("HUD_KEY") != None):
+    if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
         
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
+        
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+            
     if not isinstance(state, (int, str, list)) :
         raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
@@ -435,7 +462,7 @@ def hud_state_minor_civil_divisions(state: Union[int, str, list[int], list[str],
 
     if type(key) != str:
         raise ValueError("\nKey should be a string")
-    if(key == ""):
+    if key == "":
         raise ValueError("Did you forget to set the key. " + 
                             "Please go to https://www.huduser.gov/" +
                             "hudapi/public/register?comingfrom=1 to " +
@@ -477,7 +504,7 @@ def hud_state_minor_civil_divisions(state: Union[int, str, list[int], list[str],
   
     mcd = huddoquerycalls.misc_do_query_calls(urls, key)
   
-    if (len(mcd) > 1):
+    if len(mcd) > 1:
         return(mcd.reset_index())
     
     raise ValueError("Your key might be invalid or could not find mcds for this state.")

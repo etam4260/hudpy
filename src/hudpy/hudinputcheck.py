@@ -217,7 +217,7 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list[int], list[str], tu
     if all(map(lambda x: len(x) == 2, query)):
         query = list(map(lambda x: str.upper(x), query))
     elif all(map(lambda x: len(x) > 2, query)):
-        query = list(map(lambda x: str.capitalize(x), query))
+        query = list(map(lambda x: x[0:1].upper() + x[1:len(x)], query))
 
     if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
@@ -237,7 +237,6 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list[int], list[str], tu
         querytype = "state"
     elif all(list(map(lambda x: len(x) == 16, query))):
         querytype = "cbsa"
-        query = list(map(lambda x: str.upper(x), query))
     else:
         raise ValueError("\nThere is no matching fips code for one of the inputted states")
 

@@ -127,8 +127,6 @@ def crosswalk(data: pd.DataFrame,
 
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-
     args = hudinputcheck.crosswalk_a_dataset_input_check_cleansing(data, geoid, geoid_col,
                                             cw_geoid, cw_geoid_col, method,
                                             year,

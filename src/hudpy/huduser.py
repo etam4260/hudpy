@@ -1,9 +1,12 @@
 from __future__ import annotations
 from typing import Union
+from distutils.log import warn
 
 import os
 from datetime import date
 import pandas as pd
+import itertools
+import json
 
 from datetime import date
 from datetime import timedelta
@@ -12,6 +15,8 @@ from hudpy import hudinternetonline
 from hudpy import hudinputcheck
 from hudpy import hudfmr
 from hudpy import hudcw
+from hudpy import hudpkgenv
+from hudpy import huddownloadbar
 
 
 def hud_cw(type: Union[str, int],
@@ -304,8 +309,6 @@ def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     >>> hud_fmr("METRO47900M47900", year = 2018)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
-    
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
         
@@ -368,12 +371,86 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
     >>> hud_il("METRO47900M47900", year = 2018)
     
     """
+    
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+    
+    args = hudinputcheck.fmr_il_input_check_cleansing(query, year, key)
+    
+    query = args[0]
+    year = args[1]
+    key = args[2]
+    querytype = args[3]
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    error_urls = list()
 
+    all_queries = list(itertools.product(query, year))
     
+    # Make query calls for all queries.
+    result = pd.DataFrame()
+
+    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
     
-    
+    for i in range(len(all_queries)):
+        url_piece = "statedata/" if querytype == ["state"] else "data/"
+        
+        urls = "https://www.huduser.gov/hudapi/public/il/" + \
+               url_piece + \
+               all_queries[i][0] + \
+               "?year=" + \
+               all_queries[i][1]
+
+        headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
+        call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
+                               
+        cont = json.loads(call.data.decode('utf-8'))
+        
+        huddownloadbar.download_bar(i + 1, len(all_queries))
+
+        if cont == "State Level data is not available for this input" or "error" in pd.json_normalize(cont).columns:
+            error_urls.append(urls)
+        else:
+            
+            if querytype == ["state"]:
+                data = pd.json_normalize(cont["data"])
+                
+                ver_low = pd.json_normalize(cont["data"]["very_low"])
+                ext_low = pd.json_normalize(cont["data"]["extremely_low"])
+                low = pd.json_normalize(cont["data"]["low"])
+                
+                res = pd.concat([data, ver_low, ext_low, low], axis = 1)
+                
+                res.rename(columns = {"statecode": "query"}, inplace = True)
+                
+            elif querytype == ["county"]:
+                res =  pd.json_normalize(cont["data"])
+                res.insert(1, "query", all_queries[i][0])
+            elif querytype == ["cbsa"]:
+                res =  pd.json_normalize(cont["data"])
+                res.insert(1, "query", all_queries[i][0])
+                
+            result = pd.concat([result, res])
+
+    # Just print a newline
+    print()
+
+    if len(error_urls) != 0:
+        # Print all error urls
+        # Construct warning message... 
+        warn("Could not find data for queries: \n\n" +
+             "\n".join(map(lambda x: "*" + x, error_urls)) +
+             "\n\nIt is possible that your key maybe invalid or " +
+             "there isn't any data for these parameters, " +
+             "If you think this is wrong please " +
+             "report it at https://github.com/etam4260/hudpy/issues.")
+
+    return(result.reset_index())
     
 
 def hud_chas(type: Union[str, int],
@@ -448,4 +525,9 @@ def hud_chas(type: Union[str, int],
 
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
