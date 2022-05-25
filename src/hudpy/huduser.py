@@ -140,74 +140,74 @@ def hud_cw(type: Union[str, int],
 
 
 
-    >>> hud_cw(type = 4, query = "22031", year = c("2017", "2019"),
-       quarter = c("4"))
+    >>> hud_cw(type = 4, query = "22031", year = ["2017", "2019"],
+       quarter = "4")
        
-    >>> hud_cw(type = 4, query = "22031", year = c("2017", "2019"),
-       quarter = c("4"))
+    >>> hud_cw(type = 4, query = "22031", year = ["2017", "2019"],
+       quarter = "4")
 
 
 
-    >>> hud_cw(type = "5", query = "35213", year = c(2011, "2012"),
-       quarter = c("1", "2"))
+    >>> hud_cw(type = "5", query = "35213", year = [2011, "2012"],
+       quarter = ["1", "2"])
 
-    >>> hud_cw(type = "5", query = "35213", year = c(2011, "2012"),
-       quarter = c("1", "2"))
-
-
-
-    >>> hud_cw(type = 6, query = "48201223100", year = c("2017", "2010"),
-       quarter = c("1", "2", "3"))
-
-    >>> hud_cw(type = 6, query = "48201223100", year = c("2017", "2010"),
-       quarter = c("1", "2", "3"))
+    >>> hud_cw(type = "5", query = "35213", year = [2011, "2012"],
+       quarter = ["1", "2"])
 
 
 
-    >>> hud_cw(type = 7, query = "22031", year = c("2010", "2011"),
-       quarter = c("1", "2", "3"))
+    >>> hud_cw(type = 6, query = "48201223100", year = ["2017", "2010"],
+       quarter = ["1", "2", "3"])
 
-    >>> hud_cw(type = 7, query = "22031", year = c("2010", "2011"),
-       quarter = c("1", "2", "3"))
-
-
-
-    >>> hud_cw(type = 8, query = "10140", year = c("2010", "2011"),
-       quarter = c("1", "2"))
-
-    >>> hud_cw(type = 8, query = "10140", year = c("2010", "2011"),
-       quarter = c("1", "2"))
+    >>> hud_cw(type = 6, query = "48201223100", year = ["2017", "2010"],
+       quarter = ["1", "2", "3"])
 
 
 
-    >>> hud_cw(type = 9, query = "10380", year = c("2017"),
-       quarter = c("1", "2", "3"))
+    >>> hud_cw(type = 7, query = "22031", year = ["2010", "2011"],
+       quarter = ["1", "2", "3"])
 
-    >>> hud_cw(type = 9, query = "10380", year = c("2017"),
-       quarter = c("1", "2", "3"))
-
-
-
-    >>> hud_cw(type = 10, query = "2202", year = c("2010", "2011"),
-       quarter = c("4", "3"))
-
-    >>> hud_cw(type = 10, query = "2202", year = c("2010", "2011"),
-       quarter = c("4", "3"))
+    >>> hud_cw(type = 7, query = "22031", year = ["2010", "2011"],
+       quarter = ["1", "2", "3"])
 
 
 
-    >>> hud_cw(type = 11, query = "35213", year = c("2019", "2020"),
-       quarter = c("2", "3"))
+    >>> hud_cw(type = 8, query = "10140", year = ["2010", "2011"],
+       quarter = ["1", "2"])
+
+    >>> hud_cw(type = 8, query = "10140", year = ["2010", "2011"],
+       quarter = ["1", "2"])
+
+
+
+    >>> hud_cw(type = 9, query = "10380", year = ["2017"],
+       quarter = ["1", "2", "3"])
+
+    >>> hud_cw(type = 9, query = "10380", year = ["2017"],
+       quarter = ["1", "2", "3"])
+
+
+
+    >>> hud_cw(type = 10, query = "2202", year = ["2010", "2011"],
+       quarter = ["4", "3"])
+
+    >>> hud_cw(type = 10, query = "2202", year = ["2010", "2011"],
+       quarter = ["4", "3"])
+
+
+
+    >>> hud_cw(type = 11, query = "35213", year = ["2019", "2020"],
+       quarter = ["2", "3"])
        
-    >>> hud_cw(type = 11, query = "35213", year = c("2019", "2020"),
-       quarter = c("2", "3"))
+    >>> hud_cw(type = 11, query = "35213", year = ["2019", "2020"],
+       quarter = ["2", "3"])
 
 
 
-    >>> hud_cw(type = 12, query = "4606720300 ", year = c("2019", "2019", "2019"),
-       quarter = c("4", "4"))
-    >>> hud_cw(type = 12, query = "4606720300 ", year = c("2019", "2019", "2019"),
-       quarter = c("4", "4"))
+    >>> hud_cw(type = 12, query = "4606720300 ", year = ["2019", "2019", "2019"],
+       quarter = ["4", "4"])
+    >>> hud_cw(type = 12, query = "4606720300 ", year = ["2019", "2019", "2019"],
+       quarter = ["4", "4"])
 
     """
     
@@ -297,11 +297,11 @@ def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     Examples
     --------
 
-    >>> hud_fmr("VA", year=c(2021))
+    >>> hud_fmr("VA", year = 2021)
 
-    >>> hud_fmr("5100199999", year=c(2021))
+    >>> hud_fmr("5100199999", year = 2021)
 
-    >>> hud_fmr("METRO47900M47900", year=c(2018))
+    >>> hud_fmr("METRO47900M47900", year = 2018)
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -330,6 +330,8 @@ def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]]
         return(hudfmr.hud_fmr_county_zip(query, year, key))
     
 
+    
+    
 def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = None,
            year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
            key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
@@ -359,11 +361,12 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
     Examples
     --------
 
-    >>> hud_il("VA", year=c(2021))
+    >>> hud_il("VA", year = 2021)
 
-    >>> hud_il("5100199999", year=c(2021))
+    >>> hud_il("5100199999", year = 2021)
 
-    >>> hud_il("METRO47900M47900", year=c(2018))
+    >>> hud_il("METRO47900M47900", year = 2018)
+    
     """
 
     if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
@@ -435,13 +438,13 @@ def hud_chas(type: Union[str, int],
     --------
     >>> hud_chas(1)
 
-    >>> hud_chas('2', state_id = '56')
+    >>> hud_chas("2", state_id = "56")
 
-    >>> hud_chas('3','51','199')
+    >>> hud_chas("3", "51", "199")
 
-    >>> hud_chas('4', '51', 94087)
+    >>> hud_chas("4", "51", 94087)
 
-    >>> hud_chas('5', '51', 48996)
+    >>> hud_chas("5", "51", 48996)
 
     """
 
