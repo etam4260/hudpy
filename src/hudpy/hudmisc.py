@@ -12,6 +12,7 @@ import itertools
 from hudpy import hudpkgenv
 from hudpy import huddoquerycalls
 from hudpy import hudinternetonline
+from hudpy import huddownloadbar
 
 def hud_nation_states_territories(key: str = None) -> pd.DataFrame:
     """ 
@@ -70,11 +71,14 @@ def hud_nation_states_territories(key: str = None) -> pd.DataFrame:
     
     if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
     
+    huddownloadbar.download_bar(done = 1, total = 1, current = urls, error = 0)
+    
     call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
 
     cont = json.loads(call.data.decode('utf-8'))   
     cont = pd.json_normalize(cont) 
-    cont["state_num"] = list(map(lambda x: int(float(x)), cont["state_num"]))
+ 
+    cont["state_num"] = cont["state_num"].astype("float").astype("int").astype("str")
     
     return(cont)
 
@@ -151,7 +155,9 @@ def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[in
 
     cont = json.loads(call.data.decode('utf-8'))    
     cont = pd.json_normalize(cont) 
-
+    
+    huddownloadbar.download_bar(done = 1, total = 1, current = urls, error = 0)
+    
     # Not vectorized so need to match 
     # each item in cont["area_name"] one by one...
     def parse_area_name(area):
@@ -199,6 +205,7 @@ def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[in
         state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_code"]) 
     if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
         state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_code"])   
+    
     cont = cont[cont["metro_state"].isin(state)]
 
     return(cont.reset_index())

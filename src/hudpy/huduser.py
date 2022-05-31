@@ -7,6 +7,7 @@ from datetime import date
 import pandas as pd
 import itertools
 import json
+import urllib3
 
 from datetime import date
 from datetime import timedelta
@@ -17,6 +18,7 @@ from hudpy import hudfmr
 from hudpy import hudcw
 from hudpy import hudpkgenv
 from hudpy import huddownloadbar
+from hudpy import huddoquerycalls
 
 
 def hud_cw(type: Union[str, int],
@@ -24,7 +26,7 @@ def hud_cw(type: Union[str, int],
            year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
            quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
            minimal: bool = False,
-           key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+           key: str = None) -> pd.DataFrame:
     """
     Omni-function to query the Crosswalks API provided by US
     Department of Housing and Urban Development. This follows closely 
@@ -257,7 +259,7 @@ def hud_cw(type: Union[str, int],
 
 def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = None,
             year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
-            key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+            key: str = None) -> pd.DataFrame:
     """
     Function to query the Fair Markets Rent API provided by US
     Department of Housing and Urban Development. This function encapsulated
@@ -309,7 +311,7 @@ def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     >>> hud_fmr("METRO47900M47900", year = 2018)
     """
 
-    if(key == None and os.getenv("HUD_KEY") != None):
+    if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
         
     args = hudinputcheck.fmr_il_input_check_cleansing(query, year, key)
@@ -337,7 +339,7 @@ def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     
 def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = None,
            year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
-           key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+           key: str = None) -> pd.DataFrame:
     """
     Function to query the Income Limits API provided by US
     Department of Housing and Urban Development. Measurements are provided at 
@@ -378,7 +380,7 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
         else:
             hudpkgenv.pkg_env["internet_on"] == True
             
-    if(key == None and os.getenv("HUD_KEY") != None):
+    if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
     
     args = hudinputcheck.fmr_il_input_check_cleansing(query, year, key)
@@ -411,8 +413,6 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
                                
         cont = json.loads(call.data.decode('utf-8'))
         
-        huddownloadbar.download_bar(i + 1, len(all_queries))
-
         if cont == "State Level data is not available for this input" or "error" in pd.json_normalize(cont).columns:
             error_urls.append(urls)
         else:
@@ -436,6 +436,8 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
                 res.insert(1, "query", all_queries[i][0])
                 
             result = pd.concat([result, res])
+        
+        huddownloadbar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
 
     # Just print a newline
     print()
@@ -456,8 +458,8 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
 def hud_chas(type: Union[str, int],
              state_id: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = None,
              entity_id: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = None,
-             year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
-             key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+             year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = "2014-2018",
+             key: str = None) -> pd.DataFrame:
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
     by the US Department of Housing and Urban Development. This returns CHAS measurements
@@ -530,4 +532,116 @@ def hud_chas(type: Union[str, int],
             raise ConnectionError("You currently do not have internet access.")
         else:
             hudpkgenv.pkg_env["internet_on"] == True
-            
+
+    if key == None and os.getenv("HUD_KEY") != None:
+        key = os.getenv("HUD_KEY")
+
+    if type == "nation":
+        type = 1
+    elif type == "state":
+        type = 2
+    elif type == "county":
+        type = 3
+    elif type == "mcd":
+        type = 4
+    elif type == "place":
+        type = 5
+    elif type == "city":
+        type = 5
+
+    if not isinstance(type, (int, str)) :
+        raise ValueError("\ntype should be int or str")
+    
+    if not isinstance(state_id, (int, str, list)) :
+        raise ValueError("\nstate_id should be int, str, or list or tuple of ints and strings.")
+    
+    if not isinstance(entity_id, (int, str, list)) :
+        raise ValueError("\nentity_id should be int, str, or list or tuple of ints and strings.")
+
+    if not isinstance(year, (int, str, list)) :
+        raise ValueError("\nYear should be int, str, or list or tuple of ints and strings.")
+    
+    if key == None:
+        raise ValueError("\nIt looks like the HUD_KEY was not set: use hud_set_key().")
+        
+    if type(key) != str:
+        raise ValueError("\nKey should be a string")
+
+    year = [str(year)] if isinstance(year, str) or isinstance(year, int) else list(map(lambda x: str(x), year))
+    if str(type) != "1":
+        state_id = [str(state_id)] if isinstance(state_id, str) or isinstance(state_id, int) else list(map(lambda x: str(x), state_id))
+        entity_id = [str(entity_id)] if isinstance(entity_id, str) or isinstance(entity_id, int) else list(map(lambda x: str(x), entity_id))
+        
+    year = list(set(map(lambda x: str.strip(x), year)))
+    
+    possible_years = ["2014-2018", "2013-2017",
+                      "2012-2016", "2011-2015",
+                      "2010-2014", "2009-2013",
+                      "2008-2012", "2007-2011",
+                      "2006-2010"]
+
+    for i in range(0, len(year)):
+        if year[i] not in possible_years:
+            raise ValueError("\nOne of the years does not fall into the values " +
+                             "expected")
+    
+    if str(type) != "1":
+        state_id  = list(set(map(lambda x: str.strip(x), state_id )))
+        entity_id = list(set(map(lambda x: str.strip(x), entity_id)))
+
+    if int(type) < 1 or int(type) > 5:
+        raise ValueError("\nThe type input is not in the range of 1-5")
+
+
+    if str(type) == "1": 
+        urls = "https://www.huduser.gov/hudapi/public/chas?type=" + "1" + \
+                    "&year=", year
+    
+    if str(type) == "2": 
+        if state_id == None: raise ValueError("You need to specify a stateId for this type.")
+           
+
+        all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=2&stateId="],
+                                            [state_id],
+                                            ["&year="],
+                                            [year]))
+
+        urls = []
+        for i in range(0, len(all_queries)):
+            urls.append(
+                all_queries[i][0] + 
+                all_queries[i][1] +
+                all_queries[i][2] +
+                all_queries[i][3] 
+            )
+
+    if str(type) == "3" or str(type) == "4" or str(type) == "5": 
+        if state_id == None or entity_id == None: 
+            raise ValueError("You need to specify a stateId and entityId for this type.")
+
+        if len(state_id) != len(entity_id):
+            raise ValueError("\nYou need to make sure stateId and entityId are " + \
+                             "of same length and correspond to each other by index.")
+    
+        all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type="],
+                                            [type],
+                                            ["&stateId="],
+                                            [state_id],
+                                            ["&year="],
+                                            [year]))
+
+        urls = []
+        for i in range(0, len(all_queries)):
+            urls.append(
+                all_queries[i][0] + 
+                all_queries[i][1] +
+                all_queries[i][2] +
+                all_queries[i][3] +
+                all_queries[i][4] +
+                "&entityId=" +
+                entity_id[i % len(entity_id)] +
+                all_queries[i][5] +
+                all_queries[i][6] 
+            )
+
+    return(huddoquerycalls.chas_do_query_calls(urls, key = key))

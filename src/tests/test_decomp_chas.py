@@ -91,7 +91,7 @@ def test_chas_county():
 
     # Only use the first 5 numbers in fips code.
 
-    all_md = hudchas.hud_chas_county(county = map(lambda x: x[0:4], all_md_counties["fips_code"]))
+    all_md = hudchas.hud_chas_county(county = list(map(lambda x: x[0:5], all_md_counties["fips_code"])))
     assert len(all_md) >= 1
 
 
@@ -101,5 +101,5 @@ def test_chas_mcd():
     # This will take a while...
     all_md = hudchas.hud_chas_state_mcd("md")
 
-    assert len(all_md) == 1
+    assert len(all_md) >= 1
 

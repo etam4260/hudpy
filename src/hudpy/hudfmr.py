@@ -97,8 +97,6 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
         call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
                                
         cont = json.loads(call.data.decode('utf-8'))
-        
-        huddownloadbar.download_bar(i + 1, len(all_queries))
 
         if "error" in pd.json_normalize(cont).columns:
             error_urls.append(urls)
@@ -107,6 +105,9 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
         
             cont["year"] = [all_queries[i][1] for j in range(0, cont.shape[0])]
             result = pd.concat([result, cont])
+                
+        huddownloadbar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+
 
     # Just print a newline
     print()
@@ -206,8 +207,6 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
                             
         cont = json.loads(call.data.decode('utf-8'))
         
-        huddownloadbar.download_bar(i + 1, len(all_queries))
-
         if "error" in pd.json_normalize(cont).columns:
             error_urls.append(urls)
         else:
@@ -215,6 +214,9 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
         
             cont["year"] = [all_queries[i][1] for j in range(0, cont.shape[0])]
             result = pd.concat([result, cont])
+
+        huddownloadbar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+
 
     # Just print a newline
     print()
@@ -318,8 +320,7 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
                          
         cont = json.loads(call.data.decode('utf-8'))    
     
-        huddownloadbar.download_bar(i + 1, len(urls))
-
+   
         if "error" in pd.json_normalize(cont).columns:
             error_urls.append(urls)
         else:
@@ -364,7 +365,8 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
                 # drop zip and move it
                 result = pd.concat([result, merged])
 
-            
+        huddownloadbar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+
     if len(error_urls) != 0:
         # Print all error urls
         # Construct warning message...
@@ -467,8 +469,6 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
 
         cont = json.loads(call.data.decode('utf-8'))  
         
-        huddownloadbar.download_bar(i + 1, len(urls))
-
         if "error" in pd.json_normalize(cont).columns:
             error_urls.append(urls)
         else:
@@ -510,7 +510,8 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
                 # drop zip and move it
                 result = pd.concat([result, merged])
     
-    
+        huddownloadbar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+
     if len(error_urls) != 0:
         # Print all error urls
         # Construct warning message...

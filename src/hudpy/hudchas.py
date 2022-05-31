@@ -11,8 +11,8 @@ from hudpy import huddoquerycalls
 from hudpy import hudpkgenv
 from hudpy import hudmisc
 
-def hud_chas_nation(year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                    key: str = os.getenv("HUD_KEY")):
+def hud_chas_nation(year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = "2014-2018",
+                    key: str = None):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
     by the US Department of Housing and Urban Development. This returns CHAS measurements
@@ -22,6 +22,16 @@ def hud_chas_nation(year: Union[int, str, list[int], list[str], tuple[int], tupl
     ----------
 
     year : The year(s) to query for.
+         * 2014-2018
+         * 2013-2017
+         * 2012-2016
+         * 2011-2015
+         * 2010-2014
+         * 2009-2013
+         * 2008-2012
+         * 2007-2011
+         * 2006-2010
+
 
     key : The API key for this user. You must go to HUD and sign up for an
         account and request for an API key.
@@ -46,20 +56,36 @@ def hud_chas_nation(year: Union[int, str, list[int], list[str], tuple[int], tupl
     >>> hud_chas_nation()
    
     """
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
+    args = hudinputcheck.chas_input_check_cleansing(query = None, year = year, key = key)
+    year = args[0]
+    key = args[1]
 
-    args = hudinputcheck.chas_input_check_cleansing(year = year, key = key)
-    year = args[[1]]
-    key = args[[2]]
-
-    urls = "https://www.huduser.gov/hudapi/public/chas?type=" + "1" + "&year=" + year
+    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=1"], 
+                                         ["&year="], year))
+    
+    urls = []
+    for i in range(len(all_queries)):
+        urls.append(
+            all_queries[i][0] + 
+            all_queries[i][1] +
+            all_queries[i][2] 
+        )
 
     return(huddoquerycalls.chas_do_query_calls(urls, key = key))
 
 
 def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                   year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
-                   key: str = os.getenv("HUD_KEY")):
+                   year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = "2014-2018", 
+                   key: str = None):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
     by the US Department of Housing and Urban Development. This returns CHAS measurements
@@ -72,6 +98,16 @@ def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tupl
         abbreviation.
 
     year : The year(s) to query for.
+         * 2014-2018
+         * 2013-2017
+         * 2012-2016
+         * 2011-2015
+         * 2010-2014
+         * 2009-2013
+         * 2008-2012
+         * 2007-2011
+         * 2006-2010
+
 
     key : The API key for this user. You must go to HUD and sign up for an
         account and request for an API key.
@@ -101,52 +137,66 @@ def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tupl
 
     """
     
-    args = hudinputcheck.chas_input_check_cleansing(state, year, key)
-    state = args[[1]]
-    year = args[[2]]
-    key = args[[3]]
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
+
+    args = hudinputcheck.chas_input_check_cleansing(state, year, key)
+    state = args[0]
+    year = args[1]
+    key = args[2]
+  
     # Assume abbreviation or fips code if length of 2. Captitalize does not
     # affect numbers. Assume full state name if length more than 2
-    if all(map(len() == 2, state)):
-        state = map(str.upper(), state)
-    elif all(map(len() > 2, state)):
-        state = map(str.capitalize(), state)
+    if all(map(lambda x: len(x) == 2, state)):
+        state = list(map(lambda x: str.upper(x), state))
+    elif all(map(lambda x: len(x) > 2, state)):
+        state = list(map(lambda x: x[0:1].upper() + x[1:len(x)], state))
 
-    if hudpkgenv.pkg_env["states"] == None:
+    if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
         hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
         
     for i in range(0, len(state)):
-        if state[i] not in hudpkgenv.pkg_env["states"]:
-            raise ValueError("There is no matching fips code for " + state[i])
+        if state[i] not in hudpkgenv.pkg_env["states"].values:
+            raise ValueError("There is no matching fips code for " + str(state[i]))
 
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_name"])) != 0: 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
         # Not sure if this is right syntax... need to test it...
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_name"].isin(state))[2]
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_code"])) != 0:   
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_code"].isin(state))[2]
-    if len(set.intersection(state, hudpkgenv.pkg_env["states"]["state_num"])) != 0:  
-        state = hudpkgenv.pkg_env["states"].loc(hudpkgenv.pkg_env["states"]["state_num"].isin(state))[2]
-
-
-    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=2"], state, ["&year="], year))
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_num"])
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_num"]) 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
+    
+  
+    
+    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=2&stateId="], 
+                                         state, ["&year="], year))
     
     urls = []
-    for i in range(0, len(all_queries)):
+    for i in range(len(all_queries)):
         urls.append(
             all_queries[i][0] + 
             all_queries[i][1] +
             all_queries[i][2] +
             all_queries[i][3]
         )
-
+  
 
     return huddoquerycalls.chas_do_query_calls(urls, key = key)
 
+
+
 def hud_chas_county(county: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                    year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
-                    key: str = os.getenv("HUD_KEY")):
+                    year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = "2014-2018", 
+                    key: str = None):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
     by the US Department of Housing and Urban Development. This returns CHAS measurements
@@ -158,6 +208,16 @@ def hud_chas_county(county: Union[int, str, list[int], list[str], tuple[int], tu
     county : The county(s) to query for CHAS. Must be provided as a 5 digit fips code.
 
     year : The year(s) to query for.
+         * 2014-2018
+         * 2013-2017
+         * 2012-2016
+         * 2011-2015
+         * 2010-2014
+         * 2009-2013
+         * 2008-2012
+         * 2007-2011
+         * 2006-2010
+
 
     key : The API key for this user. You must go to HUD and sign up for an
         account and request for an API key.
@@ -179,61 +239,63 @@ def hud_chas_county(county: Union[int, str, list[int], list[str], tuple[int], tu
     Examples
     --------
 
-    >>> hud_chas_county(county = [06105, 06113])
+    >>> hud_chas_county(county = ["06105", "06113"])
 
     >>> hud_chas_county(county = ["06105", "06113"], year = 2020)
 
     """
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+    if key == None and os.getenv("HUD_KEY") != None:
+        key = os.getenv("HUD_KEY")
 
     args = hudinputcheck.chas_input_check_cleansing(county, year, key)
-    county = args[[1]]
-    year = args[[2]]
-    key = args[[3]]
+    county = args[0]
+    year = args[1]
+    key = args[2]
 
     # Try to fix the counties that have lost leading zeros in them...
     # county = add_leading_zeros(geoid_type = "county", county)
 
     # The first 2 are state fip. Last 3 are county fip.
-    state_fip = map(lambda x: int(x[1,2]), county)
-    county_fip = map(lambda x: int(x[3,5]), county)
+    state_fip = list(map(lambda x:  str(x[0:2]).lstrip('0') if len(x) == 5 else (str(x[0:1]) if len(x) == 4 else "") , county))
+    county_fip = list(map(lambda x: str(x[2:5]).lstrip('0') if len(x) == 5 else (str(x[1:4]) if len(x) == 4 else "") , county))
 
-    check_county = county + "99999"
+    check_county = list(map(lambda x: x + "99999", county))
 
-    if hudpkgenv.pkg_env["states"] == None:
+    if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
         hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
         
         
     for i in range(0, len(state_fip)):
-        if state_fip[i] not in hudpkgenv.pkg_env["states"]:
-            raise ValueError("\nThere is no matching fips code for " + state_fip[i])
+        if state_fip[i] not in hudpkgenv.pkg_env["states"].values:
+            raise ValueError("\nThere is no matching fips code for " + str(state_fip[i]))
 
-    for i in range(0, len(county_fip)):
-        if county_fip[i] not in hudpkgenv.pkg_env["states"]["fips_code"]:
-            raise ValueError("\nThere is no matching county FIPs code for",
-                             "one of the inputted counties")
-    
     all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=3&stateId="],
-                                         state_fip, ["&entityId="],
-                                         county_fip, ["&year="], year))
+                                         state_fip, ["&year="], year))
     
     urls = []
     for i in range(0, len(all_queries)):
         urls.append(
             all_queries[i][0] + 
             all_queries[i][1] +
+            "&entityId=" +
+            county_fip[i % len(county_fip)]+
             all_queries[i][2] +
-            all_queries[i][3] +
-            all_queries[i][4] +
-            all_queries[i][5] 
+            all_queries[i][3] 
         )
 
 
     return huddoquerycalls.chas_do_query_calls(urls, key = key)
 
 def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                       year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
-                       key: str = os.getenv("HUD_KEY")):
+                       year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = "2014-2018", 
+                       key: str = None):
     """
     Function to query Comprehensive Housing and Affordability (CHAS) API provided
     by the US Department of Housing and Urban Development. This returns CHAS measurements
@@ -246,6 +308,16 @@ def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], 
          abbreviation.
 
     year : The year(s) to query for.
+         * 2014-2018
+         * 2013-2017
+         * 2012-2016
+         * 2011-2015
+         * 2010-2014
+         * 2009-2013
+         * 2008-2012
+         * 2007-2011
+         * 2006-2010
+
 
     key : The API key for this user. You must go to HUD and sign up for an
         account and request for an API key.
@@ -267,14 +339,74 @@ def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], 
     Examples
     --------
 
-    >>> hud_chas_state_mcd("VA", year = c("2014-2018","2013-2017"))
+    >>> hud_chas_state_mcd("VA", year = ["2014-2018", "2013-2017"])
 
     """
+    
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+    if key == None and os.getenv("HUD_KEY") != None:
+        key = os.getenv("HUD_KEY")
+
+    args = hudinputcheck.chas_input_check_cleansing(query = state, year = year, key = key)
+    state = args[0]
+    year = args[1]
+    key = args[2]
+
+    if all(map(lambda x: len(x) == 2, state)):
+        state = list(map(lambda x: str.upper(x), state))
+    elif all(map(lambda x: len(x) > 2, state)):
+        state = list(map(lambda x: x[0:1].upper() + x[1:len(x)], state))
+
+    if hudpkgenv.pkg_env["states"].empty:
+        hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
+        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+        
+    for i in range(0, len(state)):
+        if state[i] not in hudpkgenv.pkg_env["states"].values:
+            raise ValueError("\nThere is no matching fips code for " + str(state[i]))
+
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
+        # Not sure if this is right syntax... need to test it...
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_num"])
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_num"]) 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
+    
+    # Get all mcds using state inputs...
+    
+    minor_civil_divisions = hudmisc.hud_state_minor_civil_divisions(state)["entityId"]
+
+    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=4&stateId="],
+                                          state,
+                                          ["&entityId="],
+                                          minor_civil_divisions,
+                                          ["&year="],
+                                          year))
+    
+    urls = []
+    for i in range(0, len(all_queries)):
+        urls.append(
+            all_queries[i][0] + 
+            all_queries[i][1] +
+            all_queries[i][2] +
+            all_queries[i][3] +
+            all_queries[i][4] +
+            all_queries[i][5] 
+        )
+
+
+    return huddoquerycalls.chas_do_query_calls(urls, key = key)
 
 
 def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                         year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"), 
-                         key: str = os.getenv("HUD_KEY")):
+                         year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = "2014-2018", 
+                         key: str = None):
     """
     #' @name hud_chas_state_place
     #' @title hud_chas_state_place
@@ -326,7 +458,64 @@ def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int]
     Examples
     --------
 
-    >>> hud_chas_state_place("VA", year = c("2014-2018","2013-2017"))
+    >>> hud_chas_state_place("VA", year = ["2014-2018","2013-2017"])
 
     """
     
+    if hudpkgenv.pkg_env["internet_on"] == False: 
+        if not hudinternetonline.internet_on():
+            raise ConnectionError("You currently do not have internet access.")
+        else:
+            hudpkgenv.pkg_env["internet_on"] == True
+            
+    if key == None and os.getenv("HUD_KEY") != None:
+        key = os.getenv("HUD_KEY")
+
+    args = hudinputcheck.chas_input_check_cleansing(state, year = year, key = key)
+    state = args[0]
+    year = args[1]
+    key = args[2]
+
+    if all(map(lambda x: len(x) == 2, state)):
+        state = list(map(lambda x: str.upper(x), state))
+    elif all(map(lambda x: len(x) > 2, state)):
+        state = list(map(lambda x: x[0:1].upper() + x[1:len(x)], state))
+
+    if hudpkgenv.pkg_env["states"].empty:
+        hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
+        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+        
+    for i in range(0, len(state)):
+        if state[i] not in hudpkgenv.pkg_env["states"].values:
+            raise ValueError("\nThere is no matching fips code for " + str(state[i]))
+
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
+        # Not sure if this is right syntax... need to test it...
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_num"])
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_num"]) 
+    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
+        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
+    
+    minor_civil_divisions = hudmisc.hud_state_places(state)["entityId"]
+
+    all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=4&stateId="],
+                                          state,
+                                          ["&entityId="],
+                                          minor_civil_divisions,
+                                          ["&year="],
+                                          year))
+
+    urls = []
+    for i in range(0, len(all_queries)):
+        urls.append(
+            all_queries[i][0] + 
+            all_queries[i][1] +
+            all_queries[i][2] +
+            all_queries[i][3] +
+            all_queries[i][4] +
+            all_queries[i][5] 
+        )
+
+
+    return huddoquerycalls.chas_do_query_calls(urls, key = key)

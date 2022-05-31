@@ -9,7 +9,7 @@ from hudpy import hudmisc
 
 def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                                year: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                               key: str) -> list[list]:
+                               key: str):
     """
     Helper function to clean user inputted variables for all
     CHAS (Comprehensive Housing and Affordability)[hud_chas] function calls.
@@ -30,9 +30,6 @@ def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tupl
 
     """
     
-    if not isinstance(query, (int, str, list)) :
-        raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
-
     if not isinstance(year, (int, str, list)) :
         raise ValueError("\nYear should be int, str, or list or tuple of ints and strings.")
     
@@ -43,8 +40,7 @@ def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tupl
         raise ValueError("\nKey should be a string")
 
     year = [str(year)] if isinstance(year, str) or isinstance(year, int) else list(map(lambda x: str(x), year))
-    query = [str(query)] if isinstance(query, str) or isinstance(query, int) else list(map(lambda x: str(x), query))
-    
+   
     if(key == ""):
         raise ValueError("\nDid you forget to set the key. " + 
                          "Please go to https://www.huduser.gov/" +
@@ -54,25 +50,27 @@ def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tupl
                          "hud_set_key(your-key)")
 
     year = list(set(map(lambda x: str.strip(x), year)))
-    query = list(set(map(lambda x: str.strip(x), query)))
 
-
-    possible_years = list("2014-2018", "2013-2017",
+    possible_years = ["2014-2018", "2013-2017",
                           "2012-2016", "2011-2015",
                           "2010-2014", "2009-2013",
                           "2008-2012", "2007-2011",
-                          "2006-2010")
+                          "2006-2010"]
 
     for i in range(0, len(year)):
-        if int(year[i]) not in possible_years:
-            raise ValueError("\nOne of the years does not fall into the values" +
+        if year[i] not in possible_years:
+            raise ValueError("\nOne of the years does not fall into the values " +
                              "expected")
     if query is not None:
-        if type(query) != list and type(query) != tuple:
-            raise ValueError("")
+        
+        if not isinstance(query, (int, str, list)) :
+            raise ValueError("\nQuery should be int, str, or list or tuple of ints and strings.")
 
-        query = map(lambda x: str.strip(x), query)
-        return(list(query, year, key))    
+        query = [str(query)] if isinstance(query, str) or isinstance(query, int) else list(map(lambda x: str(x), query))
+    
+        query = list(map(lambda x: str.strip(x), query))
+        
+        return([query, year, key])    
     
     return([year, key])
 
@@ -238,7 +236,7 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list[int], list[str], tu
     elif all(list(map(lambda x: len(x) == 16, query))):
         querytype = "cbsa"
     else:
-        raise ValueError("\nThere is no matching fips code for one of the inputted states")
+        raise ValueError("\nThis doesn't seem to be either an county, state, or cbsa inputted.")
 
     return([query, year, key, [querytype]])
 
