@@ -157,7 +157,7 @@ def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tupl
     if all(map(lambda x: len(x) == 2, state)):
         state = list(map(lambda x: str.upper(x), state))
     elif all(map(lambda x: len(x) > 2, state)):
-        state = list(map(lambda x: x[0:1].upper() + x[1:len(x)], state))
+        state = list(map(lambda x: x[0:1].upper() + x[1:len(x)].lower(), state))
 
     if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
@@ -360,7 +360,7 @@ def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], 
     if all(map(lambda x: len(x) == 2, state)):
         state = list(map(lambda x: str.upper(x), state))
     elif all(map(lambda x: len(x) > 2, state)):
-        state = list(map(lambda x: x[0:1].upper() + x[1:len(x)], state))
+        state = list(map(lambda x: x[0:1].upper() + x[1:len(x)].lower(), state))
 
     if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
@@ -384,8 +384,6 @@ def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], 
 
     all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=4&stateId="],
                                           state,
-                                          ["&entityId="],
-                                          minor_civil_divisions,
                                           ["&year="],
                                           year))
     
@@ -394,10 +392,10 @@ def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], 
         urls.append(
             all_queries[i][0] + 
             all_queries[i][1] +
+            "&entityId=" +
+            minor_civil_divisions[i % len(minor_civil_divisions)] +
             all_queries[i][2] +
-            all_queries[i][3] +
-            all_queries[i][4] +
-            all_queries[i][5] 
+            all_queries[i][3] 
         )
 
 
@@ -479,7 +477,7 @@ def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int]
     if all(map(lambda x: len(x) == 2, state)):
         state = list(map(lambda x: str.upper(x), state))
     elif all(map(lambda x: len(x) > 2, state)):
-        state = list(map(lambda x: x[0:1].upper() + x[1:len(x)], state))
+        state = list(map(lambda x: x[0:1].upper() + x[1:len(x)].lower(), state))
 
     if hudpkgenv.pkg_env["states"].empty:
         hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
@@ -497,12 +495,10 @@ def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int]
     if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
         state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
     
-    minor_civil_divisions = hudmisc.hud_state_places(state)["entityId"]
+    places = hudmisc.hud_state_places(state)["entityId"]
 
     all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=4&stateId="],
                                           state,
-                                          ["&entityId="],
-                                          minor_civil_divisions,
                                           ["&year="],
                                           year))
 
@@ -511,10 +507,10 @@ def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int]
         urls.append(
             all_queries[i][0] + 
             all_queries[i][1] +
+            ["&entityId="],
+            places[i % len(places)],
             all_queries[i][2] +
-            all_queries[i][3] +
-            all_queries[i][4] +
-            all_queries[i][5] 
+            all_queries[i][3] 
         )
 
 

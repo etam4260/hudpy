@@ -28,6 +28,7 @@ def test_il_state_queries():
         huduser.hud_il("DC")
 
     hud_states = hudmisc.hud_nation_states_territories()
+    hud_states["state_num"] = list(map(lambda x: int(x), hud_states["state_num"]))
     hud_states = hud_states[hud_states["state_num"] < 57]
     hud_states = hud_states[hud_states["state_code"] != "DC"]
 

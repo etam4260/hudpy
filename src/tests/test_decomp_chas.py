@@ -55,18 +55,19 @@ def test_chas_state():
     test = hudchas.hud_chas_state(state = "vIRGINIa")
     assert len(test) == 1
     
-    # Try querying for all states in nation
-    hudstates = hudmisc.hud_nation_states_territories()
-    hudstates = hudmisc.hudstates[int(hudstates["state_num"]) < 57, ]
-    hudstates = hudstates[hudstates["state_code"] != "DC", ]
+    hud_states = hudmisc.hud_nation_states_territories()
+    hud_states["state_num"] = list(map(lambda x: int(x), hud_states["state_num"]))
+    hud_states = hud_states[hud_states["state_num"] < 57]
+    hud_states = hud_states[hud_states["state_code"] != "DC"]
+
 
     # Try to query for all state codes?
-    all_state_abbr = hudchas.hud_chas_state(hudstates["state_code"])
-    assert len(all_state_abbr) == 1
+    all_state_abbr = hudchas.hud_chas_state(list(hud_states["state_code"]))
+    assert len(all_state_abbr) == len(hud_states)
     
     # Try to query for all state name?
-    all_state_num = hudchas.hud_chas_state(hudstates["state_num"])
-    assert len(all_state_num) == 1
+    all_state_num = hudchas.hud_chas_state(list(hud_states["state_num"]))
+    assert len(all_state_num) == len(hud_states)
 
 
 @pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
