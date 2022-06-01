@@ -129,7 +129,7 @@ def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
             cont = pd.json_normalize(cont["data"]["results"]) 
         
             cont.rename(columns = {'geoid': secondary_geoid}, inplace = True)
-            cont["query"] = [query[i] for j in range(0, cont.shape[0])]
+            cont[primary_geoid] = [query[i] for j in range(0, cont.shape[0])]
             cont["year"] = [year[i] for j in range(0, cont.shape[0])]
             cont["quarter"] = [quarter[i] for j in range(0, cont.shape[0])]
             

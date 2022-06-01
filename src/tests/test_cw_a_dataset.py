@@ -6,9 +6,11 @@ from hudpy import huddatasetcw
 
 @pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_simple_cw():
-    sample = pd.DataFrame(mes = list(1232, 2453, 4564),
-                          zip = list(21206, 21224, 20854))
+    
+    data = {'mes': [1232, 2453, 4564], 'zip': [21206, 21224, 20854]}
+    sample = pd.DataFrame(data)
 
+    
     cw = huddatasetcw.crosswalk(sample, "zip", "zip", "county",
                                  year = 2018,
                                  quarter = 1)
@@ -16,6 +18,7 @@ def test_simple_cw():
 
     cw = huddatasetcw.crosswalk(sample, "zip", "zip", "county", "mes", "res",
                                  2018, 1)
+    
     assert len(cw) >= 1
 
     cw = huddatasetcw.crosswalk(sample, "zip", "zip", "county", "mes", "bus",
@@ -35,7 +38,6 @@ def test_simple_cw():
                                  year = 2018,
                                  quarter = 1)
     assert len(cw) >= 1
-
 
 
 

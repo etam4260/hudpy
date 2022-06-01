@@ -288,10 +288,36 @@ def crosswalk_a_dataset_input_check_cleansing(data,
     This returns a list of the cleaned user inputs.
 
     """
+    
+    if not isinstance(geoid_col, (str)) :
+        raise ValueError("\ngeoid_col should be str, or list of tuple of strings corresponding to column names")
+    if cw_geoid_col != None and not isinstance(cw_geoid_col, (str)) :
+        raise ValueError("\ngeoid_col should be str, or list of tuple of strings corresponding to column names")
+     
+    
+    if not isinstance(geoid, (str)) :
+        raise ValueError("\ngeoid should be a string corresponding to column with the geoids used to crosswalk.")
+    if not isinstance(cw_geoid, (str)) :
+        raise ValueError("\ncw_geoid should be a string corresponding to column with the columns to crosswalk.")
+    if method != None and not isinstance(method, (str)) :
+        raise ValueError("\nmethod should be a string corresponding to either res, bus, oth, or tot.")
 
-    if len(geoid) > 1 or len(geoid_col) > 1 or \
-       len(year) > 1 or len(quarter) > 1:
-        raise ValueError("\nMake sure geoid, geoid_col, year, and quarter arguments are of length 1.")
+
+    if cw_geoid_col != None:
+        cw_geoid_col = [str(cw_geoid_col)] if isinstance(cw_geoid_col, str) else list(map(lambda x: str(x), cw_geoid_col))
+
+    args = cw_input_check_cleansing(query = list(data[geoid_col]),
+                                    year = year,
+                                    quarter = quarter,
+                                    key = key
+                                    )
+    
+    query = args[0]
+    year = args[1] 
+    quarter = args[2]
+    key = args[3]
+    
+
     if key == None:
         raise ValueError("\nIt looks like the HUD_KEY was not set: use hud_set_key().")
        
@@ -306,12 +332,7 @@ def crosswalk_a_dataset_input_check_cleansing(data,
                          "this to your environment using " +
                          "hud_set_key(your-key)")
 
-    args = cw_input_check_cleansing(query = data[geoid_col],
-                                    year = year,
-                                    quarter = quarter,
-                                    key = key
-                                    )
+    
 
     return([geoid, geoid_col, cw_geoid, cw_geoid_col, method, 
-                args[2], args[3], args[4]])
-    
+                args[1], args[2], args[3]])

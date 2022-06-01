@@ -17,7 +17,7 @@ def crosswalk(data: pd.DataFrame,
               method: Union[str, None] = None,
               year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
               quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
-              key: str = os.getenv("HUD_KEY")) -> pd.DataFrame:
+              key: str = None) -> pd.DataFrame:
     """
     Function to crosswalk a dataframe using the US Department of Housing and Urban Development 
     crosswalk files. This function assumes data is well formed. For just obtaining the 
@@ -126,62 +126,68 @@ def crosswalk(data: pd.DataFrame,
                year = 2018, quarter = 1)
 
     """
+    
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+        
+        
+    args = hudinputcheck.crosswalk_a_dataset_input_check_cleansing(data = data, geoid = geoid, geoid_col = geoid_col,
+                                            cw_geoid = cw_geoid, cw_geoid_col = cw_geoid_col, method = method,
+                                            year = year,
+                                            quarter = quarter, key = key)
 
-    args = hudinputcheck.crosswalk_a_dataset_input_check_cleansing(data, geoid, geoid_col,
-                                            cw_geoid, cw_geoid_col, method,
-                                            year,
-                                            quarter, key)
+    geoid = args[0]
+    geoid_col = args[1]
+    
+    cw_geoid = args[2]
+    cw_geoid_col = args[3]
 
-    geoid = args[1]
-    geoid_col = args[2]
-    cw_geoid = args[3]
+    method = args[4]
+    
+    year = args[5]
+    quarter = args[6]
+    
+    key = args[7]
 
-    cw_geoid_col = args[4]
-
-    method = args[5]
-    year = args[6]
-    quarter = args[7]
-    key = args[8]
-
-
-    if geoid == "zip" and cw_geoid in list("county", "countysub", "tract",
-                                       "cbsa", "cbsadiv", "cd"):
+   
+    if geoid == "zip" and cw_geoid in ["county", "countysub", "tract",
+                                       "cbsa", "cbsadiv", "cd"]:
         if cw_geoid == "county":
-            cw_data = hudcw.hud_cw_zip_county(data[geoid_col], year = year,
+            cw_data = hudcw.hud_cw_zip_county(list(data[geoid_col]), year = year,
                                         quarter = quarter, key = key)
         elif cw_geoid == "countysub":
-            cw_data = hudcw.hud_cw_zip_countysub(data[geoid_col], year = year,
+            cw_data = hudcw.hud_cw_zip_countysub(list(data[geoid_col]), year = year,
                                             quarter = quarter, key = key)
         elif cw_geoid == "cd":
-            cw_data = hudcw.hud_cw_zip_cd(data[geoid_col], year = year,
+            cw_data = hudcw.hud_cw_zip_cd(list(data[geoid_col]), year = year,
                                     quarter = quarter, key = key)
         elif cw_geoid == "tract":
-            cw_data = hudcw.hud_cw_zip_tract(data[geoid_col], year = year,
+            cw_data = hudcw.hud_cw_zip_tract(list(data[geoid_col]), year = year,
                                         quarter = quarter, key = key)
         elif cw_geoid == "cbsa":
-            cw_data = hudcw.hud_cw_zip_cbsa(data[geoid_col], year = year,
+            cw_data = hudcw.hud_cw_zip_cbsa(list(data[geoid_col]), year = year,
                                         quarter = quarter, key = key)
         elif cw_geoid == "cbsadiv":
-            cw_data = hudcw.hud_cw_zip_cbsadiv(data[geoid_col], year = year,
+            cw_data = hudcw.hud_cw_zip_cbsadiv(list(data[geoid_col]), year = year,
                                             quarter = quarter, key = key)
 
     elif geoid == "county" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_county_zip(data[geoid_col], year = year,
+        cw_data = hudcw.hud_cw_county_zip(list(data[geoid_col]), year = year,
                                         quarter = quarter, key = key)
     elif geoid == "countysub" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_countysub_zip(data[geoid_col], year = year,
+        cw_data = hudcw.hud_cw_countysub_zip(list(data[geoid_col]), year = year,
                                         quarter = quarter, key = key)
     elif geoid == "cd" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_cd_zip(data[geoid_col], year = year,
+        cw_data = hudcw.hud_cw_cd_zip(list(data[geoid_col]), year = year,
                                 quarter = quarter, key = key)
     elif geoid == "tract" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_tract_zip(data[geoid_col], year = year,
+        cw_data = hudcw.hud_cw_tract_zip(list(data[geoid_col]), year = year,
                                     quarter = quarter, key = key)
     elif geoid == "cbsa" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_cbsa_zip(data[geoid_col], year = year,
+        cw_data = hudcw.hud_cw_cbsa_zip(list(data[geoid_col]), year = year,
                                 quarter = quarter, key = key)
     elif geoid == "cbsadiv" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_cbsadiv_zip(data[geoid_col], year = year,
+        cw_data = hudcw.hud_cw_cbsadiv_zip(list(data[geoid_col]), year = year,
                                     quarter = quarter, key = key)
     else:
         raise ValueError("\nCrosswalk from {} to {} is not supported.".format(geoid, cw_geoid))
@@ -190,15 +196,22 @@ def crosswalk(data: pd.DataFrame,
 
     # If no columns are provides, assume just want to merge...
     # If no method is provided, assume merge and crosswalk
+    
     if cw_geoid_col == None or method == None:
         
         print("\n* No method or cw_geoid_col specified: will just merge the datasets.")
-     
-        return(pd.merge(cw_data, data, left_on = 6, right_on = geoid_col))
+        
+        cw_data[geoid] = cw_data[geoid].astype(str)
+        data[geoid_col] = data[geoid_col].astype(str)
+
+        return(pd.merge(cw_data, data, left_on = geoid, right_on = geoid_col).drop(columns = 'index'))
 
     elif cw_geoid_col != None and method != None:
-
-        merged = pd.merge(cw_data, data, left_on = 6, right_one = geoid_col)
+        
+        cw_data[geoid] = cw_data[geoid].astype(str)
+        data[geoid_col] = data[geoid_col].astype(str)
+        
+        merged = pd.merge(cw_data, data, left_on = geoid, right_on = geoid_col).drop(columns = 'index')
 
         # clear memory
         cw_data = None
