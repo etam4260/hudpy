@@ -14,73 +14,136 @@ coverage](https://codecov.io/gh/etam4260/hudr/branch/main/graph/badge.svg)](http
 
 <!-- badges: end -->
 
+Are you a R developer? Check out [rhud](https://github.com/etam4260/rhud) instead
 
 ## Housing and Urban Development in Python
 
 -   This interface uses the HUD User Data API but is not endorsed or
     certified by HUD User.
 
-The goal of this project is to provide an easy-to-use interface to
-access various open-source APIs provided by the U.S Housing and Urban
-Development. These include the USPS Crosswalk Files, Fair Markets Rent,
-Income Limits, and Comprehensive Housing and Affordability Strategy.
+The goal of this project is to provide an easy-to-use interface to access
+various open-source APIs provided by the U.S Housing and Urban Development. 
+These include the USPS Crosswalk Files, Fair Markets Rent, Income Limits, and
+Comprehensive Housing and Affordability Strategy. Although HUD does provide 
+datasets for other programs, they are currently not supported by an API. 
 
+Please read https://www.huduser.gov/portal/dataset/api-terms-of-service.html
+for all terms of service.
+
+According to HUD USER:
+
+All services, which utilize or access the API, should display the following
+notice prominently within the application: "This product uses the HUD User Data
+API but is not endorsed or certified by HUD User." You may use the HUD User name
+in order to identify the source of API content subject to these rules. You may
+not use the HUD User name, or the like to imply endorsement of any product,
+service, or entity, not-for-profit, commercial or otherwise.
+y.
 
 ## HUD User: <https://www.huduser.gov/portal/datasets>
 
-According to (HUD User Home Page \| HUD USER), HUD User is a U.S.
-Department of Housing and Urban Development information source that
-includes reports and reference documents. HUD USER was founded in 1978
-by the Department of Housing and Urban Development’s Office of Policy
-Development and Research.
+According to (HUD User Home Page | HUD USER), HUD User is a U.S. Department of
+Housing and Urban Development information source that includes reports and
+reference documents. HUD USER was founded in 1978 by the Department of Housing
+and Urban Development's Office of Policy Development and Research.
 
-HUD User maintains an API to gain access to their data. However, their
-API system can be confusing and provides their information in JSON
-format rather than a data-frame like object. Although there exist file
-downloadables, R users may want to be able to extract specific bits of
-the data into memory.
-
-All services, which utilize or access the API, should display the
-following notice prominently within the application: “This product uses
-the HUD User Data API but is not endorsed or certified by HUD User." You
-may use the HUD User name in order to identify the source of API content
-subject to these rules. You may not use the HUD User name, or the like
-to imply endorsement of any product, service, or entity, not-for-profit,
-commercial or otherwise.
+HUD User maintains an API to gain access to their data. However, their API
+system can be confusing and provides their information in JSON format 
+rather than a data-frame like object. Although there exist file downloadables,
+R users may want to be able to extract specific bits of the data into memory.
 
 ## Citation
 
 Please cite this package using:
 
- Tam, E., Reilly, A., & Ghaedi, H. (2022). hudpy: A python interface for
- accessing HUD (US Department of Housing and Urban Development)
- APIs (Version 0.1.0). <https://github.com/etam4260/hudpy>
+| Tam, E., Reilly, A., & Ghaedi, H. (2022). hudpy: A python interface for
+|     accessing HUD (US Department of Housing and Urban Development)
+|     APIs (Version 0.1.0). <https://github.com/etam4260/hudpy>
 
 ## Available Data
 
 The APIs and datasets which this library interfaces are listed below.
 The HUD also provide miscellaneous supplemental APIs under them.
-
-HUD USER
     
-*   USPS Crosswalk
-        (<https://www.huduser.gov/portal/dataset/uspszip-api.html>)
+1) HUD User
+  
+  - USPS Crosswalk (https://www.huduser.gov/portal/dataset/uspszip-api.html)
+    
+  | USPS Crosswalk Files | Years | 
+  |------------------------------------------|------------------------------------------------|
+  | `hud_cw_zip_tract()` | 2010-2021 | 
+  | `hud_cw_zip_county()` | 2010-2021 |
+  | `hud_cw_zip_cbsa()` | 2010-2021 |
+  | `hud_cw_zip_cbsadiv()` | <b>2017-2021<b> |
+  | `hud_cw_zip_countysub()` | <b>2018-2021<b> |
+  | `hud_cw_zip_cd()` | 2010-2021 |
+  | `hud_cw_tract_zip()` | 2010-2021 |
+  | `hud_cw_county_zip()` | 2010-2021 |
+  | `hud_cw_cbsa_zip()` | 2010-2021 |
+  | `hud_cw_cbsadiv_zip()` | <b>2017-2021<b> |
+  | `hud_cw_cd_zip()` | 2010-2021 |
+  | `hud_cw_countysub_zip()` | <b>2018-2021<b> |
+  | `hud_cw()` | 2010-2021 |
+  | `crosswalk()` | 2010-2021 | 
 
-*   Fair Markets Rent
-        (<https://www.huduser.gov/portal/dataset/fmr-api.html>)
-        
-    *  Small Areas Fair Markets Rent
-    *   List States
-    *   List Small Areas
+  - Fair Markets Rent (https://www.huduser.gov/portal/dataset/fmr-api.html)
+      + Small Areas Fair Markets Rent
+      
+  | Fair Markets Rent | Years
+  |------------------------------------------|------------------------------------------------|
+  | `hud_fmr_state_county()` | 2017-2022 |
+  | `hud_fmr_state_metroarea()` | 2017-2022 |
+  | `hud_fmr_county_zip()` | 2017-2022 |
+  | `hud_fmr_metroarea_zip()` | 2017-2022 |
+  | `hud_fmr()` | 2017-2022 |
 
-*   Income Limits
-        (<https://www.huduser.gov/portal/dataset/fmr-api.html>)
-*   Comprehensive Housing and Affordability Strategy
-        (<https://www.huduser.gov/portal/dataset/chas-api.html>)
-        
-    *   List Counties in State
-    *   List MCDs in State
-    *   List All Cities in State
+  
+  - Income Limits (https://www.huduser.gov/portal/dataset/fmr-api.html)
+  
+  | Income Limits | Years
+  |------------------------------------------|------------------------------------------------|
+  | `hud_il()` | 2017-2022 |
+    
+  - Comprehensive Housing and Affordability Strategy (https://www.huduser.gov/portal/dataset/chas-api.html)
+      
+  | Comprehensive Housing and Affordability Strategy | Years
+  |------------------------------------------|------------------------------------------------|
+  | `hud_chas_nation()` | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+  | `hud_chas_state()` | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+  | `hud_chas_county()` | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+  | `hud_chas_state_mcd()` | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+  | `hud_chas_state_places()` | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+  | `hud_chas()` | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+
+  - US Geographic Entities
+
+  | US Geographies | 
+  |------------------------------------------|
+  | `hud_nation_state_territories()` |
+  | `hud_state_metropolitan()` | 
+  | `hud_state_counties()` |
+  | `hud_state_places()` |
+  | `hud_state_minor_civil_divisions()` | 
+
+  - Key access 
+  
+  | Managing Keys |
+  |------------------------------------------|
+  | `hud_set_key()` | 
+  | `hud_get_key()` | 
+
+  - Caching
+  
+  | Caching |
+  |------------------------------------------|
+  | `rhud_cache_dir()` |
+  | `rhud_clear_cache()` | 
+
+  - Documentation
+  
+  | Documentation |
+  |------------------------------------------|
+  | `rhud_website()` | 
 
 ## Installation
 
@@ -120,6 +183,6 @@ pip install hudpy
 
 ## References
 
-HUD User Home Page: HUD USER. HUD User Home Page \ HUD USER. (n.d.).
-Retrieved February 24, 2022, from
-<https://www.huduser.gov/portal/home.html>
+| HUD User Home Page: HUD USER. HUD User Home Page \ HUD USER. (n.d.).
+|     Retrieved February 24, 2022, from
+|     <https://www.huduser.gov/portal/home.html>
