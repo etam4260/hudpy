@@ -7,9 +7,9 @@ import pandas as pd
 import os
 import itertools
 
-from hudpy import hudinputcheck
-from hudpy import hudinternetonline
-from hudpy import huddoquerycalls
+from hudpy import hud_input_check
+from hudpy import hud_internet_online
+from hudpy import hud_do_query_calls
 
 def hud_cw_zip_tract(zip: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                      year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
@@ -37,6 +37,7 @@ def hud_cw_zip_tract(zip: Union[int, str, list[int], list[str], tuple[int], tupl
 
     key : The API key for this user. You must go to HUD and sign up for an
         account and request for an API key.
+
     See Also
     --------
     
@@ -71,7 +72,7 @@ def hud_cw_zip_tract(zip: Union[int, str, list[int], list[str], tuple[int], tupl
 
     """
     
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
     
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -80,7 +81,7 @@ def hud_cw_zip_tract(zip: Union[int, str, list[int], list[str], tuple[int], tupl
     primary_geoid = "zip"
     secondary_geoid = "tract"
 
-    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[0]
     year = args[1]
     quarter = args[2]
@@ -107,13 +108,13 @@ def hud_cw_zip_tract(zip: Union[int, str, list[int], list[str], tuple[int], tupl
     
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["tract"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -180,7 +181,7 @@ def hud_cw_zip_county(zip: Union[int, str, list[int], list[str], tuple[int], tup
 
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
     
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -188,7 +189,7 @@ def hud_cw_zip_county(zip: Union[int, str, list[int], list[str], tuple[int], tup
     primary_geoid = "zip"
     secondary_geoid = "county"
 
-    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[0]
     year = args[1]
     quarter = args[2]
@@ -215,13 +216,13 @@ def hud_cw_zip_county(zip: Union[int, str, list[int], list[str], tuple[int], tup
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["county"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -287,7 +288,7 @@ def hud_cw_zip_cbsa(zip: Union[int, str, list[int], list[str], tuple[int], tuple
         minimal = True)
     """
     
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
     
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -295,7 +296,7 @@ def hud_cw_zip_cbsa(zip: Union[int, str, list[int], list[str], tuple[int], tuple
     primary_geoid = "zip"
     secondary_geoid = "cbsa"
 
-    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[0]
     year = args[1]
     quarter = args[2]
@@ -324,13 +325,13 @@ def hud_cw_zip_cbsa(zip: Union[int, str, list[int], list[str], tuple[int], tuple
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["cbsa"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -395,7 +396,7 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str, list[int], list[str], tuple[int], tu
         minimal = True)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
     
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -403,7 +404,7 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str, list[int], list[str], tuple[int], tu
     primary_geoid = "zip"
     secondary_geoid = "cbsadiv"
 
-    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[0]
     year = args[1]
     quarter = args[2]
@@ -432,13 +433,13 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str, list[int], list[str], tuple[int], tu
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["cbsadiv"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -446,8 +447,8 @@ def hud_cw_zip_cbsadiv(zip: Union[int, str, list[int], list[str], tuple[int], tu
 
 
 def hud_cw_zip_cd(zip: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                  year: Union[int, str, list[int], List[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
-                  quarter: Union[int, str, list[int], List[str], tuple[int], tuple[str]] = 1,
+                  year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() - timedelta(days = 365)).strftime("%Y"),
+                  quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = 1,
                   minimal: bool = False,
                   key: str = None) -> pd.DataFrame:
     """
@@ -504,7 +505,7 @@ def hud_cw_zip_cd(zip: Union[int, str, list[int], list[str], tuple[int], tuple[s
         minimal = True)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
     
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -512,7 +513,7 @@ def hud_cw_zip_cd(zip: Union[int, str, list[int], list[str], tuple[int], tuple[s
     primary_geoid = "zip"
     secondary_geoid = "cd"
 
-    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[0]
     year = args[1]
     quarter = args[2]
@@ -541,13 +542,13 @@ def hud_cw_zip_cd(zip: Union[int, str, list[int], list[str], tuple[int], tuple[s
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["cd"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -612,7 +613,7 @@ def hud_cw_zip_countysub(zip: Union[int, str, list[int], list[str], tuple[int], 
         minimal = True)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
     
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -620,7 +621,7 @@ def hud_cw_zip_countysub(zip: Union[int, str, list[int], list[str], tuple[int], 
     primary_geoid = "zip"
     secondary_geoid = "countysub"
 
-    args = hudinputcheck.cw_input_check_cleansing(zip, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(zip, year, quarter, key)
     zip = args[0]
     year = args[1]
     quarter = args[2]
@@ -649,13 +650,13 @@ def hud_cw_zip_countysub(zip: Union[int, str, list[int], list[str], tuple[int], 
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["countysub"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -720,7 +721,7 @@ def hud_cw_tract_zip(tract: Union[int, str, list[int], list[str], tuple[int], tu
         minimal = True)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -729,7 +730,7 @@ def hud_cw_tract_zip(tract: Union[int, str, list[int], list[str], tuple[int], tu
     primary_geoid = "tract"
     secondary_geoid = "zip"
 
-    args = hudinputcheck.cw_input_check_cleansing(tract, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(tract, year, quarter, key)
     tract = args[0]
     year = args[1]
     quarter = args[2]
@@ -758,13 +759,13 @@ def hud_cw_tract_zip(tract: Union[int, str, list[int], list[str], tuple[int], tu
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["zip"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -830,7 +831,7 @@ def hud_cw_county_zip(county: Union[int, str, list[int], list[str], tuple[int], 
         minimal = True)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -838,7 +839,7 @@ def hud_cw_county_zip(county: Union[int, str, list[int], list[str], tuple[int], 
     primary_geoid = "county"
     secondary_geoid = "zip"
 
-    args = hudinputcheck.cw_input_check_cleansing(county, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(county, year, quarter, key)
     county = args[0]
     year = args[1]
     quarter = args[2]
@@ -867,13 +868,13 @@ def hud_cw_county_zip(county: Union[int, str, list[int], list[str], tuple[int], 
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["zip"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -939,7 +940,7 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, list[int], list[str], tuple[int], tupl
         minimal = True)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
     
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -947,7 +948,7 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, list[int], list[str], tuple[int], tupl
     primary_geoid = "cbsa"
     secondary_geoid = "zip"
 
-    args = hudinputcheck.cw_input_check_cleansing(cbsa, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(cbsa, year, quarter, key)
     cbsa = args[0]
     year = args[1]
     quarter = args[2]
@@ -976,13 +977,13 @@ def hud_cw_cbsa_zip(cbsa: Union[int, str, list[int], list[str], tuple[int], tupl
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["zip"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -1049,7 +1050,7 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list[int], list[str], tuple[int]
         minimal = True)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -1057,7 +1058,7 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list[int], list[str], tuple[int]
     primary_geoid = "cbsadiv"
     secondary_geoid = "zip"
 
-    args = hudinputcheck.cw_input_check_cleansing(cbsadiv, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(cbsadiv, year, quarter, key)
     cbsadiv = args[0]
     year = args[1]
     quarter = args[2]
@@ -1086,13 +1087,13 @@ def hud_cw_cbsadiv_zip(cbsadiv: Union[int, str, list[int], list[str], tuple[int]
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["zip"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -1159,7 +1160,7 @@ def hud_cw_cd_zip(cd: Union[int, str, list[int], list[str], tuple[int], tuple[st
         minimal = True)
     """
     
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
     
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -1167,7 +1168,7 @@ def hud_cw_cd_zip(cd: Union[int, str, list[int], list[str], tuple[int], tuple[st
     primary_geoid = "cd"
     secondary_geoid = "zip"
 
-    args = hudinputcheck.cw_input_check_cleansing(cd, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(cd, year, quarter, key)
     cd = args[0]
     year = args[1]
     quarter = args[2]
@@ -1196,13 +1197,13 @@ def hud_cw_cd_zip(cd: Union[int, str, list[int], list[str], tuple[int], tuple[st
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["zip"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
@@ -1270,7 +1271,7 @@ def hud_cw_countysub_zip(countysub: Union[int, str, list[int], list[str], tuple[
         minimal = True)
     """
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
     
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
@@ -1278,7 +1279,7 @@ def hud_cw_countysub_zip(countysub: Union[int, str, list[int], list[str], tuple[
     primary_geoid = "countysub"
     secondary_geoid = "zip"
 
-    args = hudinputcheck.cw_input_check_cleansing(countysub, year, quarter, key)
+    args = hud_input_check.cw_input_check_cleansing(countysub, year, quarter, key)
     countysub = args[0]
     year = args[1]
     quarter = args[2]
@@ -1307,13 +1308,13 @@ def hud_cw_countysub_zip(countysub: Union[int, str, list[int], list[str], tuple[
 
 
     if minimal == True:
-        return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+        return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,
                                 key)["zip"].reset_index())
 
-    return(huddoquerycalls.cw_do_query_calls(urls, [i[0] for i in all_queries],
+    return(hud_do_query_calls.cw_do_query_calls(urls, [i[0] for i in all_queries],
                                 [i[1] for i in all_queries], [i[2] for i in all_queries],
                                 primary_geoid,
                                 secondary_geoid,

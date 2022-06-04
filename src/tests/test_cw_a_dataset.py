@@ -2,7 +2,7 @@ import pytest
 import os
 import pandas as pd
 
-from hudpy import huddatasetcw
+from hudpy import hud_dataset_cw
 
 @pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_simple_cw():
@@ -11,122 +11,122 @@ def test_simple_cw():
     sample = pd.DataFrame(data)
 
     
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "county",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "county",
                                  year = 2018,
                                  quarter = 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "county", "mes", "res",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "county", "mes", "res",
                                  2018, 1)
     
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "county", "mes", "bus",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "county", "mes", "bus",
                             2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "county", "mes", "oth",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "county", "mes", "oth",
                                 2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "county", "mes", "tot",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "county", "mes", "tot",
                                 2018, 1)
     assert len(cw) >= 1
 
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "tract",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "tract",
                                  year = 2018,
                                  quarter = 1)
     assert len(cw) >= 1
 
 
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "tract", "mes", "res",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "tract", "mes", "res",
                                  2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "tract", "mes", "bus",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "tract", "mes", "bus",
                             2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "tract", "mes", "oth",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "tract", "mes", "oth",
                                 2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "tract", "mes", "tot",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "tract", "mes", "tot",
                                 2018, 1)
     assert len(cw) >= 1
 
 
 
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cbsa", "mes", "res",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cbsa", "mes", "res",
                                  2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cbsa", "mes", "bus",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cbsa", "mes", "bus",
                             2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cbsa", "mes", "oth",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cbsa", "mes", "oth",
                                 2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cbsa", "mes", "tot",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cbsa", "mes", "tot",
                                 2018, 1)
     assert len(cw) >= 1
 
 
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cbsadiv", "mes", "res",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cbsadiv", "mes", "res",
                                  2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cbsadiv", "mes", "bus",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cbsadiv", "mes", "bus",
                             2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cbsadiv", "mes", "oth",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cbsadiv", "mes", "oth",
                                 2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cbsadiv", "mes", "tot",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cbsadiv", "mes", "tot",
                                 2018, 1)
     assert len(cw) >= 1
 
 
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cd", "mes", "res",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cd", "mes", "res",
                                  2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cd", "mes", "bus",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cd", "mes", "bus",
                             2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cd", "mes", "oth",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cd", "mes", "oth",
                                 2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cd", "mes", "tot",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cd", "mes", "tot",
                                 2018, 1)
     assert len(cw) >= 1
 
 
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cd", "mes", "res",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cd", "mes", "res",
                                  2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cd", "mes", "bus",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cd", "mes", "bus",
                             2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cd", "mes", "oth",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cd", "mes", "oth",
                                 2018, 1)
     assert len(cw) >= 1
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "cd", "mes", "tot",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "cd", "mes", "tot",
                                 2018, 1)
     assert len(cw) >= 1
 
@@ -134,14 +134,14 @@ def test_simple_cw():
 def test_awkward_cw():
     sample = pd.DataFrame(mes = list(1232, 1232, 1232), zip = list(21206, 21206, 21206))
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "county", year = 2018,
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "county", year = 2018,
               quarter = 1)
 
-    cw = huddatasetcw.crosswalk(sample, "zip", "zip", "county", "mes", "res",
+    cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "county", "mes", "res",
               2018, 1)
 
     sample = pd.DataFrame(mes = list(1232, 1232, 1232), zip = list(21202336, 212206, 2221206))
 
     with pytest.raises(ValueError) as e_info:
-        huddatasetcw.crosswalk(sample, "zip", "zip", "county", year = 2018,
+        hud_dataset_cw.crosswalk(sample, "zip", "zip", "county", year = 2018,
                                           quarter = 1)

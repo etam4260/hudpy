@@ -4,7 +4,7 @@ from typing import Union
 import os
 import platform
 
-from hudpy import hudinternetonline
+from hudpy import hud_internet_online
 
 def hudpy_website(website: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = ["github-pages", "github"]):
     
@@ -25,7 +25,7 @@ def hudpy_website(website: Union[int, str, list[int], list[str], tuple[int], tup
     >>> rhud_website()
     """ 
 
-    if(not hudinternetonline.internet_on()): raise ConnectionError("You currently do not have internet access.")
+    if(not hud_internet_online.internet_on()): raise ConnectionError("You currently do not have internet access.")
 
     github_pages = "https://etam4260.github.io/hudpy/"
     github = "https://github.com/etam4260/hudpy"

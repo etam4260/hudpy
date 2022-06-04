@@ -5,11 +5,11 @@ from datetime import date, timedelta
 import os 
 import itertools
 
-from hudpy import hudinternetonline
-from hudpy import hudinputcheck
-from hudpy import huddoquerycalls
-from hudpy import hudpkgenv
-from hudpy import hudmisc
+from hudpy import hud_internet_online
+from hudpy import hud_input_check
+from hudpy import hud_do_query_calls
+from hudpy import hud_pkg_env
+from hudpy import hud_misc
 
 def hud_chas_nation(year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = "2014-2018",
                     key: str = None):
@@ -56,16 +56,16 @@ def hud_chas_nation(year: Union[int, str, list[int], list[str], tuple[int], tupl
     >>> hud_chas_nation()
    
     """
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
             
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
 
-    args = hudinputcheck.chas_input_check_cleansing(query = None, year = year, key = key)
+    args = hud_input_check.chas_input_check_cleansing(query = None, year = year, key = key)
     year = args[0]
     key = args[1]
 
@@ -80,7 +80,7 @@ def hud_chas_nation(year: Union[int, str, list[int], list[str], tuple[int], tupl
             all_queries[i][2] 
         )
 
-    return(huddoquerycalls.chas_do_query_calls(urls, key = key))
+    return(hud_do_query_calls.chas_do_query_calls(urls, key = key))
 
 
 def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
@@ -137,17 +137,17 @@ def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tupl
 
     """
     
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
             
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
 
 
-    args = hudinputcheck.chas_input_check_cleansing(state, year, key)
+    args = hud_input_check.chas_input_check_cleansing(state, year, key)
     state = args[0]
     year = args[1]
     key = args[2]
@@ -159,21 +159,21 @@ def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tupl
     elif all(map(lambda x: len(x) > 2, state)):
         state = list(map(lambda x: x[0:1].upper() + x[1:len(x)].lower(), state))
 
-    if hudpkgenv.pkg_env["states"].empty:
-        hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
-        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+    if hud_pkg_env.pkg_env["states"].empty:
+        hud_pkg_env.pkg_env["states"] = hud_misc.hud_nation_states_territories(key = key)
+        hud_pkg_env.pkg_env["states"]["state_num"] = hud_pkg_env.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
         
     for i in range(0, len(state)):
-        if state[i] not in hudpkgenv.pkg_env["states"].values:
+        if state[i] not in hud_pkg_env.pkg_env["states"].values:
             raise ValueError("There is no matching fips code for " + str(state[i]))
 
-    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
+    if len(set(state).intersection(set(hud_pkg_env.pkg_env["states"]["state_name"]))) != 0: 
         # Not sure if this is right syntax... need to test it...
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_num"])
-    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_num"]) 
-    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
+        state = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_name"].isin(state)]["state_num"])
+    if len(set(state).intersection(set(hud_pkg_env.pkg_env["states"]["state_code"]))) != 0:   
+        state = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_code"].isin(state)]["state_num"]) 
+    if len(set(state).intersection(set(hud_pkg_env.pkg_env["states"]["state_num"]))) != 0:  
+        state = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
     
   
     
@@ -190,7 +190,7 @@ def hud_chas_state(state: Union[int, str, list[int], list[str], tuple[int], tupl
         )
   
 
-    return huddoquerycalls.chas_do_query_calls(urls, key = key)
+    return hud_do_query_calls.chas_do_query_calls(urls, key = key)
 
 
 
@@ -244,16 +244,16 @@ def hud_chas_county(county: Union[int, str, list[int], list[str], tuple[int], tu
     >>> hud_chas_county(county = ["06105", "06113"], year = 2020)
 
     """
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
             
     if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
 
-    args = hudinputcheck.chas_input_check_cleansing(county, year, key)
+    args = hud_input_check.chas_input_check_cleansing(county, year, key)
     county = args[0]
     year = args[1]
     key = args[2]
@@ -267,13 +267,13 @@ def hud_chas_county(county: Union[int, str, list[int], list[str], tuple[int], tu
 
     check_county = list(map(lambda x: x + "99999", county))
 
-    if hudpkgenv.pkg_env["states"].empty:
-        hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
-        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+    if hud_pkg_env.pkg_env["states"].empty:
+        hud_pkg_env.pkg_env["states"] = hud_misc.hud_nation_states_territories(key = key)
+        hud_pkg_env.pkg_env["states"]["state_num"] = hud_pkg_env.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
         
         
     for i in range(0, len(state_fip)):
-        if state_fip[i] not in hudpkgenv.pkg_env["states"].values:
+        if state_fip[i] not in hud_pkg_env.pkg_env["states"].values:
             raise ValueError("\nThere is no matching fips code for " + str(state_fip[i]))
 
     all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=3&stateId="],
@@ -291,7 +291,7 @@ def hud_chas_county(county: Union[int, str, list[int], list[str], tuple[int], tu
         )
 
 
-    return huddoquerycalls.chas_do_query_calls(urls, key = key)
+    return hud_do_query_calls.chas_do_query_calls(urls, key = key)
 
 def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                        year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = "2014-2018", 
@@ -343,16 +343,16 @@ def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], 
 
     """
     
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
             
     if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
 
-    args = hudinputcheck.chas_input_check_cleansing(query = state, year = year, key = key)
+    args = hud_input_check.chas_input_check_cleansing(query = state, year = year, key = key)
     state = args[0]
     year = args[1]
     key = args[2]
@@ -362,25 +362,25 @@ def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], 
     elif all(map(lambda x: len(x) > 2, state)):
         state = list(map(lambda x: x[0:1].upper() + x[1:len(x)].lower(), state))
 
-    if hudpkgenv.pkg_env["states"].empty:
-        hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
-        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+    if hud_pkg_env.pkg_env["states"].empty:
+        hud_pkg_env.pkg_env["states"] = hud_misc.hud_nation_states_territories(key = key)
+        hud_pkg_env.pkg_env["states"]["state_num"] = hud_pkg_env.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
         
     for i in range(0, len(state)):
-        if state[i] not in hudpkgenv.pkg_env["states"].values:
+        if state[i] not in hud_pkg_env.pkg_env["states"].values:
             raise ValueError("\nThere is no matching fips code for " + str(state[i]))
 
-    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
+    if len(set(state).intersection(set(hud_pkg_env.pkg_env["states"]["state_name"]))) != 0: 
         # Not sure if this is right syntax... need to test it...
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_num"])
-    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_num"]) 
-    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
+        state = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_name"].isin(state)]["state_num"])
+    if len(set(state).intersection(set(hud_pkg_env.pkg_env["states"]["state_code"]))) != 0:   
+        state = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_code"].isin(state)]["state_num"]) 
+    if len(set(state).intersection(set(hud_pkg_env.pkg_env["states"]["state_num"]))) != 0:  
+        state = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
     
     # Get all mcds using state inputs...
     
-    minor_civil_divisions = hudmisc.hud_state_minor_civil_divisions(state)["entityId"]
+    minor_civil_divisions = hud_misc.hud_state_minor_civil_divisions(state)["entityId"]
 
     all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=4&stateId="],
                                           state,
@@ -399,7 +399,7 @@ def hud_chas_state_mcd(state: Union[int, str, list[int], list[str], tuple[int], 
         )
 
 
-    return huddoquerycalls.chas_do_query_calls(urls, key = key)
+    return hud_do_query_calls.chas_do_query_calls(urls, key = key)
 
 
 def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
@@ -460,16 +460,16 @@ def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int]
 
     """
     
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
             
     if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
 
-    args = hudinputcheck.chas_input_check_cleansing(state, year = year, key = key)
+    args = hud_input_check.chas_input_check_cleansing(state, year = year, key = key)
     state = args[0]
     year = args[1]
     key = args[2]
@@ -479,23 +479,23 @@ def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int]
     elif all(map(lambda x: len(x) > 2, state)):
         state = list(map(lambda x: x[0:1].upper() + x[1:len(x)].lower(), state))
 
-    if hudpkgenv.pkg_env["states"].empty:
-        hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
-        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+    if hud_pkg_env.pkg_env["states"].empty:
+        hud_pkg_env.pkg_env["states"] = hud_misc.hud_nation_states_territories(key = key)
+        hud_pkg_env.pkg_env["states"]["state_num"] = hud_pkg_env.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
         
     for i in range(0, len(state)):
-        if state[i] not in hudpkgenv.pkg_env["states"].values:
+        if state[i] not in hud_pkg_env.pkg_env["states"].values:
             raise ValueError("\nThere is no matching fips code for " + str(state[i]))
 
-    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
+    if len(set(state).intersection(set(hud_pkg_env.pkg_env["states"]["state_name"]))) != 0: 
         # Not sure if this is right syntax... need to test it...
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(state)]["state_num"])
-    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(state)]["state_num"]) 
-    if len(set(state).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
-        state = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
+        state = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_name"].isin(state)]["state_num"])
+    if len(set(state).intersection(set(hud_pkg_env.pkg_env["states"]["state_code"]))) != 0:   
+        state = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_code"].isin(state)]["state_num"]) 
+    if len(set(state).intersection(set(hud_pkg_env.pkg_env["states"]["state_num"]))) != 0:  
+        state = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_num"].isin(state)]["state_num"])   
     
-    places = hudmisc.hud_state_places(state)["entityId"]
+    places = hud_misc.hud_state_places(state)["entityId"]
 
     all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=4&stateId="],
                                           state,
@@ -514,4 +514,4 @@ def hud_chas_state_place(state: Union[int, str, list[int], list[str], tuple[int]
         )
 
 
-    return huddoquerycalls.chas_do_query_calls(urls, key = key)
+    return hud_do_query_calls.chas_do_query_calls(urls, key = key)

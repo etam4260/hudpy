@@ -56,9 +56,9 @@ R users may want to be able to extract specific bits of the data into memory.
 
 Please cite this package using:
 
-| Tam, E., Reilly, A., & Ghaedi, H. (2022). hudpy: A python interface for
-|     accessing HUD (US Department of Housing and Urban Development)
-|     APIs (Version 0.1.0). <https://github.com/etam4260/hudpy>
+Tam, E., Reilly, A., & Ghaedi, H. (2022). hudpy: A python interface for
+accessing HUD (US Department of Housing and Urban Development)
+APIs (Version 0.1.0). <https://github.com/etam4260/hudpy>
 
 ## Available Data
 
@@ -85,6 +85,21 @@ The HUD also provide miscellaneous supplemental APIs under them.
   | `hud_cw_countysub_zip()` | <b>2018-2021<b> |
   | `hud_cw()` | 2010-2021 |
   | `crosswalk()` | 2010-2021 | 
+  | | | 
+  | `z_in_trt()` | 2010-2021 |
+  | `z_in_cty()` | 2010-2021  |
+  | `z_in_cbsa()` | 2010-2021  |
+  | `z_in_cbsadiv()` |  <b>2017-2021 <b>  | 
+  | `z_in_ctysb()` |  <b>2018-2021 <b>  |
+  | `z_in_cd()` | 2010-2021  |
+  | `trt_in_z()` | 2010-2021  |
+  | `cty_in_z()` | 2010-2021  |
+  | `cbsa_in_z()` | 2010-2021  |
+  | `cbsadiv_in_z()` |  <b>2017-2021 <b>  |
+  | `ctysb_in_z()` |  <b>2018-2021<b>  |
+  | `cd_in_z()` | 2010-2021  |
+  
+  
 
   - Fair Markets Rent (https://www.huduser.gov/portal/dataset/fmr-api.html)
       + Small Areas Fair Markets Rent
@@ -125,25 +140,31 @@ The HUD also provide miscellaneous supplemental APIs under them.
   | `hud_state_places()` |
   | `hud_state_minor_civil_divisions()` | 
 
-  - Key access 
+  - Management
   
-  | Managing Keys |
+  | Management |
   |------------------------------------------|
   | `hud_set_key()` | 
   | `hud_get_key()` | 
+  | `hud_set_user_agent()`|
+  | `hud_get_user_agent()`|
 
   - Caching
   
   | Caching |
   |------------------------------------------|
-  | `rhud_cache_dir()` |
-  | `rhud_clear_cache()` | 
+  | `hud_set_cache_dir()` |
+  | `hud_get_cache_dir()`|
+  | `hud_clear_cache()` | 
 
-  - Documentation
+  - Utilities
   
-  | Documentation |
+  | Utilities |
   |------------------------------------------|
   | `rhud_website()` | 
+  | `hud_rec_cw_yr()` |
+  | `hud_rec_fmr_yr()` |
+  | `hud_rec_il_yr()`|
 
 ## Installation
 
@@ -183,6 +204,6 @@ pip install hudpy
 
 ## References
 
-| HUD User Home Page: HUD USER. HUD User Home Page \ HUD USER. (n.d.).
-|     Retrieved February 24, 2022, from
-|     <https://www.huduser.gov/portal/home.html>
+HUD User Home Page: HUD USER. HUD User Home Page \ HUD USER. (n.d.).
+Retrieved February 24, 2022, from
+<https://www.huduser.gov/portal/home.html>

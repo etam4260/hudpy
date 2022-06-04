@@ -11,10 +11,10 @@ import json
 from datetime import date
 from datetime import timedelta
 
-from hudpy import huddownloadbar
-from hudpy import hudinternetonline
-from hudpy import hudinputcheck
-from hudpy import hudpkgenv
+from hudpy import hud_download_bar
+from hudpy import hud_internet_online
+from hudpy import hud_input_check
+from hudpy import hud_pkg_env
 
 def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                              year: Union[int, str, list[int], list[str], tuple[int], tuple[str]] = (date.today() -   timedelta(days = 365)).strftime("%Y"),
@@ -61,16 +61,16 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
     >>> hud_fmr_state_metroareas(state = "24", year = 2021)
     """  
     
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
             
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
         
-    args = hudinputcheck.fmr_il_input_check_cleansing(state, year, key)
+    args = hud_input_check.fmr_il_input_check_cleansing(state, year, key)
     query = args[0]
     year = args[1]
     key = args[2]
@@ -84,7 +84,7 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
     # Make query calls for all queries.
     result = pd.DataFrame()
 
-    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    if hud_pkg_env.pkg_env["pool_manager"] == None: hud_pkg_env.pkg_env["pool_manager"] = urllib3.PoolManager()
     
     for i in range(len(all_queries)):
         urls = "https://www.huduser.gov/hudapi/public/fmr/" + \
@@ -94,7 +94,7 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
                all_queries[i][1]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
+        call = hud_pkg_env.pkg_env["pool_manager"].request("GET", urls, headers = headers)
                                
         cont = json.loads(call.data.decode('utf-8'))
 
@@ -106,7 +106,7 @@ def hud_fmr_state_metroareas(state: Union[int, str, list[int], list[str], tuple[
             cont["year"] = [all_queries[i][1] for j in range(0, cont.shape[0])]
             result = pd.concat([result, cont])
                 
-        huddownloadbar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+        hud_download_bar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
 
 
     # Just print a newline
@@ -170,16 +170,16 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
     >>> hud_fmr_state_counties(state = "24", year = 2021)
     """
 
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
             
     if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
         
-    args = hudinputcheck.fmr_il_input_check_cleansing(state, year, key)
+    args = hud_input_check.fmr_il_input_check_cleansing(state, year, key)
     query = args[0]
     year = args[1]
     key = args[2]
@@ -193,7 +193,7 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
     # Make query calls for all queries.
     result = pd.DataFrame()
     
-    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    if hud_pkg_env.pkg_env["pool_manager"] == None: hud_pkg_env.pkg_env["pool_manager"] = urllib3.PoolManager()
   
     for i in range(len(all_queries)):
         urls = "https://www.huduser.gov/hudapi/public/fmr/" + \
@@ -203,7 +203,7 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
                all_queries[i][1]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
+        call = hud_pkg_env.pkg_env["pool_manager"].request("GET", urls, headers = headers)
                             
         cont = json.loads(call.data.decode('utf-8'))
         
@@ -215,7 +215,7 @@ def hud_fmr_state_counties(state: Union[int, str, list[int], list[str], tuple[in
             cont["year"] = [all_queries[i][1] for j in range(0, cont.shape[0])]
             result = pd.concat([result, cont])
 
-        huddownloadbar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+        hud_download_bar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
 
 
     # Just print a newline
@@ -279,16 +279,16 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
     >>> hud_fmr_county_zip(county = 5151099999, year = 2021)
     """
 
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
             
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
         
-    args = hudinputcheck.fmr_il_input_check_cleansing(county, year, key)
+    args = hud_input_check.fmr_il_input_check_cleansing(county, year, key)
     query = args[0]
     year = args[1]
     key = args[2]
@@ -310,13 +310,13 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
             all_queries[i][3]
         )
  
-    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    if hud_pkg_env.pkg_env["pool_manager"] == None: hud_pkg_env.pkg_env["pool_manager"] = urllib3.PoolManager()
     
     for i in range(len(urls)):
         url = urls[i]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
+        call = hud_pkg_env.pkg_env["pool_manager"].request("GET", url, headers = headers)
                          
         cont = json.loads(call.data.decode('utf-8'))    
     
@@ -365,7 +365,7 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
                 # drop zip and move it
                 result = pd.concat([result, merged])
 
-        huddownloadbar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+        hud_download_bar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
 
     if len(error_urls) != 0:
         # Print all error urls
@@ -427,17 +427,17 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
     >>> hud_fmr_metroarea_zip(metroarea = "METRO10380M10380", year = 2020)
     """
 
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
           
         
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
 
-    args = hudinputcheck.fmr_il_input_check_cleansing(metroarea, year, key)
+    args = hud_input_check.fmr_il_input_check_cleansing(metroarea, year, key)
     query = args[0]
     year = args[1]
     key = args[2]
@@ -459,13 +459,13 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
             all_queries[i][3]
         )
         
-    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    if hud_pkg_env.pkg_env["pool_manager"] == None: hud_pkg_env.pkg_env["pool_manager"] = urllib3.PoolManager()
     
     for i in range(len(urls)):
         url = urls[i]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
+        call = hud_pkg_env.pkg_env["pool_manager"].request("GET", url, headers = headers)
 
         cont = json.loads(call.data.decode('utf-8'))  
         
@@ -510,7 +510,7 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
                 # drop zip and move it
                 result = pd.concat([result, merged])
     
-        huddownloadbar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+        hud_download_bar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
 
     if len(error_urls) != 0:
         # Print all error urls

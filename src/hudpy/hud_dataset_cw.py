@@ -5,9 +5,9 @@ import os
 from datetime import date, timedelta
 import pandas as pd
 
-from hudpy import hudinputcheck
-from hudpy import hudcw
-from hudpy import hudinternetonline
+from hudpy import hud_input_check
+from hudpy import hud_cw
+from hudpy import hud_internet_online
 
 def crosswalk(data: pd.DataFrame,
               geoid: str,
@@ -131,7 +131,7 @@ def crosswalk(data: pd.DataFrame,
         key = os.getenv("HUD_KEY")
         
         
-    args = hudinputcheck.crosswalk_a_dataset_input_check_cleansing(data = data, geoid = geoid, geoid_col = geoid_col,
+    args = hud_input_check.crosswalk_a_dataset_input_check_cleansing(data = data, geoid = geoid, geoid_col = geoid_col,
                                             cw_geoid = cw_geoid, cw_geoid_col = cw_geoid_col, method = method,
                                             year = year,
                                             quarter = quarter, key = key)
@@ -153,41 +153,41 @@ def crosswalk(data: pd.DataFrame,
     if geoid == "zip" and cw_geoid in ["county", "countysub", "tract",
                                        "cbsa", "cbsadiv", "cd"]:
         if cw_geoid == "county":
-            cw_data = hudcw.hud_cw_zip_county(list(data[geoid_col]), year = year,
+            cw_data = hud_cw.hud_cw_zip_county(list(data[geoid_col]), year = year,
                                         quarter = quarter, key = key)
         elif cw_geoid == "countysub":
-            cw_data = hudcw.hud_cw_zip_countysub(list(data[geoid_col]), year = year,
+            cw_data = hud_cw.hud_cw_zip_countysub(list(data[geoid_col]), year = year,
                                             quarter = quarter, key = key)
         elif cw_geoid == "cd":
-            cw_data = hudcw.hud_cw_zip_cd(list(data[geoid_col]), year = year,
+            cw_data = hud_cw.hud_cw_zip_cd(list(data[geoid_col]), year = year,
                                     quarter = quarter, key = key)
         elif cw_geoid == "tract":
-            cw_data = hudcw.hud_cw_zip_tract(list(data[geoid_col]), year = year,
+            cw_data = hud_cw.hud_cw_zip_tract(list(data[geoid_col]), year = year,
                                         quarter = quarter, key = key)
         elif cw_geoid == "cbsa":
-            cw_data = hudcw.hud_cw_zip_cbsa(list(data[geoid_col]), year = year,
+            cw_data = hud_cw.hud_cw_zip_cbsa(list(data[geoid_col]), year = year,
                                         quarter = quarter, key = key)
         elif cw_geoid == "cbsadiv":
-            cw_data = hudcw.hud_cw_zip_cbsadiv(list(data[geoid_col]), year = year,
+            cw_data = hud_cw.hud_cw_zip_cbsadiv(list(data[geoid_col]), year = year,
                                             quarter = quarter, key = key)
 
     elif geoid == "county" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_county_zip(list(data[geoid_col]), year = year,
+        cw_data = hud_cw.hud_cw_county_zip(list(data[geoid_col]), year = year,
                                         quarter = quarter, key = key)
     elif geoid == "countysub" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_countysub_zip(list(data[geoid_col]), year = year,
+        cw_data = hud_cw.hud_cw_countysub_zip(list(data[geoid_col]), year = year,
                                         quarter = quarter, key = key)
     elif geoid == "cd" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_cd_zip(list(data[geoid_col]), year = year,
+        cw_data = hud_cw.hud_cw_cd_zip(list(data[geoid_col]), year = year,
                                 quarter = quarter, key = key)
     elif geoid == "tract" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_tract_zip(list(data[geoid_col]), year = year,
+        cw_data = hud_cw.hud_cw_tract_zip(list(data[geoid_col]), year = year,
                                     quarter = quarter, key = key)
     elif geoid == "cbsa" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_cbsa_zip(list(data[geoid_col]), year = year,
+        cw_data = hud_cw.hud_cw_cbsa_zip(list(data[geoid_col]), year = year,
                                 quarter = quarter, key = key)
     elif geoid == "cbsadiv" and cw_geoid == "zip":
-        cw_data = hudcw.hud_cw_cbsadiv_zip(list(data[geoid_col]), year = year,
+        cw_data = hud_cw.hud_cw_cbsadiv_zip(list(data[geoid_col]), year = year,
                                     quarter = quarter, key = key)
     else:
         raise ValueError("\nCrosswalk from {} to {} is not supported.".format(geoid, cw_geoid))
@@ -211,7 +211,7 @@ def crosswalk(data: pd.DataFrame,
         cw_data[geoid] = cw_data[geoid].astype(str)
         data[geoid_col] = data[geoid_col].astype(str)
         
-        merged = pd.merge(cw_data, data, left_on = geoid, right_on = geoid_col).drop(columns = 'index')
+        merged = pd.merge(cw_data, data, left_on = geoid, right_onyou = geoid_col).drop(columns = 'index')
 
         # clear memory
         cw_data = None

@@ -37,5 +37,7 @@ def hud_set_key(key:str):
     --------
     >>> hud_set_key("DWKQOD442OLKDF3")
     """
+    if not isinstance(key, str):
+        raise ValueError("Key should be a string.")
 
     os.environ["HUD_KEY"] = key

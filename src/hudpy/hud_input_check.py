@@ -3,9 +3,9 @@ from __future__ import annotations
 from datetime import date
 from typing import Union
 
-from hudpy import hudpkgenv
-from hudpy import hudinputcheck
-from hudpy import hudmisc 
+from hudpy import hud_pkg_env
+from hudpy import hud_input_check
+from hudpy import hud_misc 
 
 def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                                year: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
@@ -217,17 +217,17 @@ def fmr_il_input_check_cleansing(query: Union[int, str, list[int], list[str], tu
     elif all(map(lambda x: len(x) > 2, query)):
         query = list(map(lambda x: x[0:1].upper() + x[1:len(x)], query))
 
-    if hudpkgenv.pkg_env["states"].empty:
-        hudpkgenv.pkg_env["states"] = hudmisc.hud_nation_states_territories(key = key)
-        hudpkgenv.pkg_env["states"]["state_num"] = hudpkgenv.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
+    if hud_pkg_env.pkg_env["states"].empty:
+        hud_pkg_env.pkg_env["states"] = hud_misc.hud_nation_states_territories(key = key)
+        hud_pkg_env.pkg_env["states"]["state_num"] = hud_pkg_env.pkg_env["states"]["state_num"].astype("float").astype("int").astype("str")
         
-    if len(set(query).intersection(set(hudpkgenv.pkg_env["states"]["state_name"]))) != 0: 
+    if len(set(query).intersection(set(hud_pkg_env.pkg_env["states"]["state_name"]))) != 0: 
         # Not sure if this is right syntax... need to test it...
-        query = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_name"].isin(query)]["state_code"])
-    if len(set(query).intersection(set(hudpkgenv.pkg_env["states"]["state_code"]))) != 0:   
-        query = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_code"].isin(query)]["state_code"]) 
-    if len(set(query).intersection(set(hudpkgenv.pkg_env["states"]["state_num"]))) != 0:  
-        query = list(hudpkgenv.pkg_env["states"][hudpkgenv.pkg_env["states"]["state_num"].isin(query)]["state_code"])   
+        query = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_name"].isin(query)]["state_code"])
+    if len(set(query).intersection(set(hud_pkg_env.pkg_env["states"]["state_code"]))) != 0:   
+        query = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_code"].isin(query)]["state_code"]) 
+    if len(set(query).intersection(set(hud_pkg_env.pkg_env["states"]["state_num"]))) != 0:  
+        query = list(hud_pkg_env.pkg_env["states"][hud_pkg_env.pkg_env["states"]["state_num"].isin(query)]["state_code"])   
  
     if all(list(map(lambda x: len(x) == 10, query))):
         querytype = "county"

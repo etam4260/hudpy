@@ -7,8 +7,8 @@ import pandas as pd
 import json
 from distutils.log import warn
 
-from hudpy import huddownloadbar
-from hudpy import hudpkgenv
+from hudpy import hud_download_bar
+from hudpy import hud_pkg_env
 
 def chas_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
     """
@@ -32,7 +32,7 @@ def chas_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
     error_urls = list()
     res = pd.DataFrame()
 
-    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    if hud_pkg_env.pkg_env["pool_manager"] == None: hud_pkg_env.pkg_env["pool_manager"] = urllib3.PoolManager()
     
     for i in range(len(urls)):
 
@@ -40,7 +40,7 @@ def chas_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
         
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
         
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
+        call = hud_pkg_env.pkg_env["pool_manager"].request("GET", url, headers = headers)
 
         cont = json.loads(call.data.decode('utf-8'))    
     
@@ -54,7 +54,7 @@ def chas_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
                 
             res = pd.concat([res, cont])
         
-        huddownloadbar.download_bar(done = i + 1, total = len(urls), current = url, error = len(error_urls))
+        hud_download_bar.download_bar(done = i + 1, total = len(urls), current = url, error = len(error_urls))
 
     print("\n")
 
@@ -109,14 +109,14 @@ def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
     error_urls = list()
     res = pd.DataFrame()
   
-    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    if hud_pkg_env.pkg_env["pool_manager"] == None: hud_pkg_env.pkg_env["pool_manager"] = urllib3.PoolManager()
     
     for i in range(len(urls)):
 
         url = urls[i]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
+        call = hud_pkg_env.pkg_env["pool_manager"].request("GET", url, headers = headers)
     
         cont = json.loads(call.data.decode('utf-8'))    
 
@@ -135,7 +135,7 @@ def cw_do_query_calls(urls, query, year, quarter, primary_geoid,
             
             res = pd.concat([res, cont])
         
-        huddownloadbar.download_bar(done = i + 1, total = len(urls), current = url, error = len(error_urls))
+        hud_download_bar.download_bar(done = i + 1, total = len(urls), current = url, error = len(error_urls))
 
             
     print("\n")
@@ -179,14 +179,14 @@ def misc_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
     res = pd.DataFrame()
 
 
-    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    if hud_pkg_env.pkg_env["pool_manager"] == None: hud_pkg_env.pkg_env["pool_manager"] = urllib3.PoolManager()
     
     for i in range(len(urls)):
 
         url = urls[i]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", url, headers = headers)
+        call = hud_pkg_env.pkg_env["pool_manager"].request("GET", url, headers = headers)
 
         cont = json.loads(call.data.decode('utf-8'))    
         cont = pd.json_normalize(cont) 
@@ -199,7 +199,7 @@ def misc_do_query_calls(urls: Union[str, list[str]], key: str) -> pd.DataFrame:
            
             res = pd.concat([res, cont])
         
-        huddownloadbar.download_bar(done = i + 1, total = len(urls), current = url, error = len(error_urls))
+        hud_download_bar.download_bar(done = i + 1, total = len(urls), current = url, error = len(error_urls))
 
             
     print("\n")

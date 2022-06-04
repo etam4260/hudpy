@@ -12,13 +12,13 @@ import urllib3
 from datetime import date
 from datetime import timedelta
 
-from hudpy import hudinternetonline
-from hudpy import hudinputcheck
-from hudpy import hudfmr
-from hudpy import hudcw
-from hudpy import hudpkgenv
-from hudpy import huddownloadbar
-from hudpy import huddoquerycalls
+from hudpy import hud_internet_online
+from hudpy import hud_input_check
+from hudpy import hud_fmr
+from hudpy import hud_cw
+from hudpy import hud_pkg_env
+from hudpy import hud_download_bar
+from hudpy import hud_do_query_calls
 
 
 def hud_cw(type: Union[str, int],
@@ -220,38 +220,38 @@ def hud_cw(type: Union[str, int],
     
     # Call the appropriate decomposed function depending on type specified
     if type == 1 or type == "1" or type == "zip-tract" :
-        return(hudcw.hud_cw_zip_tract(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_zip_tract(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
     
     elif type == 2 or type == "2" or type == "zip-county":
-        return(hudcw.hud_cw_zip_county(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_zip_county(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
     
     elif type == 3 or type == "3" or type == "zip-cbsa":
-        return(hudcw.hud_cw_zip_cbsa(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_zip_cbsa(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
     
     elif type == 4 or type == "4" or type == "zip-cbsadiv":
-        return(hudcw.hud_cw_zip_cbsadiv(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_zip_cbsadiv(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
     
     elif type == 5 or type == "5" or type == "zip-cd":
-        return(hudcw.hud_cw_zip_cd(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_zip_cd(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
     
     elif type == 6 or type == "6" or type == "tract-zip":    
-        return(hudcw.hud_cw_tract_zip(tract = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_tract_zip(tract = query, year = year, quarter = quarter, minimal = minimal, key = key))
         
     elif type == 7 or type == "7" or type == "county-zip":
-        return(hudcw.hud_cw_county_zip(county = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_county_zip(county = query, year = year, quarter = quarter, minimal = minimal, key = key))
         
     elif type == 8 or type == "8" or type == "cbsa-zip":
-        return(hudcw.hud_cw_cbsa_zip(cbsa = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_cbsa_zip(cbsa = query, year = year, quarter = quarter, minimal = minimal, key = key))
         
     elif type == 9 or type == "9" or type == "cbsadiv-zip":
-        return(hudcw.hud_cw_cbsadiv_zip(cbsadiv = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_cbsadiv_zip(cbsadiv = query, year = year, quarter = quarter, minimal = minimal, key = key))
     elif type == 10 or type == "10" or type == "cd-zip":
-        return(hudcw.hud_cw_cd_zip(cd = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_cd_zip(cd = query, year = year, quarter = quarter, minimal = minimal, key = key))
         
     elif type == 11 or type == "11" or type == "zip-countysub": 
-        return(hudcw.hud_cw_zip_countysub(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))     
+        return(hud_cw.hud_cw_zip_countysub(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))     
     elif type == 12 or type == "12" or type == "countysub-zip":
-        return(hudcw.hud_cw_countysub_zip(countysub = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw.hud_cw_countysub_zip(countysub = query, year = year, quarter = quarter, minimal = minimal, key = key))
     else:
         raise ValueError("\nPlease check if the type argument is valid.")
     
@@ -314,7 +314,7 @@ def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
         
-    args = hudinputcheck.fmr_il_input_check_cleansing(query, year, key)
+    args = hud_input_check.fmr_il_input_check_cleansing(query, year, key)
 
     query = args[0]
     year = args[1]
@@ -325,14 +325,14 @@ def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     # Call helper functions...
     if (querytype == ["state"]):
         # Merge county level data with metroarea data.
-        return({"counties": hudfmr.hud_fmr_state_counties(query, year, key),
-                    "metroareas": hudfmr.hud_fmr_state_metroareas(query, year, key)})
+        return({"counties": hud_fmr.hud_fmr_state_counties(query, year, key),
+                    "metroareas": hud_fmr.hud_fmr_state_metroareas(query, year, key)})
     elif querytype == ["cbsa"]:
         # Returns zip level data.
-        return(hudfmr.hud_fmr_metroarea_zip(query, year, key))
+        return(hud_fmr.hud_fmr_metroarea_zip(query, year, key))
     elif querytype == ["county"]:
         # Returns zip level data.
-        return(hudfmr.hud_fmr_county_zip(query, year, key))
+        return(hud_fmr.hud_fmr_county_zip(query, year, key))
     
 
     
@@ -374,16 +374,16 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
     
     """
     
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
             
     if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
     
-    args = hudinputcheck.fmr_il_input_check_cleansing(query, year, key)
+    args = hud_input_check.fmr_il_input_check_cleansing(query, year, key)
     
     query = args[0]
     year = args[1]
@@ -397,7 +397,7 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
     # Make query calls for all queries.
     result = pd.DataFrame()
 
-    if hudpkgenv.pkg_env["pool_manager"] == None: hudpkgenv.pkg_env["pool_manager"] = urllib3.PoolManager()
+    if hud_pkg_env.pkg_env["pool_manager"] == None: hud_pkg_env.pkg_env["pool_manager"] = urllib3.PoolManager()
     
     for i in range(len(all_queries)):
         url_piece = "statedata/" if querytype == ["state"] else "data/"
@@ -409,7 +409,7 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
                all_queries[i][1]
 
         headers = {"Authorization": "Bearer " + key, "User-Agent": "https://github.com/etam4260/hudpy"}
-        call = hudpkgenv.pkg_env["pool_manager"].request("GET", urls, headers = headers)
+        call = hud_pkg_env.pkg_env["pool_manager"].request("GET", urls, headers = headers)
                                
         cont = json.loads(call.data.decode('utf-8'))
         
@@ -437,7 +437,7 @@ def hud_il(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]] 
                 
             result = pd.concat([result, res])
         
-        huddownloadbar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+        hud_download_bar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
 
     # Just print a newline
     print()
@@ -527,11 +527,11 @@ def hud_chas(type: Union[str, int],
 
     """
 
-    if hudpkgenv.pkg_env["internet_on"] == False: 
-        if not hudinternetonline.internet_on():
+    if hud_pkg_env.pkg_env["internet_on"] == False: 
+        if not hud_internet_online.internet_on():
             raise ConnectionError("You currently do not have internet access.")
         else:
-            hudpkgenv.pkg_env["internet_on"] == True
+            hud_pkg_env.pkg_env["internet_on"] == True
 
     if key == None and os.getenv("HUD_KEY") != None:
         key = os.getenv("HUD_KEY")
@@ -644,4 +644,4 @@ def hud_chas(type: Union[str, int],
                 all_queries[i][6] 
             )
 
-    return(huddoquerycalls.chas_do_query_calls(urls, key = key))
+    return(hud_do_query_calls.chas_do_query_calls(urls, key = key))
