@@ -365,7 +365,7 @@ def hud_fmr_county_zip(county: Union[int, str, list[int], list[str], tuple[int],
                 # drop zip and move it
                 result = pd.concat([result, merged])
 
-        hud_download_bar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+        hud_download_bar.download_bar(done = i + 1, total = len(all_queries), current = url, error = len(error_urls))
 
     if len(error_urls) != 0:
         # Print all error urls
@@ -510,7 +510,7 @@ def hud_fmr_metroarea_zip(metroarea: Union[str, list[str], tuple[str]],
                 # drop zip and move it
                 result = pd.concat([result, merged])
     
-        hud_download_bar.download_bar(done = i + 1, total = len(all_queries), current = urls, error = len(error_urls))
+        hud_download_bar.download_bar(done = i + 1, total = len(all_queries), current = url, error = len(error_urls))
 
     if len(error_urls) != 0:
         # Print all error urls
