@@ -75,7 +75,9 @@ def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tupl
     return([year, key])
 
 
-def cw_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
+def cw_input_check_cleansing(primary_geoid : str,
+                             secondary_geoid : str,
+                             query: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                              year: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                              quarter: Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                              key: str) -> list[list]:
@@ -125,7 +127,18 @@ def cw_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[
     year = [str(year)] if isinstance(year, str) or isinstance(year, int) else list(map(lambda x: str(x), year))
     quarter =  [str(quarter)] if isinstance(quarter, str) or isinstance(quarter, int) else list(map(lambda x: str(x), quarter))
     
+
+    if primary_geoid == "cbsadiv" or secondary_geoid == "cbsadiv":
+        min_year = 2017
+        min_quarter = 4
+    elif primary_geoid == "countysub" or secondary_geoid == "countysub":
+        min_year = 2018
+        min_quarter = 2
+    else:
+        min_year = 2010
+        min_quarter = 1
     
+
     if(key == ""):
         raise ValueError("\nDid you forget to set the key. " + 
                          "Please go to https://www.huduser.gov/" +
@@ -152,6 +165,11 @@ def cw_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[
     for i in range(0, len(year)):
         if int(year[i]) > int(date.today().strftime("%Y")):
             raise ValueError("\nA year seems to be in the future?")
+
+    if any(yr == min_year for yr in year) and any(int(qrter) < min_quarter for qrter in quarter):  
+        raise ValueError("\nOne of the quarters is below the minimum quarter for the minimum year: " + 
+                        min_quarter)
+
 
     return([query, year, quarter, key])
 
