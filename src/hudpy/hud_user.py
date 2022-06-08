@@ -11,11 +11,10 @@ import urllib3
 
 from datetime import date
 from datetime import timedelta
-
 from hudpy import hud_internet_online
 from hudpy import hud_input_check
-from hudpy import hud_fmr
-from hudpy import hud_cw
+from hudpy.hud_fmr import *
+from hudpy.hud_cw import *
 from hudpy import hud_pkg_env
 from hudpy import hud_download_bar
 from hudpy import hud_do_query_calls
@@ -220,38 +219,38 @@ def hud_cw(type: Union[str, int],
     
     # Call the appropriate decomposed function depending on type specified
     if type == 1 or type == "1" or type == "zip-tract" :
-        return(hud_cw.hud_cw_zip_tract(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_zip_tract(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
     
     elif type == 2 or type == "2" or type == "zip-county":
-        return(hud_cw.hud_cw_zip_county(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_zip_county(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
     
     elif type == 3 or type == "3" or type == "zip-cbsa":
-        return(hud_cw.hud_cw_zip_cbsa(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_zip_cbsa(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
     
     elif type == 4 or type == "4" or type == "zip-cbsadiv":
-        return(hud_cw.hud_cw_zip_cbsadiv(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_zip_cbsadiv(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
     
     elif type == 5 or type == "5" or type == "zip-cd":
-        return(hud_cw.hud_cw_zip_cd(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_zip_cd(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))
     
     elif type == 6 or type == "6" or type == "tract-zip":    
-        return(hud_cw.hud_cw_tract_zip(tract = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_tract_zip(tract = query, year = year, quarter = quarter, minimal = minimal, key = key))
         
     elif type == 7 or type == "7" or type == "county-zip":
-        return(hud_cw.hud_cw_county_zip(county = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_county_zip(county = query, year = year, quarter = quarter, minimal = minimal, key = key))
         
     elif type == 8 or type == "8" or type == "cbsa-zip":
-        return(hud_cw.hud_cw_cbsa_zip(cbsa = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_cbsa_zip(cbsa = query, year = year, quarter = quarter, minimal = minimal, key = key))
         
     elif type == 9 or type == "9" or type == "cbsadiv-zip":
-        return(hud_cw.hud_cw_cbsadiv_zip(cbsadiv = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_cbsadiv_zip(cbsadiv = query, year = year, quarter = quarter, minimal = minimal, key = key))
     elif type == 10 or type == "10" or type == "cd-zip":
-        return(hud_cw.hud_cw_cd_zip(cd = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_cd_zip(cd = query, year = year, quarter = quarter, minimal = minimal, key = key))
         
     elif type == 11 or type == "11" or type == "zip-countysub": 
-        return(hud_cw.hud_cw_zip_countysub(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))     
+        return(hud_cw_zip_countysub(zip = query, year = year, quarter = quarter, minimal = minimal, key = key))     
     elif type == 12 or type == "12" or type == "countysub-zip":
-        return(hud_cw.hud_cw_countysub_zip(countysub = query, year = year, quarter = quarter, minimal = minimal, key = key))
+        return(hud_cw_countysub_zip(countysub = query, year = year, quarter = quarter, minimal = minimal, key = key))
     else:
         raise ValueError("\nPlease check if the type argument is valid.")
     
@@ -325,14 +324,14 @@ def hud_fmr(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     # Call helper functions...
     if (querytype == ["state"]):
         # Merge county level data with metroarea data.
-        return({"counties": hud_fmr.hud_fmr_state_counties(query, year, key),
-                    "metroareas": hud_fmr.hud_fmr_state_metroareas(query, year, key)})
+        return({"counties": hud_fmr_state_counties(query, year, key),
+                    "metroareas": hud_fmr_state_metroareas(query, year, key)})
     elif querytype == ["cbsa"]:
         # Returns zip level data.
-        return(hud_fmr.hud_fmr_metroarea_zip(query, year, key))
+        return(hud_fmr_metroarea_zip(query, year, key))
     elif querytype == ["county"]:
         # Returns zip level data.
-        return(hud_fmr.hud_fmr_county_zip(query, year, key))
+        return(hud_fmr_county_zip(query, year, key))
     
 
     
