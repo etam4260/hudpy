@@ -4,7 +4,9 @@ from hudpy import hud_cw
 from hudpy import hud_fmr
 from hudpy import hud_user
 
-def hud_rec_cw_yr():
+import os
+
+def hud_rec_cw_yr(key: str = None):
     """
     Ping the Crosswalk API provided by HUD User to determine the
     most recently released files. This will only ping for the last two
@@ -27,6 +29,8 @@ def hud_rec_cw_yr():
     >>> hud_rec_cw_yr()
 
     """
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     year = int(date.today().strftime("%Y"))
     month = int(date.today().strftime("%m"))
@@ -51,10 +55,12 @@ def hud_rec_cw_yr():
 
         data = hud_cw.hud_cw_tract_zip(tract = 48201223100,
                                 year = year,
-                                quarter = quarter)
+                                quarter = quarter,
+                                key = key
+                                )
 
-        if data != None and len(data) >= 1: 
-            return({year: year, quarter: quarter})
+        if not data.empty: 
+            return({"year": year, "quarter": quarter})
         
         if quarter > 1:
             quarter = quarter - 1
@@ -70,7 +76,7 @@ def hud_rec_cw_yr():
 
 
 
-def hud_rec_fmr_yr(): 
+def hud_rec_fmr_yr(key: str = None): 
     
     """
     Ping the Fair Markets Rent API provided by HUD User to
@@ -96,6 +102,8 @@ def hud_rec_fmr_yr():
     >>> hud_rec_fmr_yr()
 
     """
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     year = int(date.today().strftime("%Y"))
     month = int(date.today().strftime("%m"))
@@ -119,22 +127,22 @@ def hud_rec_fmr_yr():
 
         if year_state == None:
             
-            data = hud_user.hud_fmr("MD", year = year)
+            data = hud_user.hud_fmr("MD", year = year, key = key)
 
-            if data != None and len(data) >= 1:
+            if len(data) != 0:
                 year_state = year
 
         if year_county == None:
-            data = hud_fmr.hud_fmr_county_zip("5100199999", year = year)
+            data = hud_fmr.hud_fmr_county_zip("5100199999", year = year, key = key)
 
-            if data != None and len(data) >= 1:
+            if not data.empty:
                 year_county = year
             
 
         if year_metroarea == None:  
-            data = hud_fmr.hud_fmr_metroarea_zip("METRO47900M47900", year = year)
+            data = hud_fmr.hud_fmr_metroarea_zip("METRO47900M47900", year = year, key = key)
 
-            if data != None and len(data) >= 1:
+            if not data.empty:
                 year_metroarea = year
             
 
@@ -153,7 +161,7 @@ def hud_rec_fmr_yr():
 
 
 
-def hud_rec_il_yr():
+def hud_rec_il_yr(key:str = None):
     """
     Ping the Income Limits API provided by HUD User to
     determine the most recently released files. This will only ping
@@ -178,6 +186,8 @@ def hud_rec_il_yr():
     >>> hud_rec_il_yr()
 
     """
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     year = int(date.today().strftime("%Y"))
     month = int(date.today().strftime("%m"))
@@ -200,22 +210,22 @@ def hud_rec_il_yr():
 
         if year_state == None:
             
-            data = hud_user.hud_il("MD", year = year)
+            data = hud_user.hud_il("MD", year = year, key = key)
 
-            if data != None and len(data) >= 1:
+            if not data.empty:
                 year_state = year
 
         if year_county == None:
-            data = hud_user.hud_il("5100199999", year = year)
+            data = hud_user.hud_il("5100199999", year = year, key = key)
 
-            if data != None and len(data) >= 1:
+            if not data.empty:
                 year_county = year
             
 
         if year_metroarea == None:  
-            data = hud_user.hud_il("METRO47900M47900", year = year)
+            data = hud_user.hud_il("METRO47900M47900", year = year, key = key)
 
-            if data != None and len(data) >= 1:
+            if not data.empty:
                 year_metroarea = year
             
 
