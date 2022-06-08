@@ -109,7 +109,7 @@ def test_cw_diff_years():
                          year = ["2010", "2011"],
                          quarter = ["1", "2", "3", "4", "5"])
 
-@pytest.mark.skipif(os.getenv("HUD_KEY") == "", reason="HUD_KEY not available.")
+@pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cw_wrong_query():
     with pytest.raises(ValueError) as e_info:
         hud_user.hud_cw(type = 7, query = "22031241231",
