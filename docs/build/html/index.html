@@ -15,7 +15,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="setup.html" />
+    <link rel="next" title="Setup" href="setup.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -37,6 +37,13 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#setting-the-key">Setting the Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#setting-a-user-agent">Setting a user agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#understanding-the-syntax">Understanding the Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#additional-help">Additional Help</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="hudpy.html">hudpy package</a></li>
 </ul>
@@ -94,7 +101,8 @@ commercial or otherwise.</p>
 <p>Tam E, Reilly A, Ghaedi H, Jin S (2022). rhud: A Python Interface to the
 HUD (US Department of Housing and Urban Development) APIs. 0.1.0.9000,
 &lt;<a class="reference external" href="https://github.com/etam4260/hudpy/">https://github.com/etam4260/hudpy/</a>&gt;.</p>
-<p>## Available Data</p>
+<section id="available-data">
+<h2>Available Data<a class="headerlink" href="#available-data" title="Permalink to this headline">¶</a></h2>
 <p>The APIs and datasets which this library interfaces are listed below.
 The HUD also provide miscellaneous supplemental APIs under them.</p>
 <ol class="arabic simple">
@@ -104,132 +112,280 @@ The HUD also provide miscellaneous supplemental APIs under them.</p>
 <li><p>USPS Crosswalk
 (&lt;<a class="reference external" href="https://www.huduser.gov/portal/dataset/uspszip-api.html">https://www.huduser.gov/portal/dataset/uspszip-api.html</a>&gt;)</p></li>
 </ul>
-<div class="line-block">
-<div class="line">USPS Crosswalk Files     | Years           |</div>
-</div>
-<p><a href="#id1"><span class="problematic" id="id2">|--------------------------|</span></a>-----------------|
-| <cite>hud_cw_zip_tract()</cite>     | 2010-2021       |
-| <cite>hud_cw_zip_county()</cite>    | 2010-2021       |
-| <cite>hud_cw_zip_cbsa()</cite>      | 2010-2021       |
-| <cite>hud_cw_zip_cbsadiv()</cite>   | &lt;b&gt;2017-2021&lt;b&gt; |
-| <cite>hud_cw_zip_countysub()</cite> | &lt;b&gt;2018-2021&lt;b&gt; |
-| <cite>hud_cw_zip_cd()</cite>        | 2010-2021       |
-| <cite>hud_cw_tract_zip()</cite>     | 2010-2021       |
-| <cite>hud_cw_county_zip()</cite>    | 2010-2021       |
-| <cite>hud_cw_cbsa_zip()</cite>      | 2010-2021       |
-| <cite>hud_cw_cbsadiv_zip()</cite>   | &lt;b&gt;2017-2021&lt;b&gt; |
-| <cite>hud_cw_cd_zip()</cite>        | 2010-2021       |
-| <cite>hud_cw_countysub_zip()</cite> | &lt;b&gt;2018-2021&lt;b&gt; |
-| <cite>hud_cw()</cite>               | 2010-2021       |
-| <cite>crosswalk()</cite>            | 2010-2021       |
-|                          |                 |
-| <cite>z_in_trt()</cite>             | 2010-2021       |
-| <cite>z_in_cty()</cite>             | 2010-2021       |
-| <cite>z_in_cbsa()</cite>            | 2010-2021       |
-| <cite>z_in_cbsadiv()</cite>         | &lt;b&gt;2017-2021&lt;b&gt; |
-| <cite>z_in_ctysb()</cite>           | &lt;b&gt;2018-2021&lt;b&gt; |
-| <cite>z_in_cd()</cite>              | 2010-2021       |
-| <cite>trt_in_z()</cite>             | 2010-2021       |
-| <cite>cty_in_z()</cite>             | 2010-2021       |
-| <cite>cbsa_in_z()</cite>            | 2010-2021       |
-| <cite>cbsadiv_in_z()</cite>         | &lt;b&gt;2017-2021&lt;b&gt; |
-| <cite>ctysb_in_z()</cite>           | &lt;b&gt;2018-2021&lt;b&gt; |
-| <cite>cd_in_z()</cite>              | 2010-2021       |
-|                          |                 |
-| <cite>%z_in_trt%</cite>             | 2021            |
-| <cite>%z_in_cty%</cite>             | 2021            |
-| <cite>%z_in_cbsa%</cite>            | 2021            |
-| <cite>%z_in_cbsadiv%</cite>         | 2021            |
-| <cite>%z_in_ctysb%</cite>           | 2021            |
-| <cite>%z_in_cd%</cite>              | 2021            |
-|                          |                 |
-| <cite>%trt_in_z%</cite>             | 2021            |
-| <cite>%cty_in_z%</cite>             | 2021            |
-| <cite>%cbsa_in_z%</cite>            | 2021            |
-| <cite>%cbsadiv_in_z%</cite>         | 2021            |
-| <cite>%ctysb_in_z%</cite>           | 2021            |
-| <cite>%cd_in_z%</cite>              | 2021            |</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>USPS Crosswalk Files</p></th>
+<th class="head"><p>Years</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>hud_cw_zip_tract()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_cw_zip_county()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_cw_zip_cbsa()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_cw_zip_cbsadiv()</cite></p></td>
+<td><p>2017-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_cw_zip_countysub()</cite></p></td>
+<td><p>2018-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_cw_zip_cd()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_cw_tract_zip()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_cw_county_zip()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_cw_cbsa_zip()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_cw_cbsadiv_zip()</cite></p></td>
+<td><p>2017-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_cw_cd_zip()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_cw_countysub_zip()</cite></p></td>
+<td><p>2018-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_cw()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><cite>crosswalk()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><cite>z_in_trt()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>z_in_cty()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>z_in_cbsa()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>z_in_cbsadiv()</cite></p></td>
+<td><p>2017-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>z_in_ctysb()</cite></p></td>
+<td><p>2018-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>z_in_cd()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>trt_in_z()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>cty_in_z()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>cbsa_in_z()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>cbsadiv_in_z()</cite></p></td>
+<td><p>2017-2021</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>ctysb_in_z()</cite></p></td>
+<td><p>2018-2021</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>cd_in_z()</cite></p></td>
+<td><p>2010-2021</p></td>
+</tr>
+</tbody>
+</table>
 <ul class="simple">
 <li><p>Fair Markets Rent
 (&lt;<a class="reference external" href="https://www.huduser.gov/portal/dataset/fmr-api.html">https://www.huduser.gov/portal/dataset/fmr-api.html</a>&gt;)
 -   Small Areas Fair Markets Rent</p></li>
 </ul>
-<div class="line-block">
-<div class="line">Fair Markets Rent            | Years     |</div>
-</div>
-<p><a href="#id3"><span class="problematic" id="id4">|------------------------------|</span></a>-----------|
-| <cite>hud_fmr_state_counties()</cite>   | 2017-2022 |
-| <cite>hud_fmr_state_metroareas()</cite> | 2017-2022 |
-| <cite>hud_fmr_county_zip()</cite>       | 2017-2022 |
-| <cite>hud_fmr_metroarea_zip()</cite>    | 2017-2022 |
-| <cite>hud_fmr()</cite>                  | 2017-2022 |</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Fair Markets Rent</p></th>
+<th class="head"><p>Years</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>hud_fmr_state_counties()</cite></p></td>
+<td><p>2017-2022</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_fmr_state_metroareas()</cite></p></td>
+<td><p>2017-2022</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_fmr_county_zip()</cite></p></td>
+<td><p>2017-2022</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_fmr_metroarea_zip()</cite></p></td>
+<td><p>2017-2022</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_fmr()</cite></p></td>
+<td><p>2017-2022</p></td>
+</tr>
+</tbody>
+</table>
 <ul class="simple">
 <li><p>Income Limits
 (&lt;<a class="reference external" href="https://www.huduser.gov/portal/dataset/fmr-api.html">https://www.huduser.gov/portal/dataset/fmr-api.html</a>&gt;)</p></li>
 </ul>
-<div class="line-block">
-<div class="line">Income Limits | Years     |</div>
-</div>
-<p><a href="#id5"><span class="problematic" id="id6">|---------------|</span></a>-----------|
-| <cite>hud_il()</cite>    | 2017-2022 |</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Income Limits</p></th>
+<th class="head"><p>Years</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>hud_il()</cite></p></td>
+<td><p>2017-2022</p></td>
+</tr>
+</tbody>
+</table>
 <ul class="simple">
 <li><p>Comprehensive Housing and Affordability Strategy
 (&lt;<a class="reference external" href="https://www.huduser.gov/portal/dataset/chas-api.html">https://www.huduser.gov/portal/dataset/chas-api.html</a>&gt;)</p></li>
 </ul>
-<div class="line-block">
-<div class="line">Comprehensive Housing and Affordability Strategy | Years                                                                                              |</div>
-</div>
-<p><a href="#id7"><span class="problematic" id="id8">|--------------------------------------------------|</span></a>----------------------------------------------------------------------------------------------------|
-| <cite>hud_chas_nation()</cite>                              | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
-| <cite>hud_chas_state()</cite>                               | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
-| <cite>hud_chas_county()</cite>                              | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
-| <cite>hud_chas_state_mcd()</cite>                           | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
-| <cite>hud_chas_state_place()</cite>                         | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
-| <cite>hud_chas()</cite>                                     | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Comprehensive Housing and Affordability Strategy</p></th>
+<th class="head"><p>Years</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>hud_chas_nation()</cite></p></td>
+<td><p>2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_chas_state()</cite></p></td>
+<td><p>2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_chas_county()</cite></p></td>
+<td><p>2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_chas_state_mcd()</cite></p></td>
+<td><p>2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010</p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_chas_state_place()</cite></p></td>
+<td><p>2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010</p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_chas()</cite></p></td>
+<td><p>2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010</p></td>
+</tr>
+</tbody>
+</table>
 <ul class="simple">
 <li><p>US Geographic Entities</p></li>
 </ul>
-<div class="line-block">
-<div class="line">US Geographies                      |</div>
-</div>
-<p><a href="#id9"><span class="problematic" id="id10">|-------------------------------------|</span></a>
-| <cite>hud_nation_states_territories()</cite>   |
-| <cite>hud_state_metropolitan()</cite>          |
-| <cite>hud_state_counties()</cite>              |
-| <cite>hud_state_places()</cite>                |
-| <cite>hud_state_minor_civil_divisions()</cite> |</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>US Geographic Entities</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>hud_nation_states_territories()</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_state_metropolitan()</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_state_counties()</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_state_places()</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_state_minor_civil_divisions()</cite></p></td>
+</tr>
+</tbody>
+</table>
 <ul class="simple">
 <li><p>Key access</p></li>
 </ul>
-<div class="line-block">
-<div class="line">Management             |</div>
-</div>
-<p><a href="#id11"><span class="problematic" id="id12">|------------------------|</span></a>
-| <cite>hud_set_key()</cite>        |
-| <cite>hud_get_key()</cite>        |
-| <cite>hud_set_user_agent()</cite> |
-| <cite>hud_get_user_agent()</cite> |</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Key Access</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>hud_set_key()</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_get_key()</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_set_user_agent()</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_get_user_agent()</cite></p></td>
+</tr>
+</tbody>
+</table>
 <ul class="simple">
 <li><p>Caching</p></li>
 </ul>
-<div class="line-block">
-<div class="line">Caching               |</div>
-</div>
-<p><a href="#id13"><span class="problematic" id="id14">|-----------------------|</span></a>
-| <cite>hud_set_cache_dir()</cite> |
-| <cite>hud_get_cache_dir()</cite> |
-| <cite>hud_clear_cache()</cite>   |</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Caching</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>hud_set_cache_dir()</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_get_cache_dir()</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_clear_cache()</cite></p></td>
+</tr>
+</tbody>
+</table>
 <ul class="simple">
 <li><p>Utilities</p></li>
 </ul>
-<div class="line-block">
-<div class="line">Utilities          |</div>
-</div>
-<p><a href="#id15"><span class="problematic" id="id16">|--------------------|</span></a>
-| <cite>rhud_website()</cite>   |
-| <cite>hud_rec_cw_yr()</cite>  |
-| <cite>hud_rec_fmr_yr()</cite> |
-| <cite>hud_rec_il_yr()</cite>  |</p>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Utilities</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><cite>rhud_website()</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_rec_cw_yr()</cite></p></td>
+</tr>
+<tr class="row-even"><td><p><cite>hud_rec_fmr_yr()</cite></p></td>
+</tr>
+<tr class="row-odd"><td><p><cite>hud_rec_il_yr()</cite></p></td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 <section id="contributors">
 <h1>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h1>
@@ -287,6 +443,7 @@ Retrieved February 24, 2022, from &lt;<a class="reference external" href="https:
 <h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a></li>
 </ul>
 
@@ -294,7 +451,7 @@ Retrieved February 24, 2022, from &lt;<a class="reference external" href="https:
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="setup.html" title="next chapter">&lt;no title&gt;</a></li>
+      <li>Next: <a href="setup.html" title="next chapter">Setup</a></li>
   </ul></li>
 </ul>
 </div>

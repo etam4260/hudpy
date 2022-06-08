@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>&lt;no title&gt; &#8212; hudpy 0.1.0 documentation</title>
+    <title>Setup &#8212; hudpy 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -15,6 +15,8 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="hudpy" href="modules.html" />
+    <link rel="prev" title="Welcome to hudpy!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -31,7 +33,81 @@
 
           <div class="body" role="main">
             
-  
+  <section id="setup">
+<h1>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h1>
+<p>You can install the development version by cloning the repository</p>
+<p><code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">clone</span> <span class="pre">https://github.com/etam4260/hudpy.git</span></code></p>
+<p>and then running...</p>
+<p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">hudpy</span></code></p>
+<p>The US Department of Housing and Urban Development HUD USER requires users
+to gain an access key before querying their systems. You must go to
+<a class="reference external" href="https://www.huduser.gov/hudapi/public/register?comingfrom=1">https://www.huduser.gov/hudapi/public/register?comingfrom=1</a> and follow the
+instructions for making an account.</p>
+<p>From the website, you need to make a new token. Make sure to save the token
+somewhere as you will only be able to view it once. However, you can use it as
+many times as you want. You can now supply the 'key' argument to the function
+calls.</p>
+<section id="setting-the-key">
+<h2>Setting the Key<a class="headerlink" href="#setting-the-key" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">hud_set_key(&quot;2yeuduhq72ueajk&quot;,</span> <span class="pre">in_home</span> <span class="pre">=</span> <span class="pre">TRUE)</span></code></p>
+<p>You can also tell RStudio to remember the key by setting <cite>in_wkdir</cite> and
+<cite>in_home</cite> parameter to <cite>TRUE</cite> which will write Sys.setenv(&quot;your-key&quot;) to your
+.Rprofile.</p>
+<p>To check whether rhud can gain access to this environment variable...</p>
+<p><code class="docutils literal notranslate"><span class="pre">hud_get_key()</span></code></p>
+<p>It is now set up for the rest of the R session.</p>
+</section>
+<section id="setting-a-user-agent">
+<h2>Setting a user agent<a class="headerlink" href="#setting-a-user-agent" title="Permalink to this headline">¶</a></h2>
+<p>It is recommended to set a user agent before querying. This tells the HUD
+servers a bit more about the querying application or user.</p>
+<p><code class="docutils literal notranslate"><span class="pre">hud_set_user_agent(&quot;This</span> <span class="pre">Application&quot;)</span></code></p>
+<p>If no user agent is set, it will return an empty string.</p>
+<p><code class="docutils literal notranslate"><span class="pre">hud_get_user_agent()</span></code></p>
+</section>
+<section id="understanding-the-syntax">
+<h2>Understanding the Syntax<a class="headerlink" href="#understanding-the-syntax" title="Permalink to this headline">¶</a></h2>
+<p>A noticeable issue with querying geographic data is determining what resolution
+the data is returned in. Therefore, understanding the syntax of
+these function calls should easily help you determine what you are querying
+and what data is returned.</p>
+<p>The general syntax for these functions within the package follow this pattern
+where {1},{2}, and {3} are placeholders:</p>
+<p>hud_{1}_{2}_{3}</p>
+<p>{1}: This symbol represents the dataset to query for. So for example if you want
+fair markets rent data, this will be 'fmr'. If you want data from the crosswalk
+files, this will be 'cw'.</p>
+<p>{2}: This symbol represents the geographic resolution to query for.
+For example, if the function requires that you input state(s), then this
+will be named as 'state.' If the function requires that you input
+county(s) then this will be 'county'.</p>
+<p>{3}: This symbol represented the output geographic resolution. So for example,
+if we want data at a zip code level, then this will have 'zip'.</p>
+<p>For those that do not have the {2} and {3}, these are omni functions which
+are capable of performing all queries under {1}, but these functions are
+harder to understand.</p>
+<p>For those that do not have the {3}, it inherits the {2}. This means that
+if {2} is a state input, then the data described by the output data is also
+a state.</p>
+<p>A quick example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_county_zip(county</span> <span class="pre">=</span> <span class="pre">22031,</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2017'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('1'))</span></code></p>
+<p>The first part of the function begins with 'hud'.</p>
+<p>The second part is 'cw' meaning we are querying the crosswalk files.</p>
+<p>The third part is 'county' meaning we need to input county(s)</p>
+<p>The fourth part is the 'zip' meaning the data will be returned
+at a zip code resolution.</p>
+</section>
+<section id="additional-help">
+<h2>Additional Help<a class="headerlink" href="#additional-help" title="Permalink to this headline">¶</a></h2>
+<p>If you ever get confused or need help you can easily revisit this website
+where you can check the all the function definitions in the
+<strong>*Reference*</strong> tab.</p>
+<p><code class="docutils literal notranslate"><span class="pre">rhud_website()</span></code></p>
+<p>This will quickly open up this website on your web browser
+as well as the github repository where you can submit issues.</p>
+</section>
+</section>
+
 
           </div>
           
@@ -49,11 +125,24 @@
 
 
 <h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-the-key">Setting the Key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-a-user-agent">Setting a user agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#understanding-the-syntax">Understanding the Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-help">Additional Help</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to hudpy!</a></li>
+      <li>Next: <a href="modules.html" title="next chapter">hudpy</a></li>
   </ul></li>
 </ul>
 </div>
