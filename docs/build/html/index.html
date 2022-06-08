@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Welcome to hudpy&#39;s documentation! &#8212; hudpy 0.1.0 documentation</title>
+    <title>Welcome to hudpy! &#8212; hudpy 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -15,6 +15,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="setup.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -31,10 +32,232 @@
 
           <div class="body" role="main">
             
-  <section id="welcome-to-hudpy-s-documentation">
-<h1>Welcome to hudpy's documentation!<a class="headerlink" href="#welcome-to-hudpy-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <section id="welcome-to-hudpy">
+<h1>Welcome to hudpy!<a class="headerlink" href="#welcome-to-hudpy" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hudpy.html">hudpy package</a></li>
+</ul>
+</li>
+</ul>
 </div>
+</section>
+<section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>This interface uses the HUD User Data API but is not endorsed or
+certified by HUD User.</p></li>
+</ul>
+<p>Are you a R developer? Check out [rhud](<a class="reference external" href="https://github.com/etam4260/rhud">https://github.com/etam4260/rhud</a>) instead</p>
+<section id="key-access">
+<h2>Key Access<a class="headerlink" href="#key-access" title="Permalink to this headline">¶</a></h2>
+<p>To use functions provided by this package, you need to get access HUD
+USER via token. Go to &lt;<a class="reference external" href="https://www.huduser.gov/hudapi/public/login">https://www.huduser.gov/hudapi/public/login</a>&gt; to
+register for an account and then create a token with access to all
+datasets provided by HUD. This will include selecting USPS Crosswalk,
+Fair Markets Rent, Income Limits, and Comprehensive Housing
+Affordability Strategy.</p>
+<p>Now copy and paste that key into the hud_set_key() function.</p>
+<p><code class="docutils literal notranslate"><span class="pre">hud_set_key(&quot;sample-key&quot;)</span></code></p>
+</section>
+<section id="simplistic-example">
+<h2>Simplistic Example<a class="headerlink" href="#simplistic-example" title="Permalink to this headline">¶</a></h2>
+<p>This sample provided below shows how to query the USPS Crosswalk API</p>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_zip_tract(zip</span> <span class="pre">=</span> <span class="pre">'35213',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">['2010'],</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">['1'])</span></code></p>
+</section>
+</section>
+<section id="what-is-hudpy">
+<h1>What is hudpy?<a class="headerlink" href="#what-is-hudpy" title="Permalink to this headline">¶</a></h1>
+<p>The goal of this project is to provide an easy-to-use interface to
+access various open-source APIs provided by the U.S Housing and Urban
+Development. These include the USPS Crosswalk Files, Fair Markets Rent,
+Income Limits, and Comprehensive Housing and Affordability Strategy.
+Although HUD does provide datasets for other programs, they are
+currently not supported by an API.</p>
+<p>Please read
+&lt;<a class="reference external" href="https://www.huduser.gov/portal/dataset/api-terms-of-service.html">https://www.huduser.gov/portal/dataset/api-terms-of-service.html</a>&gt; for
+all terms of service.</p>
+<p>According to HUD USER:</p>
+<p>All services, which utilize or access the API, should display the
+following notice prominently within the application: “This product uses
+the HUD User Data API but is not endorsed or certified by HUD User.” You
+may use the HUD User name in order to identify the source of API content
+subject to these rules. You may not use the HUD User name, or the like
+to imply endorsement of any product, service, or entity, not-for-profit,
+commercial or otherwise.</p>
+</section>
+<section id="citation">
+<h1>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h1>
+<p>Please cite this package using:</p>
+<p>Tam E, Reilly A, Ghaedi H, Jin S (2022). rhud: A Python Interface to the
+HUD (US Department of Housing and Urban Development) APIs. 0.1.0.9000,
+&lt;<a class="reference external" href="https://github.com/etam4260/hudpy/">https://github.com/etam4260/hudpy/</a>&gt;.</p>
+<p>## Available Data</p>
+<p>The APIs and datasets which this library interfaces are listed below.
+The HUD also provide miscellaneous supplemental APIs under them.</p>
+<ol class="arabic simple">
+<li><p>HUD User</p></li>
+</ol>
+<ul class="simple">
+<li><p>USPS Crosswalk
+(&lt;<a class="reference external" href="https://www.huduser.gov/portal/dataset/uspszip-api.html">https://www.huduser.gov/portal/dataset/uspszip-api.html</a>&gt;)</p></li>
+</ul>
+<div class="line-block">
+<div class="line">USPS Crosswalk Files     | Years           |</div>
+</div>
+<p><a href="#id1"><span class="problematic" id="id2">|--------------------------|</span></a>-----------------|
+| <cite>hud_cw_zip_tract()</cite>     | 2010-2021       |
+| <cite>hud_cw_zip_county()</cite>    | 2010-2021       |
+| <cite>hud_cw_zip_cbsa()</cite>      | 2010-2021       |
+| <cite>hud_cw_zip_cbsadiv()</cite>   | &lt;b&gt;2017-2021&lt;b&gt; |
+| <cite>hud_cw_zip_countysub()</cite> | &lt;b&gt;2018-2021&lt;b&gt; |
+| <cite>hud_cw_zip_cd()</cite>        | 2010-2021       |
+| <cite>hud_cw_tract_zip()</cite>     | 2010-2021       |
+| <cite>hud_cw_county_zip()</cite>    | 2010-2021       |
+| <cite>hud_cw_cbsa_zip()</cite>      | 2010-2021       |
+| <cite>hud_cw_cbsadiv_zip()</cite>   | &lt;b&gt;2017-2021&lt;b&gt; |
+| <cite>hud_cw_cd_zip()</cite>        | 2010-2021       |
+| <cite>hud_cw_countysub_zip()</cite> | &lt;b&gt;2018-2021&lt;b&gt; |
+| <cite>hud_cw()</cite>               | 2010-2021       |
+| <cite>crosswalk()</cite>            | 2010-2021       |
+|                          |                 |
+| <cite>z_in_trt()</cite>             | 2010-2021       |
+| <cite>z_in_cty()</cite>             | 2010-2021       |
+| <cite>z_in_cbsa()</cite>            | 2010-2021       |
+| <cite>z_in_cbsadiv()</cite>         | &lt;b&gt;2017-2021&lt;b&gt; |
+| <cite>z_in_ctysb()</cite>           | &lt;b&gt;2018-2021&lt;b&gt; |
+| <cite>z_in_cd()</cite>              | 2010-2021       |
+| <cite>trt_in_z()</cite>             | 2010-2021       |
+| <cite>cty_in_z()</cite>             | 2010-2021       |
+| <cite>cbsa_in_z()</cite>            | 2010-2021       |
+| <cite>cbsadiv_in_z()</cite>         | &lt;b&gt;2017-2021&lt;b&gt; |
+| <cite>ctysb_in_z()</cite>           | &lt;b&gt;2018-2021&lt;b&gt; |
+| <cite>cd_in_z()</cite>              | 2010-2021       |
+|                          |                 |
+| <cite>%z_in_trt%</cite>             | 2021            |
+| <cite>%z_in_cty%</cite>             | 2021            |
+| <cite>%z_in_cbsa%</cite>            | 2021            |
+| <cite>%z_in_cbsadiv%</cite>         | 2021            |
+| <cite>%z_in_ctysb%</cite>           | 2021            |
+| <cite>%z_in_cd%</cite>              | 2021            |
+|                          |                 |
+| <cite>%trt_in_z%</cite>             | 2021            |
+| <cite>%cty_in_z%</cite>             | 2021            |
+| <cite>%cbsa_in_z%</cite>            | 2021            |
+| <cite>%cbsadiv_in_z%</cite>         | 2021            |
+| <cite>%ctysb_in_z%</cite>           | 2021            |
+| <cite>%cd_in_z%</cite>              | 2021            |</p>
+<ul class="simple">
+<li><p>Fair Markets Rent
+(&lt;<a class="reference external" href="https://www.huduser.gov/portal/dataset/fmr-api.html">https://www.huduser.gov/portal/dataset/fmr-api.html</a>&gt;)
+-   Small Areas Fair Markets Rent</p></li>
+</ul>
+<div class="line-block">
+<div class="line">Fair Markets Rent            | Years     |</div>
+</div>
+<p><a href="#id3"><span class="problematic" id="id4">|------------------------------|</span></a>-----------|
+| <cite>hud_fmr_state_counties()</cite>   | 2017-2022 |
+| <cite>hud_fmr_state_metroareas()</cite> | 2017-2022 |
+| <cite>hud_fmr_county_zip()</cite>       | 2017-2022 |
+| <cite>hud_fmr_metroarea_zip()</cite>    | 2017-2022 |
+| <cite>hud_fmr()</cite>                  | 2017-2022 |</p>
+<ul class="simple">
+<li><p>Income Limits
+(&lt;<a class="reference external" href="https://www.huduser.gov/portal/dataset/fmr-api.html">https://www.huduser.gov/portal/dataset/fmr-api.html</a>&gt;)</p></li>
+</ul>
+<div class="line-block">
+<div class="line">Income Limits | Years     |</div>
+</div>
+<p><a href="#id5"><span class="problematic" id="id6">|---------------|</span></a>-----------|
+| <cite>hud_il()</cite>    | 2017-2022 |</p>
+<ul class="simple">
+<li><p>Comprehensive Housing and Affordability Strategy
+(&lt;<a class="reference external" href="https://www.huduser.gov/portal/dataset/chas-api.html">https://www.huduser.gov/portal/dataset/chas-api.html</a>&gt;)</p></li>
+</ul>
+<div class="line-block">
+<div class="line">Comprehensive Housing and Affordability Strategy | Years                                                                                              |</div>
+</div>
+<p><a href="#id7"><span class="problematic" id="id8">|--------------------------------------------------|</span></a>----------------------------------------------------------------------------------------------------|
+| <cite>hud_chas_nation()</cite>                              | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+| <cite>hud_chas_state()</cite>                               | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+| <cite>hud_chas_county()</cite>                              | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+| <cite>hud_chas_state_mcd()</cite>                           | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+| <cite>hud_chas_state_place()</cite>                         | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |
+| <cite>hud_chas()</cite>                                     | 2014-2018 , 2013-2017, 2012-2016, 2011-2015, 2010-2014, 2009-2013, 2008-2012, 2007-2011, 2006-2010 |</p>
+<ul class="simple">
+<li><p>US Geographic Entities</p></li>
+</ul>
+<div class="line-block">
+<div class="line">US Geographies                      |</div>
+</div>
+<p><a href="#id9"><span class="problematic" id="id10">|-------------------------------------|</span></a>
+| <cite>hud_nation_states_territories()</cite>   |
+| <cite>hud_state_metropolitan()</cite>          |
+| <cite>hud_state_counties()</cite>              |
+| <cite>hud_state_places()</cite>                |
+| <cite>hud_state_minor_civil_divisions()</cite> |</p>
+<ul class="simple">
+<li><p>Key access</p></li>
+</ul>
+<div class="line-block">
+<div class="line">Management             |</div>
+</div>
+<p><a href="#id11"><span class="problematic" id="id12">|------------------------|</span></a>
+| <cite>hud_set_key()</cite>        |
+| <cite>hud_get_key()</cite>        |
+| <cite>hud_set_user_agent()</cite> |
+| <cite>hud_get_user_agent()</cite> |</p>
+<ul class="simple">
+<li><p>Caching</p></li>
+</ul>
+<div class="line-block">
+<div class="line">Caching               |</div>
+</div>
+<p><a href="#id13"><span class="problematic" id="id14">|-----------------------|</span></a>
+| <cite>hud_set_cache_dir()</cite> |
+| <cite>hud_get_cache_dir()</cite> |
+| <cite>hud_clear_cache()</cite>   |</p>
+<ul class="simple">
+<li><p>Utilities</p></li>
+</ul>
+<div class="line-block">
+<div class="line">Utilities          |</div>
+</div>
+<p><a href="#id15"><span class="problematic" id="id16">|--------------------|</span></a>
+| <cite>rhud_website()</cite>   |
+| <cite>hud_rec_cw_yr()</cite>  |
+| <cite>hud_rec_fmr_yr()</cite> |
+| <cite>hud_rec_il_yr()</cite>  |</p>
+</section>
+<section id="contributors">
+<h1>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Emmet Tam(&lt;<a class="reference external" href="https://github.com/etam4260">https://github.com/etam4260</a>&gt;)[&lt;<a class="reference external" href="mailto:emmet_tam&#37;&#52;&#48;yahoo&#46;com">emmet_tam<span>&#64;</span>yahoo<span>&#46;</span>com</a>&gt;]</p></li>
+<li><p>Allison Reilly()[&lt;<a class="reference external" href="mailto:areilly2&#37;&#52;&#48;umd&#46;edu">areilly2<span>&#64;</span>umd<span>&#46;</span>edu</a>&gt;]</p></li>
+<li><p>Hamed Ghaedi()[&lt;<a class="reference external" href="mailto:hghaedi&#37;&#52;&#48;terpmail&#46;umd&#46;edu">hghaedi<span>&#64;</span>terpmail<span>&#46;</span>umd<span>&#46;</span>edu</a>&gt;]</p></li>
+<li><p>Shuyu Jin(&lt;<a class="reference external" href="https://github.com/geojsy">https://github.com/geojsy</a>&gt;)[&lt;<a class="reference external" href="mailto:geojsy&#37;&#52;&#48;umd&#46;edu">geojsy<span>&#64;</span>umd<span>&#46;</span>edu</a>&gt;]</p></li>
+</ul>
+</section>
+<section id="disclaimers">
+<h1>Disclaimers<a class="headerlink" href="#disclaimers" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>License: GPL &gt;= 2</p></li>
+<li><p>This interface uses the HUD User Data API but is not endorsed or
+certified by HUD User.</p></li>
+<li><p>The limit on the maximum number of API calls is 1200 queries a min.
+Each function call does not correspond to a single API call!</p></li>
+<li><p>This is a WIP so please report any issues or bugs to:
+&lt;<a class="reference external" href="https://github.com/etam4260/hudpy/issues">https://github.com/etam4260/hudpy/issues</a>&gt;</p></li>
+<li><p>This is open source, so please fork and introduce some pull
+requests!</p></li>
+</ul>
+</section>
+<section id="references">
+<h1>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>
+<p>HUD User Home Page: HUD USER. HUD User Home Page | HUD USER. (n.d.).
+Retrieved February 24, 2022, from &lt;<a class="reference external" href="https://www.huduser.gov/portal/home.html">https://www.huduser.gov/portal/home.html</a>&gt;</p>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
@@ -62,11 +285,16 @@
 
 
 <h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="setup.html" title="next chapter">&lt;no title&gt;</a></li>
   </ul></li>
 </ul>
 </div>
