@@ -1,27 +1,38 @@
 from __future__ import annotations
 from typing import Union
-
+import os
 from datetime import date, timedelta
 
 from hudpy import hud_get_recent_data 
 from hudpy import hud_cw
+from hudpy import hud_input_check
+from hudpy import hud_pkg_env
+
+from distutils.log import warn
 
 def z_in_trt(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
              tract : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-             year : None,
-             quarter : None) -> bool:
+             year = None,
+             quarter = None,
+             key = None
+             ) -> list:
     """
-    Given a zip code and a tract, determine if they overlap
+    Given zip code(s) and tract(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
     
     Parameters
     ----------
     
-    zip : The zip to determine overlap with tract
-    tract : The tract to determine overlap with zip
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    zip : The zip(s) to determine overlap with tract(s).
+
+    tract : The tract(s) to determine overlap with zip(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
 
     See Also
     --------
@@ -51,18 +62,22 @@ def z_in_trt(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     
     """
 
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
+
     if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
         
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
+
+        # Store in pkg envrionment and retrieve when necessary
         if year == None:
-            year = args[1]
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
         
-
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
-
-    args = hud_get_recent_data.hud_rec_cw_yr()
 
     # TODO: We might want to allow using names also..
     # There is a bit of overhead cost for doing individual queries because each
@@ -70,23 +85,41 @@ def z_in_trt(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     # using internal functions...
 
     # Need to validate tract..
-    tract = geo_is_infix_rhs_cleansing(query = tract,  geoid_type = "tract")
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "tract",
+                                                        secondary_geoid = "zip",
+                                                        query = tract, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
+
+
+    tract = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
+
+
+    if any(list(map(lambda x: len(x) != 11, tract))):
+         raise ValueError("Tract input is not all of length 11")
+
 
     res = []
-
+    zip = [str(zip)] if isinstance(zip, str) or isinstance(zip, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), zip))))
+    
     for i in range(len(zip)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = zip[i],
                                                       f = hud_cw.hud_cw_zip_tract,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "zip")
+                                                      querytype = "zip",
+                                                      key = key
+                                                      )
 
-        if any(queried in tract):
+        if any(q in tract for q in queried):
             res.append(True)
         else:
             res.append(False)
-
+    
     return(res)
     
 
@@ -94,20 +127,28 @@ def z_in_trt(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]]
 
 def z_in_cty(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
              county : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-             year : None,
-             quarter : None) -> bool:
+             year = None,
+             quarter = None,
+             key = None
+             ) -> bool:
     """
-    Given a zip code and a county, determine if they overlap
+    Given zip code(s) and county(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
    
     Parameters
     ----------
 
-    zip : The zip to determine overlap with county
-    county : The county to determine overlap with zip
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    zip : The zip(s) to determine overlap with county(s).
+
+    county : The county(s). to determine overlap with zip(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
 
     See Also
     --------
@@ -136,33 +177,51 @@ def z_in_cty(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     >>> z_in_cty(zip = 71052, county = 22031, year = 2019, quarter = 2)
 
     """
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
-    if year == None or quarter == None: 
+    if hud_pkg_env.pkg_env["rec_cw"] == None:
         args = hud_get_recent_data.hud_rec_cw_yr()
-        
-        if year == None:
-            year = args[1]
-        
+        hud_pkg_env.pkg_env["rec_cw"] = args
 
+        # Store in pkg envrionment and retrieve when necessary
+        if year == None:
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
+        
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "county",
+                                                        secondary_geoid = "zip",
+                                                        query = county, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    county = geo_is_infix_rhs_cleansing(query = county,  geoid_type = "county")
+
+    county = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
+
+    
+    if any(list(map(lambda x: len(x) != 5, county))):
+         raise ValueError("County input is not all of length 5")
 
     res = []
-
+    zip = [str(zip)] if isinstance(zip, str) or isinstance(zip, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), zip))))
+    
     for i in range(len(zip)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = zip[i],
                                                       f = hud_cw.hud_cw_zip_county,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "zip")
+                                                      querytype = "zip",
+                                                      key = key
+                                                      )
 
-        if any(queried in county):
+        if any(q in county for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -173,20 +232,28 @@ def z_in_cty(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]]
 
 def z_in_cbsa(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
               cbsa : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-              year : None,
-              quarter : None) -> bool:
+              year = None,
+              quarter = None,
+              key = None
+              ) -> bool:
     """
-    Given a zip code and a cbsa, determine if they overlap
+    Given a zip code(s) and a cbsa(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
 
     Parameters
     ----------
 
-    zip : The zip to determine overlap with cbsa
-    cbsa : The cbsa to determine overlap with zip
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    zip : The zip(s) to determine overlap with cbsa(s).
+
+    cbsa : The cbsa(s) to determine overlap with zip(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
     
     See Also
     --------
@@ -216,34 +283,52 @@ def z_in_cbsa(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]
     >>> z_in_cbsa(zip = 71052, cbsa = 43340, year = 2019, quarter = 2)
 
     """
-
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
+
+        # Store in pkg envrionment and retrieve when necessary
         if year == None:
-            year = args[1]
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
         
-
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
+    
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "cbsa",
+                                                        secondary_geoid = "zip",
+                                                        query = cbsa, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
 
-    cbsa = geo_is_infix_rhs_cleansing(query = cbsa,  geoid_type = "cbsa")
+    cbsa = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
 
+    
+    if any(list(map(lambda x: len(x) != 5, cbsa))):
+         raise ValueError("Cbsa input is not all of length 5")
+  
     res = []
-
+    zip = [str(zip)] if isinstance(zip, str) or isinstance(zip, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), zip))))
+    
     for i in range(len(zip)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = zip[i],
                                                       f = hud_cw.hud_cw_zip_cbsa,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "zip")
+                                                      querytype = "zip",
+                                                      key = key
+                                                      )
 
-        if any(queried in cbsa):
+        if any(q in cbsa for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -254,20 +339,28 @@ def z_in_cbsa(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]
 
 def z_in_cbsadiv(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                  cbsadiv : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                 year : None,
-                 quarter : None) -> bool :
+                 year = None,
+                 quarter = None,
+                 key = None
+                 ) -> bool :
     """
-    Given a zip code and a cbsadiv, determine if they overlap
+    Given zip code(s) and cbsadiv(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
 
     Parameters
     ----------
 
-    zip : The zip to determine overlap with cbsadiv
-    cbsadiv : The cbsadiv to determine overlap with zip
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    zip : The zip(s) to determine overlap with cbsadiv(s).
+
+    cbsadiv : The cbsadiv(s) to determine overlap with zip(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
     
     See Also
     --------
@@ -297,34 +390,53 @@ def z_in_cbsadiv(zip : Union[int, str, list[int], list[str], tuple[int], tuple[s
     >>> z_in_cbsadiv(zip = 71052, cbsadiv = 43340, year = 2019, quarter = 2)
 
     """
-
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
+
+        # Store in pkg envrionment and retrieve when necessary
         if year == None:
-            year = args[1]
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
         
-
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
+    
+      
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "cbsadiv",
+                                                        secondary_geoid = "zip",
+                                                        query = cbsadiv, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
 
-    cbsadiv = geo_is_infix_rhs_cleansing(query = cbsadiv,  geoid_type = "cbsadiv")
+    cbsadiv = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
 
+    
+    if any(list(map(lambda x: len(x) != 5, cbsadiv))):
+         raise ValueError("Cbsadiv input is not all of length 5")
+  
     res = []
-
+    zip = [str(zip)] if isinstance(zip, str) or isinstance(zip, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), zip))))
+    
     for i in range(len(zip)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = zip[i],
                                                       f = hud_cw.hud_cw_zip_cbsadiv,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "zip")
+                                                      querytype = "zip",
+                                                      key = key
+                                                      )
 
-        if any(queried in cbsadiv):
+        if any(q in cbsadiv for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -335,21 +447,29 @@ def z_in_cbsadiv(zip : Union[int, str, list[int], list[str], tuple[int], tuple[s
 
 def z_in_ctysb(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                countysub : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-               year : None,
-               quarter : None) -> bool:
+               year = None,
+               quarter = None,
+               key = None
+               ) -> bool:
 
     """
-    Given a zip code and a countysub, determine if they overlap
+    Given zip code(s) and countysub(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
 
     Parameters
     ----------
 
-    zip : The zip to determine overlap with countysub
-    countysub : The countysub to determine overlap with zip
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    zip : The zip(s) to determine overlap with countysub(s).
+    
+    countysub : The countysub(s) to determine overlap with zip(s).
+    
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
     
     See Also
     --------
@@ -378,33 +498,54 @@ def z_in_ctysb(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str
     
     >>> z_in_ctysb(zip = 71052, countysub = 43340, year = 2019, quarter = 2)
     """
-  
-    if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        
-        if year == None:
-            year = args[1]
-        
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
+    if year == None or quarter == None: 
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
+
+        # Store in pkg envrionment and retrieve when necessary
+        if year == None:
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
+        
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
+  
+      
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "countysub",
+                                                        secondary_geoid = "zip",
+                                                        query = countysub, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    countysub = geo_is_infix_rhs_cleansing(query = countysub,  geoid_type = "countysub")
 
+    countysub = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
+
+    
+    if any(list(map(lambda x: len(x) != 10, countysub))):
+         raise ValueError("Countysub input is not all of length 10")
+  
     res = []
-
+    zip = [str(zip)] if isinstance(zip, str) or isinstance(zip, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), zip))))
+    
     for i in range(len(zip)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = zip[i],
                                                       f = hud_cw.hud_cw_zip_countysub,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "zip")
+                                                      querytype = "zip",
+                                                      key = key
+                                                      )
 
-        if any(queried in countysub):
+        if any(q in countysub for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -414,21 +555,29 @@ def z_in_ctysb(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str
 
 def z_in_cd(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
             cd : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-            year : None,
-            quarter : None) -> bool:
+            year = None,
+            quarter = None,
+            key = None
+            ) -> bool:
 
     """
-    Given a zip code and a congressional district, determine if they overlap
+    Given zip code(s) and congressional district(S), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
 
     Parameters
     ----------
 
-    zip : The zip to determine overlap with congressional district
-    cd : The congressional district to determine overlap with zip
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    zip : The zip(s) to determine overlap with congressional district(s).
+
+    cd : The congressional district(s) to determine overlap with zip(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
     
     See Also
     --------
@@ -457,33 +606,53 @@ def z_in_cd(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
     >>> z_in_cd(zip = 71052, cd = 43340, year = 2019, quarter = 2)
     """
 
-  
-    if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        
-        if year == None:
-            year = args[1]
-        
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
+    if year == None or quarter == None: 
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
+
+        # Store in pkg envrionment and retrieve when necessary
+        if year == None:
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
+        
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
+    
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "cd",
+                                                        secondary_geoid = "zip",
+                                                        query = cd, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    cd = geo_is_infix_rhs_cleansing(query = cd,  geoid_type = "cd")
 
+    cd = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
+
+    
+    if any(list(map(lambda x: len(x) != 4, cd))):
+         raise ValueError("Cd input is not all of length 4")
+  
     res = []
-
+    zip = [str(zip)] if isinstance(zip, str) or isinstance(zip, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), zip))))
+    
     for i in range(len(zip)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = zip[i],
                                                       f = hud_cw.hud_cw_zip_cd,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "zip")
+                                                      querytype = "zip",
+                                                      key = key
+                                                      )
 
-        if any(queried in cd):
+        if any(q in cd for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -499,20 +668,28 @@ def z_in_cd(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
 
 def trt_in_z(tract : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
              zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-             year : None,
-             quarter : None) -> bool:
+             year = None,
+             quarter = None,
+             key = None
+             ) -> bool:
     """
-    Given a tract and a zip code, determine if they overlap
+    Given tract(s) and zip code(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
 
     Parameters
     ----------
 
-    tract : The tract to determine overlap with zip
-    zip : The zip to determine overlap with tract
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    tract : The tract(s) to determine overlap with zip(s).
+
+    zip : The zip(s). to determine overlap with tract(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
     
     See Also
     --------
@@ -541,34 +718,52 @@ def trt_in_z(tract : Union[int, str, list[int], list[str], tuple[int], tuple[str
     
     >>> trt_in_z(tract = 43340, zip = 71052, year = 2019, quarter = 2)
     """
-
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        
-        if year == None:
-            year = args[1]
-        
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
 
+        # Store in pkg envrionment and retrieve when necessary
+        if year == None:
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
+        
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "zip",
+                                                        secondary_geoid = "tract",
+                                                        query = zip, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    zip = geo_is_infix_rhs_cleansing(query = zip,  geoid_type = "zip")
 
+    zip = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
+
+    
+    if any(list(map(lambda x: len(x) != 5, zip))):
+         raise ValueError("Zip input is not all of length 5")
+  
     res = []
-
+    tract = [str(tract)] if isinstance(tract, str) or isinstance(tract, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), tract))))
+    
     for i in range(len(tract)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = tract[i],
                                                       f = hud_cw.hud_cw_tract_zip,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "tract")
+                                                      querytype = "tract",
+                                                      key = key
+                                                      )
 
-        if any(queried in tract):
+        if any(q in zip for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -579,20 +774,28 @@ def trt_in_z(tract : Union[int, str, list[int], list[str], tuple[int], tuple[str
 
 def cty_in_z(county : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
              zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-             year : None,
-             quarter : None) -> bool:
+             year = None,
+             quarter = None,
+             key = None
+             ) -> bool:
     """
-    Given a county and a zip code, determine if they overlap
+    Given county(s) and zip code(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
 
     Parameters
     ----------
 
-    county : The county to determine overlap with zip
-    zip : The zip to determine overlap with county
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    county : The county(s) to determine overlap with zip(s).
+
+    zip : The zip(s) to determine overlap with county(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
     
     See Also
     --------
@@ -622,33 +825,53 @@ def cty_in_z(county : Union[int, str, list[int], list[str], tuple[int], tuple[st
     >>> cty_in_z(county = 43340, zip = 71052, year = 2019, quarter = 2)
     """
 
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        
-        if year == None:
-            year = args[1]
-        
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
 
+        # Store in pkg envrionment and retrieve when necessary
+        if year == None:
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
+        
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
+  
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "zip",
+                                                        secondary_geoid = "county",
+                                                        query = zip, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    zip = geo_is_infix_rhs_cleansing(query = zip,  geoid_type = "zip")
 
+    zip = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
+
+    
+    if any(list(map(lambda x: len(x) != 5, zip))):
+         raise ValueError("Zip input is not all of length 5")
+  
     res = []
-
+    county = [str(county)] if isinstance(county, str) or isinstance(county, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), county))))
+    
     for i in range(len(county)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = county[i],
                                                       f = hud_cw.hud_cw_county_zip,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "county")
+                                                      querytype = "county",
+                                                      key = key
+                                                      )
 
-        if any(queried in county):
+        if any(q in zip for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -660,21 +883,29 @@ def cty_in_z(county : Union[int, str, list[int], list[str], tuple[int], tuple[st
 
 def cbsa_in_z(cbsa : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
               zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-              year : None,
-              quarter : None) -> bool:
+              year = None,
+              quarter = None,
+              key = None
+              ) -> bool:
 
     """
-    Given a cbsa and a zip code, determine if they overlap
+    Given cbsa(s) and zip code(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
 
     Parameters
     ----------
 
-    cbsa : The cbsa to determine overlap with zip
-    zip : The zip to determine overlap with cbsa
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    cbsa : The cbsa(s) to determine overlap with zip(s).
+
+    zip : The zip(s) to determine overlap with cbsa(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
     
     See Also
     --------
@@ -703,34 +934,53 @@ def cbsa_in_z(cbsa : Union[int, str, list[int], list[str], tuple[int], tuple[str
     
     >>> cbsa_in_z(cbsa = 43340, zip = 71052, year = 2019, quarter = 2)
     """
-
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        
-        if year == None:
-            year = args[1]
-        
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
 
+        # Store in pkg envrionment and retrieve when necessary
+        if year == None:
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
+        
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
+    
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "zip",
+                                                        secondary_geoid = "cbsa",
+                                                        query = zip, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    zip = geo_is_infix_rhs_cleansing(query = zip,  geoid_type = "zip")
 
+    zip = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
+
+    
+    if any(list(map(lambda x: len(x) != 5, zip))):
+         raise ValueError("Zip input is not all of length 5")
+  
     res = []
-
+    cbsa = [str(cbsa)] if isinstance(cbsa, str) or isinstance(cbsa, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), cbsa))))
+    
     for i in range(len(cbsa)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = cbsa[i],
                                                       f = hud_cw.hud_cw_cbsa_zip,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "cbsa")
+                                                      querytype = "cbsa",
+                                                      key = key
+                                                      )
 
-        if any(queried in cbsa):
+        if any(q in zip for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -741,21 +991,29 @@ def cbsa_in_z(cbsa : Union[int, str, list[int], list[str], tuple[int], tuple[str
 
 def cbsadiv_in_z(cbsadiv : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                  zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-                 year : None,
-                 quarter : None) -> bool:    
+                 year = None,
+                 quarter = None,
+                 key = None
+                 ) -> bool:    
 
     """
-    Given a cbsadiv and a zip code, determine if they overlap
+    Given cbsadiv(s) and zip code(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
 
     Parameters
     ----------
 
-    cbsadiv : The cbsadiv to determine overlap with zip
-    zip : The zip to determine overlap with cbsadiv
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    cbsadiv : The cbsadiv(s) to determine overlap with zip(s).
+
+    zip : The zip(s). to determine overlap with cbsadiv(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
     
     See Also
     --------
@@ -784,33 +1042,52 @@ def cbsadiv_in_z(cbsadiv : Union[int, str, list[int], list[str], tuple[int], tup
     
     >>> cbsadiv_in_z(cbsadiv = 43340, zip = 71052, year = 2019, quarter = 2)
     """
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
+
+        # Store in pkg envrionment and retrieve when necessary
         if year == None:
-            year = args[1]
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
         
-
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
+
     
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "zip",
+                                                        secondary_geoid = "cbsadiv",
+                                                        query = zip, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
 
-    zip = geo_is_infix_rhs_cleansing(query = zip,  geoid_type = "zip")
+    zip = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
 
+    
+    if any(list(map(lambda x: len(x) != 5, zip))):
+         raise ValueError("Zip input is not all of length 5")
+  
     res = []
-
+    cbsadiv = [str(cbsadiv)] if isinstance(cbsadiv, str) or isinstance(cbsadiv, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), cbsadiv))))
+    
     for i in range(len(cbsadiv)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = cbsadiv[i],
                                                       f = hud_cw.hud_cw_cbsadiv_zip,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "cbsadiv")
+                                                      querytype = "cbsadiv",
+                                                      key = key
+                                                      )
 
-        if any(queried in cbsadiv):
+        if any(q in zip for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -821,20 +1098,28 @@ def cbsadiv_in_z(cbsadiv : Union[int, str, list[int], list[str], tuple[int], tup
 
 def cd_in_z(cd : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
             zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-            year : None,
-            quarter : None) -> bool:  
+            year = None,
+            quarter = None,
+            key = None
+            ) -> bool:  
     """
-    Given a congressional district and a zip code, determine if they overlap
+    Given congressional district(s) and zip code(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
 
     Parameters
     ----------
 
-    cd  The congressional district to determine overlap with zip
-    zip : The zip to determine overlap with congressional district
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    cd  The congressional district(s) to determine overlap with zip(s).
+
+    zip : The zip(s) to determine overlap with congressional district(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
+    
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
     
     See Also
     --------
@@ -864,33 +1149,50 @@ def cd_in_z(cd : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
     >>> cd_in_z(cd = 43340, zip = 71052, year = 2019, quarter = 2)
     """
 
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        
-        if year == None:
-            year = args[1]
-        
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
 
+        # Store in pkg envrionment and retrieve when necessary
+        if year == None:
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
+        
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "zip",
+                                                        secondary_geoid = "cd",
+                                                        query = zip, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    zip = geo_is_infix_rhs_cleansing(query = zip,  geoid_type = "zip")
-
+    zip = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
+    
+    if any(list(map(lambda x: len(x) != 5, zip))):
+         raise ValueError("Zip input is not all of length 5")
+  
     res = []
-
+    cd = [str(cd)] if isinstance(cd, str) or isinstance(cd, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), cd))))
+    
     for i in range(len(cd)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = cd[i],
                                                       f = hud_cw.hud_cw_cd_zip,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "cd")
+                                                      querytype = "cd",
+                                                      key = key
+                                                      )
 
-        if any(queried in cd):
+        if any(q in zip for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -902,21 +1204,29 @@ def cd_in_z(cd : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
  
 def ctysb_in_z(countysub : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
                zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]],
-               year : None,
-               quarter : None) -> bool:  
+               year = None,
+               quarter = None,
+               key = None
+               ) -> bool:  
     """
-    Given a countysub and a zip code, determine if they overlap
+    Given countysub(s) and zip code(s), determine if they overlap
     using the crosswalk files. Overlap will be described if
     any residential, business, other, or total addresses reside in both.
 
     Parameters
     ----------
 
-    countysub : The countysub to determine overlap with zip
-    zip : The zip to determine overlap with countysub
-    year : The year of the crosswalk files.
-    quarter : The quarter of the crosswalk files.
+    countysub : The countysub(s) to determine overlap with zip(s).
+
+    zip : The zip(s). to determine overlap with countysub(s).
+
+    year : Gets the year that this data was recorded. Can specify multiple
+        years. Default is the previous year.
     
+    quarter : Gets the quarter of the year that this data was recorded.
+        Defaults to the first quarter of the year.
+
+      
     See Also
     --------
 
@@ -944,34 +1254,53 @@ def ctysb_in_z(countysub : Union[int, str, list[int], list[str], tuple[int], tup
     
     >>> ctysb_in_z(countysub = 43340, zip = 71052, year = 2019, quarter = 2)
     """
-
+    if(key == None and os.getenv("HUD_KEY") != None):
+        key = os.getenv("HUD_KEY")
 
     if year == None or quarter == None: 
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        
-        if year == None:
-            year = args[1]
-        
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
 
+        # Store in pkg envrionment and retrieve when necessary
+        if year == None:
+            year =  hud_pkg_env.pkg_env["rec_cw"] ["year"]
+        
         if quarter == None:
-            quarter = args[2]
+            quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
     
 
-    args = hud_get_recent_data.hud_rec_cw_yr()
+  
+    cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "zip",
+                                                        secondary_geoid = "countysub",
+                                                        query = zip, year = year,
+                                                        quarter = quarter,
+                                                        key = os.getenv("HUD_KEY"))
 
-    zip = geo_is_infix_rhs_cleansing(query = zip,  geoid_type = "zip")
 
+    zip = cleaned[0]
+    year = cleaned[1]
+    quarter = cleaned[2]
+    key = cleaned[3]
+
+    
+    if any(list(map(lambda x: len(x) != 5, zip))):
+         raise ValueError("Zip input is not all of length 5")
+  
     res = []
-
+    countysub = [str(countysub)] if isinstance(countysub, str) or isinstance(countysub, int) else list(map(lambda x: str(x), list(map(lambda x: str(x), countysub))))
+    
     for i in range(len(countysub)): 
 
         queried = geo_is_infix_query_and_get_warnings(query = countysub[i],
                                                       f = hud_cw.hud_cw_countysub_zip,
                                                       year = year,
                                                       quarter = quarter,
-                                                      querytype = "countysub")
+                                                      querytype = "countysub",
+                                                      key = key
+                                                      )
 
-        if any(queried in countysub):
+        if any(q in zip for q in queried):
             res.append(True)
         else:
             res.append(False)
@@ -980,121 +1309,60 @@ def ctysb_in_z(countysub : Union[int, str, list[int], list[str], tuple[int], tup
 
 
 
-
-def geo_is_infix_rhs_cleansing(query, geoid_type):
-    """
-    #' @name geo_is_infix_rhs_cleansing
-    #' @title geo_is_infix_rhs_cleansing
-    #' @description Given a geographic identifier, described by the
-    #'   crosswalk files, determine whether it is the right length and has
-    #'   correct spacing.
-    #'  query The geoid to query for
-    #'  geoid_type The type of geoid, either:
-    #'    1) zip,
-    #'    2) tract,
-    #'    3) cd,
-    #'    4) cbsa,
-    #'    5) cbsadiv,
-    #'    6) county,
-    #'    7) countysub
-    #' @noRd
-    #' @noMd
-    """
-    query <- unique(paste(trimws(as.character(query), which = "both")))
-
-    if (geoid_type == "zip") {
-    if (FALSE %in% numbers_only(query)) stop("\nZip inputs must only be numbers.",
-                                                call. = FALSE)
-    if (any(nchar(query) != 5)) stop("\nZip inputs are not all of length 5.",
-                                        call. = FALSE)
-    } else if (geoid_type == "tract") {
-    if (FALSE %in% numbers_only(query)) stop("\nTract inputs must only be numbers.",
-                                                call. = FALSE)
-    if (any(nchar(query) != 11)) stop("\nTract inputs are not all of length 11.",
-                                        call. = FALSE)
-    } else if (geoid_type == "county") {
-    if (FALSE %in% numbers_only(query)) stop("\nCounty inputs must only be numbers.",
-                                                call. = FALSE)
-    if (any(nchar(query) != 5)) stop("\nCounty inputs are not all of length 5.",
-                                        call. = FALSE)
-    } else if (geoid_type == "cbsa") {
-    if (FALSE %in% numbers_only(query)) stop("\nCbsa inputs must only be numbers.",
-                                            call. = FALSE)
-    if (any(nchar(query) != 5)) stop("\nCbsa inputs are not all of length 5.",
-                                    call. = FALSE)
-    } else if (geoid_type == "cbsadiv") {
-    if (FALSE %in% numbers_only(query)) stop("\nCbsadiv inputs must only be numbers.",
-                                                call. = FALSE)
-    if (any(nchar(query) != 5)) stop("\nCbsadiv inputs are not all of length 5.",
-                                        call. = FALSE)
-    } else if (geoid_type == "cd") {
-    if (FALSE %in% numbers_only(query)) stop("\nCd inputs must only be numbers.",
-                                                call. = FALSE)
-    if (any(nchar(query) != 4)) stop("\nCd inputs are not all of length 4.",
-                                        call. = FALSE)
-    } else if (geoid_type == "countysub") {
-    if (FALSE %in% numbers_only(query)) stop("\nCountysub inputs must only be numbers.",
-                                                call. = FALSE)
-    if (any(nchar(query) != 10)) stop("\nCountysub inputs are not all of length 10.",
-                                        call. = FALSE)
-    }
-    return(query)
-
-
-
-
 def geo_is_infix_query_and_get_warnings(query,
                                         f,
                                         year,
                                         quarter,
-                                        querytype):
+                                        querytype,
+                                        key):
 
     """
-    #' @name geo_is_infix_query_and_get_warnings
-    #' @title geo_is_infix_query_and_get_warnings
-    #' @description Giving a geoid to query for, make sure to call the core
-    #'   hud_cw() functions to get the crosswalk output
-    #'   but intercept it to make custom warning messages.
-    #'  query The geoids to query for crosswalk
-    #'  f The function used query the crosswalk files.
-    #'  year The year to query for.
-    #'  quarter The quarter to query for.
-    #'  querytype The geoid user is querying for.
-    #'    1) zip
-    #'    2) tract
-    #'    3) cbsa
-    #'    4) cd
-    #'    5) cbsadiv
-    #'    6) countsub
-    #'    7) county
-    #' @noRd
-    #' @noMd
+    Giving a geoid to query for, make sure to call the core
+    hud_cw() functions to get the crosswalk output
+    but intercept it to make custom warning messages.
+
+    Parameters
+    ----------
+    query : The geoids to query for crosswalk
+    
+    f : The function used query the crosswalk files.
+    
+    year : The year to query for.
+    
+    quarter : The quarter to query for.
+    
+    querytype : The geoid user is querying for.
+    1) zip
+    2) tract
+    3) cbsa
+    4) cd
+    5) cbsadiv
+    6) countsub
+    7) county
     """
   
-  
-    res <- c()
-    tryCatch(
-    {
-        res <- suppressMessages(f(query,
-                minimal = TRUE,
+    res = []
+    try:
+        res = f(query,
+                minimal = True,
                 year = year,
-                quarter = quarter))
-    },
-    error = function(cond)
-    {
-        stop(cond$message, call. = FALSE)
-    },
-    warning = function(cond)
-    {
+                quarter = quarter,
+                key = key
+                )
+    
+    except ValueError as e: 
+        raise ValueError(str(e))
+    
+    except RuntimeWarning as e:
+    
         # Might be more efficient to save the errored geoids when used instead
         # of having to regex it...
-        warning(paste("\nThe ", querytype, " ", query ," inputted is not valid.",
-                    " No data was found for year: ", year , " and quarter: ", quarter,
+        warn("\nThe " +  querytype + " " + query + " inputted is not valid." +
+                    " No data was found for year: " + year +  " and quarter: " + quarter,
                     sep = ""
-                ), call. = FALSE)
+                )
 
-    }
-    )
+
     return(res)
     
 
