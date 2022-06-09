@@ -54,8 +54,8 @@ metropolitan region or non-metropolitan county, as described in 24 CFR 888.113.<
 <section id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <p>These are basic examples to show you how to query the Fair Markets Rent API. Before
-looking at the examples I RECOMMEND first looking at [the parameters][Parameters]
-as well as [return data][Returns] located at the bottom of the page.</p>
+looking at the examples I RECOMMEND first looking at [the parameters] <a class="reference internal" href="#parameters">Parameters</a>
+as well as [return data] <a class="reference internal" href="#returns">Returns</a> located at the bottom of the page.</p>
 <p><strong>Disclaimer:</strong> The output tables are too large to be displayed here so we
 choose to leave them out.</p>
 <p>Querying a county or cbsa code that are considered small areas will
@@ -72,90 +72,103 @@ are small areas will return zip code data in the zip_code field.</p>
 <p>This is an example which shows you how to query the Fair Markets Rent API for a
 state. You can use the state abbreviation, state name, or state fips code. It
 will return all counties in the state and their Fair Markets Rents as well
-as all metroareas in the state and their Fair Markets Rent.
-<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>{r, eval=FALSE}
-# These functions gets FMR data for the state of Virginia in 2021.
-hud_fmr(query = 'VA', year = '2021')</p>
-<p>hud_fmr(query= &quot;Virginia&quot;, year = '2021')</p>
-<p>hud_fmr(query= &quot;51&quot;, year = '2021')
-<a href="#id5"><span class="problematic" id="id6">``</span></a><a href="#id7"><span class="problematic" id="id8">`</span></a></p>
+as all metroareas in the state and their Fair Markets Rent.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># These functions gets FMR data for the state of Virginia in 2021.</span>
+<span class="n">hud_fmr</span><span class="p">(</span><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;VA&#39;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+
+<span class="n">hud_fmr</span><span class="p">(</span><span class="n">query</span><span class="o">=</span> <span class="s2">&quot;Virginia&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+
+<span class="n">hud_fmr</span><span class="p">(</span><span class="n">query</span><span class="o">=</span> <span class="s2">&quot;51&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>If you only need the county level data, then this might work better...</p>
-<p><a href="#id9"><span class="problematic" id="id10">``</span></a><a href="#id11"><span class="problematic" id="id12">`</span></a>{r, eval=FALSE}
-# These functions gets FMR data for the state of Virginia in 2021 for counties.
-hud_fmr_state_counties(state = 'VA', year = '2021')</p>
-<p>hud_fmr_state_counties(state = &quot;Virginia&quot;, year = '2021')</p>
-<p>hud_fmr_state_counties(state = &quot;51&quot;, year = '2021')
-<a href="#id13"><span class="problematic" id="id14">``</span></a><a href="#id15"><span class="problematic" id="id16">`</span></a></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># These functions gets FMR data for the state</span>
+<span class="c1"># of Virginia in 2021 for counties.</span>
+<span class="n">hud_fmr_state_counties</span><span class="p">(</span><span class="n">state</span> <span class="o">=</span> <span class="s1">&#39;VA&#39;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+
+<span class="n">hud_fmr_state_counties</span><span class="p">(</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;Virginia&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+
+<span class="n">hud_fmr_state_counties</span><span class="p">(</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;51&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>If you need just metro data...</p>
-<p><a href="#id17"><span class="problematic" id="id18">``</span></a><a href="#id19"><span class="problematic" id="id20">`</span></a>{r, eval=FALSE}
-# These functions gets FMR data for the state of Virginia in 2021 for metroareas.
-hud_fmr_state_metroareas(state = 'VA', year = '2021')</p>
-<p>hud_fmr_state_metroareas(state = &quot;Virginia&quot;, year = '2021')</p>
-<p>hud_fmr_state_metroareas(state = &quot;51&quot;, year = '2021')
-<a href="#id21"><span class="problematic" id="id22">``</span></a><a href="#id23"><span class="problematic" id="id24">`</span></a></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># These functions gets FMR data for the state</span>
+<span class="c1"># of Virginia in 2021 for metroareas.</span>
+<span class="n">hud_fmr_state_metroareas</span><span class="p">(</span><span class="n">state</span> <span class="o">=</span> <span class="s1">&#39;VA&#39;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+
+<span class="n">hud_fmr_state_metroareas</span><span class="p">(</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;Virginia&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+
+<span class="n">hud_fmr_state_metroareas</span><span class="p">(</span><span class="n">state</span> <span class="o">=</span> <span class="s2">&quot;51&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="county-level-fair-markets-rent">
 <h2>County Level Fair Markets Rent<a class="headerlink" href="#county-level-fair-markets-rent" title="Permalink to this headline">¶</a></h2>
 <p>This is an example which shows you how to query the Fair Markets Rent on a
 county level basis. These are defined with a 2 digit state code + 3 digit county
 code. You also need a 99999 code added onto the end. I recommend taking a
-look at [US Counties][] to determine what counties are available.</p>
-<p><code class="docutils literal notranslate"><span class="pre">`{r,</span> <span class="pre">eval=FALSE}</span>
-<span class="pre">#</span> <span class="pre">Getting</span> <span class="pre">a</span> <span class="pre">county</span> <span class="pre">requires</span> <span class="pre">a</span> <span class="pre">2</span> <span class="pre">digit</span> <span class="pre">state</span> <span class="pre">fipscode</span> <span class="pre">+</span> <span class="pre">3</span> <span class="pre">digit</span> <span class="pre">county</span> <span class="pre">fipscode</span> <span class="pre">+</span> <span class="pre">99999</span>
-<span class="pre">hud_fmr(query</span> <span class="pre">=</span> <span class="pre">'0100199999',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">'2017')</span>
-<span class="pre">`</span></code></p>
-<p>You can also choose to use:
-<code class="docutils literal notranslate"><span class="pre">`{r,</span> <span class="pre">eval=FALSE}</span>
-<span class="pre">#</span> <span class="pre">Getting</span> <span class="pre">a</span> <span class="pre">county</span> <span class="pre">requires</span> <span class="pre">a</span> <span class="pre">2</span> <span class="pre">digit</span> <span class="pre">state</span> <span class="pre">fipscode</span> <span class="pre">+</span> <span class="pre">3</span> <span class="pre">digit</span> <span class="pre">county</span> <span class="pre">fipscode</span> <span class="pre">+</span> <span class="pre">99999</span>
-<span class="pre">hud_fmr_county_zip(county</span> <span class="pre">=</span> <span class="pre">'0100199999',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">'2017')</span>
-<span class="pre">`</span></code></p>
+look at <a class="reference internal" href="#us-counties">US Counties</a> to determine what counties are available.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Getting a county requires a 2 digit state</span>
+<span class="c1"># fipscode + 3 digit county fipscode + 99999</span>
+<span class="n">hud_fmr</span><span class="p">(</span><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;0100199999&#39;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2017&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also choose to use:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Getting a county requires a 2 digit state</span>
+<span class="c1"># fipscode + 3 digit county fipscode + 99999</span>
+<span class="n">hud_fmr_county_zip</span><span class="p">(</span><span class="n">county</span> <span class="o">=</span> <span class="s1">&#39;0100199999&#39;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2017&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="small-areas-fair-markets-rent">
 <h2>Small Areas Fair Markets Rent<a class="headerlink" href="#small-areas-fair-markets-rent" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">`{r,</span> <span class="pre">eval=FALSE}</span>
-<span class="pre">#</span> <span class="pre">Gets</span> <span class="pre">FMR</span> <span class="pre">data</span> <span class="pre">for</span> <span class="pre">METRO</span> <span class="pre">area.</span>
-<span class="pre">hud_fmr(query</span> <span class="pre">=</span> <span class="pre">&quot;METRO47900M47900&quot;,</span> <span class="pre">year=c(2018))</span>
-<span class="pre">`</span></code></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gets FMR data for METRO area.</span>
+<span class="n">hud_fmr</span><span class="p">(</span><span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;METRO47900M47900&quot;</span><span class="p">,</span> <span class="n">year</span><span class="o">=</span><span class="p">[</span><span class="mi">2018</span><span class="p">])</span>
+</pre></div>
+</div>
 <p>You can also choose to use:
-<code class="docutils literal notranslate"><span class="pre">`{r,</span> <span class="pre">eval=FALSE}</span>
-<span class="pre">#</span> <span class="pre">Getting</span> <span class="pre">a</span> <span class="pre">county</span> <span class="pre">requires</span> <span class="pre">a</span> <span class="pre">2</span> <span class="pre">digit</span> <span class="pre">state</span> <span class="pre">fipscode</span> <span class="pre">+</span> <span class="pre">3</span> <span class="pre">digit</span> <span class="pre">county</span> <span class="pre">fipscode</span> <span class="pre">+</span> <span class="pre">99999</span>
-<span class="pre">hud_fmr_metroarea_zip(metroarea</span> <span class="pre">=</span> <span class="pre">'METRO47900M47900',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">'2017')</span>
-<span class="pre">`</span></code></p>
+.. code-block:: Python</p>
+<blockquote>
+<div><p># Getting a county requires a 2 digit state
+# fipscode + 3 digit county fipscode + 99999
+hud_fmr_metroarea_zip(metroarea = 'METRO47900M47900', year = '2017')</p>
+</div></blockquote>
 </section>
 <section id="most-recent-fair-markets-rent-files">
 <h2>Most recent Fair Markets Rent files<a class="headerlink" href="#most-recent-fair-markets-rent-files" title="Permalink to this headline">¶</a></h2>
 <p>To get the most recent Fair Markets Rent files by year:</p>
-<p><a href="#id25"><span class="problematic" id="id26">``</span></a><a href="#id27"><span class="problematic" id="id28">`</span></a>{r, eval = if(Sys.getenv(&quot;HUD_KEY&quot;) == &quot;&quot;) FALSE else TRUE }
-rhud::hud_rec_fmr_yr()</p>
-<p><a href="#id29"><span class="problematic" id="id30">``</span></a><a href="#id31"><span class="problematic" id="id32">`</span></a></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_rec_fmr_yr</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 <section id="querying-for-geographic-identifers">
 <h2>Querying for Geographic Identifers<a class="headerlink" href="#querying-for-geographic-identifers" title="Permalink to this headline">¶</a></h2>
 <section id="us-states">
 <h3>US States<a class="headerlink" href="#us-states" title="Permalink to this headline">¶</a></h3>
 <p>This is an example to show you how to query for all states in the US.</p>
-<p><code class="docutils literal notranslate"><span class="pre">`{r,</span> <span class="pre">eval=FALSE}</span>
-<span class="pre">library(rhud)</span>
-<span class="pre">hud_nation_states_territories()</span>
-<span class="pre">`</span></code></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_nation_states_territories</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 <section id="us-counties">
 <h3>US Counties<a class="headerlink" href="#us-counties" title="Permalink to this headline">¶</a></h3>
 <p>This is an example to show you how to query for all counties in MD,
 Virginia, and California, respectively.</p>
-<p><a href="#id33"><span class="problematic" id="id34">``</span></a><a href="#id35"><span class="problematic" id="id36">`</span></a>{r, eval=FALSE}
-hud_state_counties(&quot;MD&quot;)</p>
-<p>hud_state_counties(&quot;Virginia&quot;)</p>
-<p>hud_state_counties(&quot;6&quot;)
-<a href="#id37"><span class="problematic" id="id38">``</span></a><a href="#id39"><span class="problematic" id="id40">`</span></a></p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_state_counties</span><span class="p">(</span><span class="s2">&quot;MD&quot;</span><span class="p">)</span>
+
+<span class="n">hud_state_counties</span><span class="p">(</span><span class="s2">&quot;Virginia&quot;</span><span class="p">)</span>
+
+<span class="n">hud_state_counties</span><span class="p">(</span><span class="s2">&quot;6&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="us-metropolitan-areas">
 <h3>US Metropolitan Areas<a class="headerlink" href="#us-metropolitan-areas" title="Permalink to this headline">¶</a></h3>
 <p>This is an example to show you how to query for metropolitan areas in Wyoming
-and New York.
-<code class="docutils literal notranslate"><span class="pre">`{r,</span> <span class="pre">eval=FALSE}</span>
-<span class="pre">hud_state_metropolitan(c(&quot;WY&quot;,</span> <span class="pre">&quot;NY&quot;))</span>
-<span class="pre">`</span></code></p>
+and New York.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_state_metropolitan</span><span class="p">([</span><span class="s2">&quot;WY&quot;</span><span class="p">,</span> <span class="s2">&quot;NY&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="parameters">
@@ -169,7 +182,8 @@ and New York.
 <dl class="simple">
 <dt>&quot;What Is Fair Market Rent? | RentData.org.&quot; Www.rentdata.org,</dt><dd><p>www.rentdata.org/articles/what-is-fair-market-rent. Accessed 18 Feb. 2022.</p>
 </dd>
-<dt>&quot;Fair Market Rents | HUD USER.&quot; Huduser.gov, U.S Department of Housing and Urban</dt><dd><p>Development, 2017, www.huduser.gov/portal/datasets/fmr.html.</p>
+<dt>&quot;Fair Market Rents | HUD USER.&quot; Huduser.gov, U.S Department</dt><dd><p>of Housing and Urban Development, 2017,
+www.huduser.gov/portal/datasets/fmr.html.</p>
 </dd>
 </dl>
 </section>

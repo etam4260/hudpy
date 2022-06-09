@@ -25,8 +25,8 @@ Examples
 ========
 
 These are basic examples to show you how to query the Fair Markets Rent API. Before
-looking at the examples I RECOMMEND first looking at [the parameters][Parameters]
-as well as [return data][Returns] located at the bottom of the page.
+looking at the examples I RECOMMEND first looking at [the parameters] `Parameters`_
+as well as [return data] `Returns`_ located at the bottom of the page.
 
 **Disclaimer:** The output tables are too large to be displayed here so we
 choose to leave them out.
@@ -48,38 +48,44 @@ This is an example which shows you how to query the Fair Markets Rent API for a
 state. You can use the state abbreviation, state name, or state fips code. It
 will return all counties in the state and their Fair Markets Rents as well
 as all metroareas in the state and their Fair Markets Rent.
-```{r, eval=FALSE}
-# These functions gets FMR data for the state of Virginia in 2021.
-hud_fmr(query = 'VA', year = '2021')
 
-hud_fmr(query= "Virginia", year = '2021')
 
-hud_fmr(query= "51", year = '2021')
-```
+.. code-block:: Python
+   
+    # These functions gets FMR data for the state of Virginia in 2021.
+    hud_fmr(query = 'VA', year = '2021')
+
+    hud_fmr(query= "Virginia", year = '2021')
+
+    hud_fmr(query= "51", year = '2021')
+
 
 
 If you only need the county level data, then this might work better...
 
-```{r, eval=FALSE}
-# These functions gets FMR data for the state of Virginia in 2021 for counties.
-hud_fmr_state_counties(state = 'VA', year = '2021')
+.. code-block:: Python
 
-hud_fmr_state_counties(state = "Virginia", year = '2021')
+    # These functions gets FMR data for the state 
+    # of Virginia in 2021 for counties.
+    hud_fmr_state_counties(state = 'VA', year = '2021')
 
-hud_fmr_state_counties(state = "51", year = '2021')
-```
+    hud_fmr_state_counties(state = "Virginia", year = '2021')
+
+    hud_fmr_state_counties(state = "51", year = '2021')
 
 
 If you need just metro data...
 
-```{r, eval=FALSE}
-# These functions gets FMR data for the state of Virginia in 2021 for metroareas.
-hud_fmr_state_metroareas(state = 'VA', year = '2021')
+.. code-block:: Python
 
-hud_fmr_state_metroareas(state = "Virginia", year = '2021')
+    # These functions gets FMR data for the state 
+    # of Virginia in 2021 for metroareas.
+    hud_fmr_state_metroareas(state = 'VA', year = '2021')
 
-hud_fmr_state_metroareas(state = "51", year = '2021')
-```
+    hud_fmr_state_metroareas(state = "Virginia", year = '2021')
+
+    hud_fmr_state_metroareas(state = "51", year = '2021')
+
 
 
 County Level Fair Markets Rent
@@ -88,35 +94,43 @@ County Level Fair Markets Rent
 This is an example which shows you how to query the Fair Markets Rent on a
 county level basis. These are defined with a 2 digit state code + 3 digit county
 code. You also need a 99999 code added onto the end. I recommend taking a 
-look at [US Counties][] to determine what counties are available.
+look at `US Counties`_ to determine what counties are available.
 
-```{r, eval=FALSE}
-# Getting a county requires a 2 digit state fipscode + 3 digit county fipscode + 99999
-hud_fmr(query = '0100199999', year = '2017')
-```
+.. code-block:: Python
+
+    # Getting a county requires a 2 digit state
+    # fipscode + 3 digit county fipscode + 99999
+    hud_fmr(query = '0100199999', year = '2017')
+
 
 
 You can also choose to use:
-```{r, eval=FALSE}
-# Getting a county requires a 2 digit state fipscode + 3 digit county fipscode + 99999
-hud_fmr_county_zip(county = '0100199999', year = '2017')
-```
+
+.. code-block:: Python
+
+    # Getting a county requires a 2 digit state 
+    # fipscode + 3 digit county fipscode + 99999
+    hud_fmr_county_zip(county = '0100199999', year = '2017')
+
 
 
 Small Areas Fair Markets Rent
 ====================================
 
-```{r, eval=FALSE}
-# Gets FMR data for METRO area.
-hud_fmr(query = "METRO47900M47900", year=c(2018))
-```
+.. code-block:: Python
+
+    # Gets FMR data for METRO area.
+    hud_fmr(query = "METRO47900M47900", year=[2018])
+
 
 
 You can also choose to use:
-```{r, eval=FALSE}
-# Getting a county requires a 2 digit state fipscode + 3 digit county fipscode + 99999
-hud_fmr_metroarea_zip(metroarea = 'METRO47900M47900', year = '2017')
-```
+.. code-block:: Python
+
+    # Getting a county requires a 2 digit state 
+    # fipscode + 3 digit county fipscode + 99999
+    hud_fmr_metroarea_zip(metroarea = 'METRO47900M47900', year = '2017')
+
 
 
 Most recent Fair Markets Rent files
@@ -124,10 +138,9 @@ Most recent Fair Markets Rent files
 
 To get the most recent Fair Markets Rent files by year:
 
-```{r, eval = if(Sys.getenv("HUD_KEY") == "") FALSE else TRUE }
-rhud::hud_rec_fmr_yr()
+.. code-block:: Python
 
-```
+    hud_rec_fmr_yr()
 
 
 Querying for Geographic Identifers
@@ -137,10 +150,10 @@ US States
 ---------
 This is an example to show you how to query for all states in the US.
 
-```{r, eval=FALSE}
-library(rhud)
-hud_nation_states_territories()
-```
+.. code-block:: Python
+
+    hud_nation_states_territories()
+
 
 
 US Counties 
@@ -148,13 +161,14 @@ US Counties
 This is an example to show you how to query for all counties in MD,
 Virginia, and California, respectively.
 
-```{r, eval=FALSE}
-hud_state_counties("MD")
+.. code-block:: Python
 
-hud_state_counties("Virginia")
+    hud_state_counties("MD")
 
-hud_state_counties("6")
-```
+    hud_state_counties("Virginia")
+
+    hud_state_counties("6")
+
 
 
 US Metropolitan Areas
@@ -162,9 +176,11 @@ US Metropolitan Areas
 
 This is an example to show you how to query for metropolitan areas in Wyoming
 and New York.
-```{r, eval=FALSE}
-hud_state_metropolitan(c("WY", "NY"))
-```
+
+.. code-block:: Python
+
+    hud_state_metropolitan(["WY", "NY"])
+
 
 
 Parameters
@@ -181,5 +197,6 @@ References
 "What Is Fair Market Rent? | RentData.org." Www.rentdata.org,
         www.rentdata.org/articles/what-is-fair-market-rent. Accessed 18 Feb. 2022.
 
-"Fair Market Rents | HUD USER." Huduser.gov, U.S Department of Housing and Urban
-        Development, 2017, www.huduser.gov/portal/datasets/fmr.html.
+"Fair Market Rents | HUD USER." Huduser.gov, U.S Department
+        of Housing and Urban Development, 2017, 
+        www.huduser.gov/portal/datasets/fmr.html.
