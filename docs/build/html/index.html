@@ -68,10 +68,41 @@
 <li class="toctree-l2"><a class="reference internal" href="fair_markets_rent.html#references">References</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="income_limits.html">Income Limits</a></li>
-<li class="toctree-l1"><a class="reference internal" href="comprehensive_housing_and_affordability.html">Comprehensive Housing and Affordability Strategy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="income_limits.html">Income Limits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="income_limits.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="income_limits.html#state-level-income-limits">State Level Income Limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="income_limits.html#county-level-income-limits">County Level Income Limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="income_limits.html#small-areas-income-limits">Small Areas Income Limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="income_limits.html#most-recent-income-limits-files">Most recent Income Limits files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="income_limits.html#querying-for-geographic-identifers">Querying for Geographic Identifers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="income_limits.html#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="income_limits.html#returns">Returns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="income_limits.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_housing_and_affordability.html">Comprehensive Housing and Affordability Strategy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#comprehensive-housing-and-affordability-strategy-for-nation">Comprehensive Housing and Affordability Strategy for Nation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#comprehensive-housing-and-affordability-strategy-for-states">Comprehensive Housing and Affordability Strategy for States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#comprehensive-housing-and-affordability-strategy-for-county">Comprehensive Housing and Affordability Strategy for County</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#comprehensive-housing-and-affordability-strategy-for-mcd">Comprehensive Housing and Affordability Strategy for MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#comprehensive-housing-and-affordability-strategy-for-place">Comprehensive Housing and Affordability Strategy for Place</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#using-the-omni-function-for-querying">Using the omni function for querying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#querying-for-geographic-identifers">Querying for Geographic Identifers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#returns">Returns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comprehensive_housing_and_affordability.html#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#rhud-0-1-0-9000-6-15-2022">rhud 0.1.0.9000 (6/15/2022)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#rhud-0-0-0-9000-1-28-2022">rhud 0.0.0.9000 (1/28/2022)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="authors.html#citation">Citation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="hudpy.html">hudpy package</a></li>
 </ul>
@@ -95,12 +126,16 @@ datasets provided by HUD. This will include selecting USPS Crosswalk,
 Fair Markets Rent, Income Limits, and Comprehensive Housing
 Affordability Strategy.</p>
 <p>Now copy and paste that key into the hud_set_key() function.</p>
-<p><code class="docutils literal notranslate"><span class="pre">hud_set_key(&quot;sample-key&quot;)</span></code></p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>hud_set_key<span class="o">(</span><span class="s2">&quot;sample-key&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
 </section>
 <section id="simplistic-example">
 <h2>Simplistic Example<a class="headerlink" href="#simplistic-example" title="Permalink to this headline">¶</a></h2>
 <p>This sample provided below shows how to query the USPS Crosswalk API</p>
-<p><code class="docutils literal notranslate"><span class="pre">hud_cw_zip_tract(zip</span> <span class="pre">=</span> <span class="pre">'35213',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">['2010'],</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">['1'])</span></code></p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>hud_cw_zip_tract<span class="o">(</span><span class="nv">zip</span> <span class="o">=</span> <span class="s1">&#39;35213&#39;</span>, <span class="nv">year</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;2010&#39;</span><span class="o">]</span>, <span class="nv">quarter</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;1&#39;</span><span class="o">])</span>
+</pre></div>
+</div>
 </section>
 </section>
 <section id="what-is-hudpy">

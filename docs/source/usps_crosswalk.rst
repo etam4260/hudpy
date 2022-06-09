@@ -273,9 +273,143 @@ To get the most recent crosswalk files by year and quarter:
 Parameters
 ==========
 
++-----------+-------------------------------------------------------------------------------------+
+|Parameters | Description                                                                         |
++===========+=====================================================================================+
+| query     |    The query argument name is the first geoid in the function call.                 |
+|           |    For example, zip-county would have the 'zip' argument name as the query.         |
+|           |                                                                                     |
+|           |    Functions #1-5 and #11 must specify a 5 digit zip code in the **zip** function   |
+|           |    argument.                                                                        |
+|           |                                                                                     |
+|           |    * zip = 22031                                                                    |
+|           |                                                                                     |
+|           |                                                                                     |
+|           |    Function #6 must specify an 11 digit number consisting of state FIPS + county    |
+|           |    FIPS + tract code tract in the **tract** function argument.                      |
+|           |                                                                                     |
+|           |    * tract = 51059461700                                                            |
+|           |                                                                                     |
+|           |                                                                                     |
+|           |    Function #7 must specify a 5 digit county fips code in the **county** function   |
+|           |    argument.                                                                        |
+|           |                                                                                     |
+|           |    * county = 51600                                                                 |
+|           |                                                                                     |
+|           |                                                                                     |
+|           |    Function #8 must specify a micropolitan or metropolitan CBSA code in the         |
+|           |    **cbsa** function argument.                                                      |
+|           |                                                                                     |
+|           |    * cbsa = 10380                                                                   |
+|           |                                                                                     |
+|           |                                                                                     |    
+|           |    Function #9 must specify a metropolitan CBSA division code in the                |
+|           |    **cbsadiv** function argument.                                                   |
+|           |                                                                                     |
+|           |    * cbsadiv = 35614                                                                |
+|           |                                                                                     |
+|           |    I recommend typing hud_metropolitan("MD") to see a list of metropolitan CBSA in  |
+|           |    Maryland. For example, a code of METRO22900N40079 needs 22900 inside as the input|
+|           |    argument.                                                                        |
+|           |                                                                                     |
+|           |    Function #10 must be a 2 digit state fips code + 2 digit congressional district  |
+|           |    code in the **cd** function argument.                                            |
+|           |                                                                                     |
+|           |    * cd = 7200                                                                      |
+|           |                                                                                     |  
+|           |                                                                                     |
+|           |    Function #12 must be a 10 digit number consisting of 5 digit county fips code +  |
+|           |    5 digit county sub district code in the **countysub** argument.                  |
+|           |                                                                                     |
+|           |    * countysub = 4606720300                                                         |
+|           |                                                                                     |   
++-----------+-------------------------------------------------------------------------------------+ 		                             
+| year      |    Years of the data to retrieve: defaults to the current year.                     |
+|           |                                                                                     |
+|           |    * year = c(2019, 2018, 2021)                                                     |
+|           |    * year = c(2016)                                                                 |
+|           |    * year = 2021                                                                    |      
+|           |                                                                                     |  
++-----------+-------------------------------------------------------------------------------------+                                                                                    
+| quarter   |   The quarters in the year to retrieve: defaults to the first                       |
+|           |   quarter.                                                                          |
+|           |                                                                                     |
+|           |   * quarter = c(1,2,3,4)                                                            |
+|           |   * quarter = c(1)                                                                  |
+|           |   * quarter = 4                                                                     |   
+|           |                                                                                     |  
++-----------+-------------------------------------------------------------------------------------+ 
+| minimal   |   If TRUE, returns just the intersecting geoids that are                            |
+|           |   crosswalked with the queried geoid.                                               |                                    
+|           |                                                                                     |  
++-----------+-------------------------------------------------------------------------------------+ 
+| key       |   The API key provided by HUD USER.                                                 |
+|           |                                                                                     |         
+|           |   * key = "wqokqo2138jdi13wfwwfwcytjyr"                                             |                                         
++-----------+-------------------------------------------------------------------------------------+
 
 Returns
 =======
+
++-----------+-------------------------------------------------------------------------------------+
+|Returns    | Description                                                                         |
++===========+=====================================================================================+
+| zip,      |                                                                                     |
+| county,   |    The geoid that is queried for. The name of                                       |
+| tract,    |    the column will be named the geoid type                                          |                                     
+| cbsa,     |                                                                                     |
+| cbsadiv,  |                                                                                     |
+| cd,       |                                                                                     |
+| countysub |                                                                                     |
++-----------+-------------------------------------------------------------------------------------+ 		                             
+| res_ratio |                                                                                     |
+|           |   The ratio of residential addresses in the ZIP – Tract, County, or CBSA            |
+|           |   part to the total number of residential addresses in the entire ZIP. (for         |
+|           |   type 1-5 and 11) The ratio of residential addresses in the Zip, Tract, County, or |
+|           |   CBSA - ZIP part to the total number of residential addresses in the entire        |
+|           |   Zip, Tract, County, or CBSA. (for type 6-10 and 12)                               |                                 
+|           |                                                                                     |  
++-----------+-------------------------------------------------------------------------------------+                                                                                    
+| bus_ratio |                                                                                     |
+|           |   The quarters in the year to retrieve: defaults to the first                       |
+|           |   The ratio of business addresses in the ZIP – Tract, County, or CBSA part          |
+|           |   to the total number of business addresses in the entire ZIP. (for type 1-5 and 11)|
+|           |   The ratio of business addresses in the Tract, County, or CBSA – ZIP part to       |
+|           |   the total number of business addresses in the entire Tract, County, or CBSA.      |
+|           |   (for type 6-10 and 12)                                                            |     
+|           |                                                                                     |  
++-----------+-------------------------------------------------------------------------------------+ 
+| oth_ratio |                                                                                     |
+|           |   The ratio of other addresses in the ZIP – Tract to the total number of            |
+|           |   other addresses in the entire ZIP. (for type 1-5 and 11). The ratio of other      |
+|           |   addresses in the Tract, County, or CBSA – ZIP part to the total number of         |
+|           |   other addresses in the entire Tract, County, or CBSA. (for type 6-10 and 12)      |                                                        
+|           |                                                                                     |  
++-----------+-------------------------------------------------------------------------------------+ 
+| tot_ratio |                                                                                     |
+|           |   The ratio of all addresses in the ZIP – Tract to the total number of              |
+|           |   all types of addresses in the entire ZIP. (for type 1-5 and 11) The ratio of all  |
+|           |   addresses in the Tract, County, or CBSA-ZIP part to the total number of all       |
+|           |   types of addresses in the entire Tract, County, or CBSA. (for type 6-10 and 12)   |            
+|           |                                                                                     |                                                                 
++-----------+-------------------------------------------------------------------------------------+
+| zip,      |                                                                                     |
+| county,   |    The intersecting geoids depending on function call                               |
+| tract,    |                                                                                     |                                     
+| cbsa,     |                                                                                     |
+| cbsadiv,  |                                                                                     |
+| cd,       |                                                                                     |
+| countysub |                                                                                     |                                  
++-----------+-------------------------------------------------------------------------------------+
+| year      |   Year the measurement was taken.                                                   |
+|           |                                                                                     |         
+|           |                                                                                     |                                         
++-----------+-------------------------------------------------------------------------------------+
+| quarter   |   Quarter of year when measurement was taken.                                       |
+|           |                                                                                     |         
+|           |                                                                                     |                                         
++-----------+-------------------------------------------------------------------------------------+
+
 
 References
 ==========

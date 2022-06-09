@@ -35,6 +35,125 @@
             
   <section id="comprehensive-housing-and-affordability-strategy">
 <h1>Comprehensive Housing and Affordability Strategy<a class="headerlink" href="#comprehensive-housing-and-affordability-strategy" title="Permalink to this headline">¶</a></h1>
+<p>According to (Consolidated Planning/CHAS Data | HUD USER), the United States
+Department of Housing and Urban Development (HUD) gets custom tabulations of
+American Community Survey (ACS) data from the United States Census Bureau every
+year. These figures, dubbed &quot;CHAS&quot; (Comprehensive Housing Affordability
+Strategy), show the scope of housing issues and needs, particularly among
+low-income households. Local governments utilize the CHAS data to plan how they
+will spend HUD monies, and HUD may use the data to distribute grant funds.</p>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>These are basic examples showing you how to query the Comprehensive Housing and
+Affordability (CHAS) API.</p>
+<p>Each geoid query represents a CHAS measurement for that particular
+geographic resolution. Before looking at the examples I RECOMMEND first
+looking at [the parameters] <a class="reference internal" href="#parameters">Parameters</a>
+as well as [return data] <a class="reference internal" href="#returns">Returns</a> located at the bottom of the page.</p>
+<p>The functions below are the main functions for querying the CHAS API at
+different geographic resolutions. The package also contains an omni function
+which encapsulates thecapabilities of all the main function calls below --
+[omni-function] <a class="reference internal" href="#using-the-omni-function-for-querying">Using the omni function for querying</a></p>
+<ol class="arabic simple">
+<li><p>[nation] <a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-nation">Comprehensive Housing and Affordability Strategy for Nation</a></p></li>
+<li><p>[state] <a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-states">Comprehensive Housing and Affordability Strategy for States</a></p></li>
+<li><p>[county] <a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-county">Comprehensive Housing and Affordability Strategy for County</a></p></li>
+<li><p>[mcd] <a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-mcd">Comprehensive Housing and Affordability Strategy for MCD</a></p></li>
+<li><p>[place] <a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-place">Comprehensive Housing and Affordability Strategy for Place</a></p></li>
+</ol>
+</section>
+<section id="comprehensive-housing-and-affordability-strategy-for-nation">
+<h2>Comprehensive Housing and Affordability Strategy for Nation<a class="headerlink" href="#comprehensive-housing-and-affordability-strategy-for-nation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_chas_nation</span><span class="p">(</span><span class="n">year</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;2014-2018&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="comprehensive-housing-and-affordability-strategy-for-states">
+<h2>Comprehensive Housing and Affordability Strategy for States<a class="headerlink" href="#comprehensive-housing-and-affordability-strategy-for-states" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Queries for CHAS in a state</span>
+<span class="n">hud_chas_state</span><span class="p">(</span><span class="s2">&quot;Maryland&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;2012-2016&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="comprehensive-housing-and-affordability-strategy-for-county">
+<h2>Comprehensive Housing and Affordability Strategy for County<a class="headerlink" href="#comprehensive-housing-and-affordability-strategy-for-county" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Queries a county in Virginia</span>
+<span class="n">hud_chas_county</span><span class="p">(</span><span class="s2">&quot;51999&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;2014-2018&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="comprehensive-housing-and-affordability-strategy-for-mcd">
+<h2>Comprehensive Housing and Affordability Strategy for MCD<a class="headerlink" href="#comprehensive-housing-and-affordability-strategy-for-mcd" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Queries for CHAS for all mcds in Virginia</span>
+<span class="n">hud_chas_state_mcd</span><span class="p">(</span><span class="s2">&quot;VA&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;2014-2018&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="comprehensive-housing-and-affordability-strategy-for-place">
+<h2>Comprehensive Housing and Affordability Strategy for Place<a class="headerlink" href="#comprehensive-housing-and-affordability-strategy-for-place" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Queries for CHAS for all places in state fips code 51.</span>
+<span class="n">hud_chas_state_place</span><span class="p">(</span><span class="s2">&quot;51&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;2014-2018&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="using-the-omni-function-for-querying">
+<h2>Using the omni function for querying<a class="headerlink" href="#using-the-omni-function-for-querying" title="Permalink to this headline">¶</a></h2>
+<p>The omni function requires specifying the type which can be from 1-12. The type
+argument follows the number scheme described at [Input Arguments][]. You also
+must use the 'query' argument for inputting geoids instead of the specific
+geoid names (i.e county = 22031, cd = 7200) used by the other functions.</p>
+<p>The input arguments for the omni function closely follow the API arguments
+provided by HUD USER. Please type in '?hud_chas' into your terminal to get more
+details on how to use this.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_chas</span><span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">hud_chas</span><span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="querying-for-geographic-identifers">
+<h2>Querying for Geographic Identifers<a class="headerlink" href="#querying-for-geographic-identifers" title="Permalink to this headline">¶</a></h2>
+<section id="us-counties">
+<h3>US Counties<a class="headerlink" href="#us-counties" title="Permalink to this headline">¶</a></h3>
+<p>This is an example to show you how to query for all counties in MD,
+Virginia, and California, respectively.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_state_counties</span><span class="p">(</span><span class="s2">&quot;MD&quot;</span><span class="p">)</span>
+
+<span class="n">hud_state_counties</span><span class="p">(</span><span class="s2">&quot;Virginia&quot;</span><span class="p">)</span>
+
+<span class="n">hud_state_counties</span><span class="p">(</span><span class="s2">&quot;6&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="us-minor-civil-divisions">
+<h3>US Minor Civil Divisions<a class="headerlink" href="#us-minor-civil-divisions" title="Permalink to this headline">¶</a></h3>
+<p>This is an example to show you how to query for minor civil divisions in
+Virginia and California.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_state_minor_civil_divisions</span><span class="p">([</span><span class="s2">&quot;VA&quot;</span><span class="p">,</span> <span class="s2">&quot;CA&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="us-places">
+<h3>US Places<a class="headerlink" href="#us-places" title="Permalink to this headline">¶</a></h3>
+<p>This is an example to show you how to query for places in Wyoming and Michigan</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_state_places</span><span class="p">([</span><span class="s2">&quot;VA&quot;</span><span class="p">,</span> <span class="s2">&quot;CA&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>&quot;Consolidated Planning/CHAS Data | HUD USER.&quot; Www.huduser.gov,</dt><dd><p>www.huduser.gov/portal/datasets/cp.html.</p>
+</dd>
+</dl>
+</section>
 </section>
 
 
@@ -57,12 +176,26 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usps_crosswalk.html">USPS Crosswalk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fair_markets_rent.html">Fair Markets Rent</a></li>
 <li class="toctree-l1"><a class="reference internal" href="income_limits.html">Income Limits</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Comprehensive Housing and Affordability Strategy</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Comprehensive Housing and Affordability Strategy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-nation">Comprehensive Housing and Affordability Strategy for Nation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-states">Comprehensive Housing and Affordability Strategy for States</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-county">Comprehensive Housing and Affordability Strategy for County</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-mcd">Comprehensive Housing and Affordability Strategy for MCD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-place">Comprehensive Housing and Affordability Strategy for Place</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-omni-function-for-querying">Using the omni function for querying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#querying-for-geographic-identifers">Querying for Geographic Identifers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#returns">Returns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a></li>
 </ul>
 
 <div class="relations">

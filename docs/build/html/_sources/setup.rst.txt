@@ -3,13 +3,16 @@ Setup
 
 You can install the development version by cloning the repository
 
+.. code-block:: Bash
 
-``git clone https://github.com/etam4260/hudpy.git``
+    git clone https://github.com/etam4260/hudpy.git
 
 
 and then running...
 
-``pip install hudpy``
+.. code-block:: Bash
+
+    pip install hudpy
 
 
 The US Department of Housing and Urban Development HUD USER requires users 
@@ -26,8 +29,9 @@ calls.
 Setting the Key
 -----------------
 
+.. code-block:: Python
 
-``hud_set_key("2yeuduhq72ueajk", in_home = TRUE)``
+    hud_set_key("2yeuduhq72ueajk", in_home = TRUE)
 
 
 You can also tell RStudio to remember the key by setting `in_wkdir` and
@@ -37,7 +41,9 @@ You can also tell RStudio to remember the key by setting `in_wkdir` and
 
 To check whether rhud can gain access to this environment variable...
 
-``hud_get_key()``
+.. code-block:: Python
+
+    hud_get_key()
 
 It is now set up for the rest of the R session.
 
@@ -48,14 +54,16 @@ Setting a user agent
 It is recommended to set a user agent before querying. This tells the HUD
 servers a bit more about the querying application or user.
 
+.. code-block:: Python
 
-``hud_set_user_agent("This Application")``
+    hud_set_user_agent("This Application")
 
 
 If no user agent is set, it will return an empty string.
 
+.. code-block:: Python
 
-``hud_get_user_agent()``
+    hud_get_user_agent()    
 
 
 Understanding the Syntax
@@ -94,8 +102,9 @@ a state.
 
 A quick example:
 
+.. code-block:: Python
 
-``hud_cw_county_zip(county = 22031, year = c('2017'), quarter = c('1'))``
+    hud_cw_county_zip(county = 22031, year = c('2017'), quarter = c('1'))
 
 
 The first part of the function begins with 'hud'.
@@ -117,7 +126,9 @@ where you can check the all the function definitions in the
 ***Reference*** tab.
 
 
-``rhud_website()``
+.. code-block:: Python
+
+    rhud_website()  
 
 
 This will quickly open up this website on your web browser

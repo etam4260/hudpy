@@ -40,14 +40,20 @@ Affordability Strategy.
 
 Now copy and paste that key into the hud_set_key() function.
 
-``hud_set_key("sample-key")``
+
+.. code-block:: Bash
+
+   hud_set_key("sample-key")
 
 Simplistic Example
 ------------------
 
 This sample provided below shows how to query the USPS Crosswalk API
 
-``hud_cw_zip_tract(zip = '35213', year = ['2010'], quarter = ['1'])``
+
+.. code-block:: Bash
+
+   hud_cw_zip_tract(zip = '35213', year = ['2010'], quarter = ['1'])
 
 
 What is hudpy?

@@ -35,6 +35,122 @@
             
   <section id="income-limits">
 <h1>Income Limits<a class="headerlink" href="#income-limits" title="Permalink to this headline">¶</a></h1>
+<p>According to (Income Limits | HUD USER), HUD establishes income restrictions for
+assisted housing programs such as Public Housing, Section 8 project-based,
+Section 8 Housing Choice Voucher, Section 202 housing for the elderly, and
+Section 811 housing for persons with disabilities. For each metropolitan region,
+parts of some metropolitan areas, and non-metropolitan county, HUD creates
+income limitations based on Median Family Income estimates and Fair Market Rent
+area criteria.</p>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>This page contains basic examples of how to query the HUD Income Limits API.
+Before looking at the examples I reccomend first taking a look at
+[the parameters] <a class="reference internal" href="#parameters">Parameters</a> as well as [output data] <a class="reference internal" href="#returns">Returns</a> located at
+the bottom of the page.</p>
+<p><strong>Disclaimer:</strong> The output tables are too large to be displayed here so we
+choose to leave them out.</p>
+<ul class="simple">
+<li><p>Querying a state will return a single row containing the Income Limits for that state.</p></li>
+<li><p>Querying for a county will return the IL measurement for that county.</p></li>
+<li><p>Querying for a cbsa will return the IL measurement for that cbsa.</p></li>
+</ul>
+</section>
+<section id="state-level-income-limits">
+<h2>State Level Income Limits<a class="headerlink" href="#state-level-income-limits" title="Permalink to this headline">¶</a></h2>
+<p>These are examples which show you how to query the Income Limits on a state
+level basis. You can use the state abbreviation, state name, or state fipscode.
+It will return a single row indicating the income limits for that particular
+state.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># These function calls gets income limits data for</span>
+<span class="c1"># the state of Virginia in 2021.</span>
+<span class="n">hud_il</span><span class="p">(</span><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;VA&#39;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+
+<span class="n">hud_il</span><span class="p">(</span><span class="n">query</span><span class="o">=</span> <span class="s2">&quot;Virginia&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+
+<span class="n">hud_il</span><span class="p">(</span><span class="n">query</span><span class="o">=</span> <span class="s2">&quot;51&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2021&#39;</span><span class="p">)</span>
+
+<span class="c1"># You can also choose to query for multiple</span>
+<span class="c1"># states or multiple years.</span>
+<span class="n">hud_il</span><span class="p">(</span><span class="n">query</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;VA&#39;</span><span class="p">,</span> <span class="s1">&#39;MD&#39;</span><span class="p">],</span> <span class="n">year</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2021&#39;</span><span class="p">,</span> <span class="s1">&#39;2019&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="county-level-income-limits">
+<h2>County Level Income Limits<a class="headerlink" href="#county-level-income-limits" title="Permalink to this headline">¶</a></h2>
+<p>These are examples that show you how to query the Income Limits on a
+county-level basis: counties are defined with a 2 digit state fipscode + 3 digit county fipscode. You also need a 99999 code added to the end. We currently
+don't know why the extra 99999 is included and have not found any cases where it's different. I recommend looking at <a class="reference internal" href="#us-counties">US Counties</a> to determine what counties
+are available for particular states.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Getting a county requires a 2 digit state fip + 3 digit county fip + 99999</span>
+<span class="c1"># This queries for Income Limits in 2017.</span>
+<span class="n">hud_il</span><span class="p">(</span><span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;0100199999&#39;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="s1">&#39;2017&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="small-areas-income-limits">
+<h2>Small Areas Income Limits<a class="headerlink" href="#small-areas-income-limits" title="Permalink to this headline">¶</a></h2>
+<p>These are examples that show you how to query the Small Areas Income Limits.
+Small Areas are defined as metropolitan and micropolitan areas specified using
+CBSA codes. Currently, we know how to query for metropolitan small areas, but
+are not sure for micropolitan yet. I recommend looking at
+<a class="reference internal" href="#us-metropolitan-areas">US Metropolitan Areas</a> to determine what counties are available.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Gets il data for METRO area.</span>
+<span class="n">hud_il</span><span class="p">(</span><span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;METRO47900M47900&quot;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2018</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="most-recent-income-limits-files">
+<h2>Most recent Income Limits files<a class="headerlink" href="#most-recent-income-limits-files" title="Permalink to this headline">¶</a></h2>
+<p>To get the most recent Income Limits files by year:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_rec_il_yr</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="querying-for-geographic-identifers">
+<h2>Querying for Geographic Identifers<a class="headerlink" href="#querying-for-geographic-identifers" title="Permalink to this headline">¶</a></h2>
+<section id="us-states">
+<h3>US States<a class="headerlink" href="#us-states" title="Permalink to this headline">¶</a></h3>
+<p>This is an example to show you how to query for all states and territories
+in the US.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_nation_states_territories</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="us-counties">
+<h3>US Counties<a class="headerlink" href="#us-counties" title="Permalink to this headline">¶</a></h3>
+<p>This is an example to show you how to query for all counties in MD,
+Virginia, and California, respectively.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_state_counties</span><span class="p">(</span><span class="s2">&quot;MD&quot;</span><span class="p">)</span>
+
+<span class="n">hud_state_counties</span><span class="p">(</span><span class="s2">&quot;Virginia&quot;</span><span class="p">)</span>
+
+<span class="n">hud_state_counties</span><span class="p">(</span><span class="s2">&quot;6&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="us-metropolitan-areas">
+<h3>US Metropolitan Areas<a class="headerlink" href="#us-metropolitan-areas" title="Permalink to this headline">¶</a></h3>
+<p>This is an example to show you how to query for metropolitan areas for a state.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Get all metropolitan areas in Maryland and Virginia.</span>
+<span class="n">hud_state_metropolitan</span><span class="p">([</span><span class="s2">&quot;MD&quot;</span><span class="p">,</span> <span class="s2">&quot;VA&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>&quot;Income Limits | HUD USER.&quot; Huduser.gov, 2015,</dt><dd><p>www.huduser.gov/portal/datasets/il.html.</p>
+</dd>
+</dl>
+</section>
 </section>
 
 
@@ -57,12 +173,24 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usps_crosswalk.html">USPS Crosswalk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fair_markets_rent.html">Fair Markets Rent</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Income Limits</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Income Limits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#state-level-income-limits">State Level Income Limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#county-level-income-limits">County Level Income Limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#small-areas-income-limits">Small Areas Income Limits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#most-recent-income-limits-files">Most recent Income Limits files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#querying-for-geographic-identifers">Querying for Geographic Identifers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#returns">Returns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="comprehensive_housing_and_affordability.html">Comprehensive Housing and Affordability Strategy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a></li>
 </ul>
 
 <div class="relations">
