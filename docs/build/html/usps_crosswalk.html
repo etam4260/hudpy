@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+
+<html lang="python">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>USPS Crosswalk &#8212; hudpy 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Fair Markets Rent" href="fair_markets_rent.html" />
+    <link rel="prev" title="Setup" href="setup.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="usps-crosswalk">
+<h1>USPS Crosswalk<a class="headerlink" href="#usps-crosswalk" title="Permalink to this headline">¶</a></h1>
+<p>According to (US Department of Housing and Urban Development, n.d.), the
+difficulty of linking United States Postal Service (USPS) ZIP codes to Census
+Bureau regions is one of the many obstacles that social science scholars and
+practitioners face. Only at the ZIP code level is there relevant data that, when
+paired with demographic data calculated at various Census geographic levels,
+could open up new paths of investigation.</p>
+<p>Furthermore, the (US Department of Housing and Urban Development, n.d.) believes
+that while there are several appropriate approaches for integrating ZIP codes
+with Census geographies, they are limited. The HUD-USPS Crosswalk Files were
+supplied by PD&amp;R to enable more routes for integrating these data. These
+one-of-a-kind files were created using data from the quarterly USPS Vacancy
+Data. They come straight from the USPS; they're updated quarterly, so they're
+always up to date with changes in ZIP code configurations; and they reflect both
+commercial and residential addresses. Because many of the phenomena that housing
+researchers study are based on housing unit or address, the latter attribute is
+of special interest to them. Analysts can take into account not just the spatial
+distribution of population, but also the spatial distribution of residences, by
+utilizing an allocation approach based on residential addresses rather than by
+area or population. This allows for a more sophisticated approach to data
+allocation across different geographies.</p>
+<p>These journal articles describe the problem and proposed solution in more detail:</p>
+<dl class="simple">
+<dt>Wilson, Ron and Din, Alexander, 2018. “Understanding and Enhancing the U.S.</dt><dd><p>Department of Housing and Urban Development’s ZIP Code Crosswalk Files,”
+Cityscape: A Journal of Policy Development and Research, Volume 20 Number 2, 277
+<a class="reference external" href="https://www.huduser.gov/portal/periodicals/cityscpe/vol20num2/ch16.pdf">https://www.huduser.gov/portal/periodicals/cityscpe/vol20num2/ch16.pdf</a></p>
+</dd>
+<dt>Din, Alexander and Wilson, Ron, 2020. &quot;Crosswalking ZIP Codes to Census</dt><dd><p>Geographies: Geoprocessing the U.S. Department of Housing &amp; Urban Development’s
+ZIP Code Crosswalk Files,&quot; Cityscape: A Journal of Policy Development and
+Research, Volume 22, Number 1,
+<a class="reference external" href="https://www.huduser.gov/portal/periodicals/cityscpe/vol22num1/ch12.pdf">https://www.huduser.gov/portal/periodicals/cityscpe/vol22num1/ch12.pdf</a></p>
+</dd>
+</dl>
+<section id="census-geographies">
+<h2>Census Geographies<a class="headerlink" href="#census-geographies" title="Permalink to this headline">¶</a></h2>
+<p>This chart provided by the US Census Bureau gives a good example of the
+relationships among different geographies. The crosswalk files only support a
+subset of these.</p>
+</section>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>There are 12 main function calls for the crosswalk files:
+the package also contains an omni function which encapsulates the
+capabilities of all the main function calls below --
+[omni-function][Using the omni function for querying]</p>
+<ol class="arabic simple">
+<li><p>[zip-tract][Crosswalk zipcode to census tract]</p></li>
+<li><p>[zip-county][Crosswalk zipcode to county fip]</p></li>
+<li><p>[zip-cbsa (Core Base Statistical Areas)][Crosswalk zipcode to core base statistical area (cbsa)]</p></li>
+<li><p>[zip-cbsadiv (Available 4th Quarter 2017 onwards)][Crosswalk zipcode to core based statistical area division (cbsadiv)]</p></li>
+<li><p>[zip-cd (Congressional District)][Crosswalk zipcode to congressional district (cd)]</p></li>
+<li><p>[tract-zip][Crosswalk census tract to zipcode]</p></li>
+<li><p>[county-zip][Crosswalk county fip into zipcode]</p></li>
+<li><p>[cbsa-zip][Crosswalk core based statistical areas (cbsa) to zipcode]</p></li>
+<li><p>[cbsadiv-zip (Available 4th Quarter 2017 onwards)][Crosswalk core based statistical areas division (cbsadiv) to zipcode]</p></li>
+<li><p>[cd-zip][Crosswalk congressional district (cd) to zipcode]</p></li>
+<li><p>[zip-countysub (Available 2nd Quarter 2018 onwards)][Crosswalk zipcode to county subdivision (countysub)]</p></li>
+<li><p>[countysub-zip (Available 2nd Quarter 2018 onwards)][Crosswalk county subdivision (countysub) to zipcode]</p></li>
+</ol>
+<p>The first geoid type in the function call is what to query for. For
+example in 1) above, 'zip' is the first geoid and 'tract' is the second geoid.</p>
+<p>The second geoid in the function call describes the geoid which we want to
+determine 'intersection' with the first geoid where intersection is described
+as the % of residential, business, other, and total buildings that overlap.</p>
+<p>For example, in function call #7, we might have a county called 22031
+which has zip codes 71052, 71078, 71049, 71032 ... where the residential
+% (res_ratio) of each zip is 0.38, 0.21, 0.11, 0.05 ... respectively.
+Of all these zipcodes' res_ratios, when added up will equal 1,
+signaling these grouping of zip codes make up 100% of residential address in the
+county with each zipcode taking up their respective residential percentage.</p>
+<p>Disclaimer: Although there exists inverse relationships in the Crosswalk
+Files, the measurements are NOT COMPLETELY inverse -- for reasons stated
+within the papers above.</p>
+<p>These are basic examples which shows you to query the Crosswalk API. Before
+looking at the outputted data I RECOMMEND first taking a look at [the parameters][Parameters]
+as well as [return data][Returns] located at the bottom of the page.</p>
+<section id="crosswalk-zipcode-to-census-tract">
+<h3>Crosswalk zipcode to census tract<a class="headerlink" href="#crosswalk-zipcode-to-census-tract" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_zip_tract(zip</span> <span class="pre">=</span> <span class="pre">'35213',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2010'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('1'))</span></code></p>
+</section>
+<section id="crosswalk-zipcode-to-county-fip">
+<h3>Crosswalk zipcode to county fip<a class="headerlink" href="#crosswalk-zipcode-to-county-fip" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_zip_county(zip</span> <span class="pre">=</span> <span class="pre">35213,</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2020'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('2'))</span></code></p>
+</section>
+<section id="crosswalk-zipcode-to-core-base-statistical-area-cbsa">
+<h3>Crosswalk zipcode to core base statistical area (cbsa)<a class="headerlink" href="#crosswalk-zipcode-to-core-base-statistical-area-cbsa" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_zip_cbsa(zip</span> <span class="pre">=</span> <span class="pre">35213,</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2011'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('3'))</span></code></p>
+</section>
+<section id="crosswalk-zipcode-to-core-based-statistical-area-division-cbsadiv">
+<h3>Crosswalk zipcode to core based statistical area division (cbsadiv)<a class="headerlink" href="#crosswalk-zipcode-to-core-based-statistical-area-division-cbsadiv" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_zip_cbsadiv(zip</span> <span class="pre">=</span> <span class="pre">'22031',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2019'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('4'))</span></code></p>
+</section>
+<section id="crosswalk-zipcode-to-congressional-district-cd">
+<h3>Crosswalk zipcode to congressional district (cd)<a class="headerlink" href="#crosswalk-zipcode-to-congressional-district-cd" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_zip_cd(zip</span> <span class="pre">=</span> <span class="pre">'35213',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c(2011),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c(1))</span></code></p>
+</section>
+<section id="crosswalk-census-tract-to-zipcode">
+<h3>Crosswalk census tract to zipcode<a class="headerlink" href="#crosswalk-census-tract-to-zipcode" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_tract_zip(tract</span> <span class="pre">=</span> <span class="pre">48201223100,</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2017'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('1'))</span></code></p>
+</section>
+<section id="crosswalk-county-fip-into-zipcode">
+<h3>Crosswalk county fip into zipcode<a class="headerlink" href="#crosswalk-county-fip-into-zipcode" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_county_zip(county</span> <span class="pre">=</span> <span class="pre">'22031',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2010'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('1'))</span></code></p>
+</section>
+<section id="crosswalk-core-based-statistical-areas-cbsa-to-zipcode">
+<h3>Crosswalk core based statistical areas (cbsa) to zipcode<a class="headerlink" href="#crosswalk-core-based-statistical-areas-cbsa-to-zipcode" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_cbsa_zip(cbsa</span> <span class="pre">=</span> <span class="pre">'10140',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2017'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('2'))</span></code></p>
+</section>
+<section id="crosswalk-core-based-statistical-areas-division-cbsadiv-to-zipcode">
+<h3>Crosswalk core based statistical areas division (cbsadiv) to zipcode<a class="headerlink" href="#crosswalk-core-based-statistical-areas-division-cbsadiv-to-zipcode" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_cbsadiv_zip(cbsadiv</span> <span class="pre">=</span> <span class="pre">10380,</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2017'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('4'))</span></code></p>
+</section>
+<section id="crosswalk-congressional-district-cd-to-zipcode">
+<h3>Crosswalk congressional district (cd) to zipcode<a class="headerlink" href="#crosswalk-congressional-district-cd-to-zipcode" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_cd_zip(cd</span> <span class="pre">=</span> <span class="pre">'2202',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2010'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('4'))</span></code></p>
+</section>
+<section id="crosswalk-zipcode-to-county-subdivision-countysub">
+<h3>Crosswalk zipcode to county subdivision (countysub)<a class="headerlink" href="#crosswalk-zipcode-to-county-subdivision-countysub" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_zip_countysub(zip</span> <span class="pre">=</span> <span class="pre">'35213',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2019'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('2'))</span></code></p>
+</section>
+<section id="crosswalk-county-subdivision-countysub-to-zipcode">
+<h3>Crosswalk county subdivision (countysub) to zipcode<a class="headerlink" href="#crosswalk-county-subdivision-countysub-to-zipcode" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_countysub_zip(countysub</span> <span class="pre">=</span> <span class="pre">'4606720300</span> <span class="pre">',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2019',</span> <span class="pre">'2019',</span> <span class="pre">'2019'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('4','4'))</span></code></p>
+</section>
+<section id="querying-for-only-the-crosswalked-geoids">
+<h3>Querying for only the crosswalked geoids<a class="headerlink" href="#querying-for-only-the-crosswalked-geoids" title="Permalink to this headline">¶</a></h3>
+<p>If you just want the crosswalked geoids, you can set the <strong>minimal</strong> argument
+to TRUE. This will return a vector containing the crosswalked geoids
+without the extra metadata.</p>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw_county_zip(county</span> <span class="pre">=</span> <span class="pre">'22031',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2010'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('1'),</span> <span class="pre">minimal</span> <span class="pre">=</span> <span class="pre">TRUE)</span></code></p>
+</section>
+</section>
+<section id="using-the-omni-function-for-querying">
+<h2>Using the omni function for querying<a class="headerlink" href="#using-the-omni-function-for-querying" title="Permalink to this headline">¶</a></h2>
+<p>The omni function is a redundant implementation of the functions shown above
+that requires specifying the type which can be from 1-12. The type argument
+follows the number scheme described at within the [input arguments][Input Arguments]. You also
+must use the 'query' argument (i.e query = 22031) for inputting geoids instead
+of the specific geoid names (i.e county = 22031, cd = 7200) used by the
+above functions.</p>
+<p><code class="docutils literal notranslate"><span class="pre">hud_cw(type</span> <span class="pre">=</span> <span class="pre">7,</span> <span class="pre">query</span> <span class="pre">=</span> <span class="pre">'22031',</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">c('2010'),</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">c('1'))</span></code></p>
+</section>
+<section id="crosswalking-a-dataset">
+<h2>Crosswalking a dataset<a class="headerlink" href="#crosswalking-a-dataset" title="Permalink to this headline">¶</a></h2>
+<p>For those who need to apply an allocation method (residential, business, other,
+total) to individual items in a data set, the <strong>crosswalk()</strong> function is available.
+Lets say we wanted to know the population at a zip code level (there is likely
+already a data set for this) for the counties of Washington, Wicomico,
+and Worchester in Maryland in the year 2019.</p>
+<p>NOTE: The use of the crosswalk() function is likely best suited for datasets
+that are not described in the geographic identifier we want to crosswalk to. In
+this case population might not be the best example for this.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sample</span> <span class="pre">&lt;-</span> <span class="pre">data.frame(pop</span> <span class="pre">=</span> <span class="pre">c(151049,</span> <span class="pre">103609,</span> <span class="pre">52276),</span> <span class="pre">county</span> <span class="pre">=</span> <span class="pre">c(&quot;24043&quot;,</span> <span class="pre">&quot;24045&quot;,</span> <span class="pre">&quot;24047&quot;))</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">head(sample)</span></code></p>
+<p>In the crosswalked data set below each zip code associated with a county
+is assigned the same population value.</p>
+<p><code class="docutils literal notranslate"><span class="pre">crosswalk(data</span> <span class="pre">=</span> <span class="pre">sample,</span> <span class="pre">geoid</span> <span class="pre">=</span> <span class="pre">&quot;county&quot;,</span> <span class="pre">geoid_col</span> <span class="pre">=</span> <span class="pre">&quot;county&quot;,</span> <span class="pre">cw_geoid</span> <span class="pre">=</span> <span class="pre">&quot;zip&quot;,</span> <span class="pre">cw_geoid_col</span> <span class="pre">=</span> <span class="pre">NA,</span> <span class="pre">method</span> <span class="pre">=</span> <span class="pre">NA,</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">2019,</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">1)</span></code></p>
+<p>To utilize an allocation method provided by the crosswalk files and apply it
+to columns of the data set, specify the method and cw_geoid_col arguments.
+In this case we want to allocate the county population levels to a zip code
+level using the method based on the ratio of residential addresses.</p>
+<p><code class="docutils literal notranslate"><span class="pre">crosswalk(data</span> <span class="pre">=</span> <span class="pre">sample,</span> <span class="pre">geoid</span> <span class="pre">=</span> <span class="pre">&quot;county&quot;,</span> <span class="pre">geoid_col</span> <span class="pre">=</span> <span class="pre">&quot;county&quot;,</span> <span class="pre">cw_geoid</span> <span class="pre">=</span> <span class="pre">&quot;zip&quot;,</span> <span class="pre">cw_geoid_col</span> <span class="pre">=</span> <span class="pre">&quot;pop&quot;,</span> <span class="pre">method</span> <span class="pre">=</span> <span class="pre">&quot;res&quot;,</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">2019,</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">1)</span></code></p>
+</section>
+<section id="geo-in-geo-functions-does-one-geography-overlap-another">
+<h2>Geo-in-geo functions: does one geography overlap another?<a class="headerlink" href="#geo-in-geo-functions-does-one-geography-overlap-another" title="Permalink to this headline">¶</a></h2>
+<p>This library also allows the user to determine if one geography overlaps
+another.</p>
+<p>Disclaimer: Overlap is not determined by whether the boundaries intersect, but
+rather if any addresses lie in both.</p>
+<p>This allows you to specify the year, quarter, and key arguments.</p>
+<p><code class="docutils literal notranslate"><span class="pre">z_in_cbsa(zip</span> <span class="pre">=</span> <span class="pre">71052,</span> <span class="pre">cbsa</span> <span class="pre">=</span> <span class="pre">43340,</span> <span class="pre">year</span> <span class="pre">=</span> <span class="pre">2019,</span> <span class="pre">quarter</span> <span class="pre">=</span> <span class="pre">2)</span></code></p>
+</section>
+<section id="most-recent-usps-crosswalk-files">
+<h2>Most recent USPS Crosswalk files<a class="headerlink" href="#most-recent-usps-crosswalk-files" title="Permalink to this headline">¶</a></h2>
+<p>To get the most recent crosswalk files by year and quarter:</p>
+<p><code class="docutils literal notranslate"><span class="pre">hud_rec_cw_yr()</span></code></p>
+</section>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Din, Alexander and Wilson, Ron, 2020. &quot;Crosswalking ZIP Codes to Census</dt><dd><p>Geographies: Geoprocessing the U.S. Department of Housing &amp; Urban Development’s
+ZIP Code Crosswalk Files,&quot; Cityscape: A Journal of Policy Development and
+Research, Volume 22, Number 1, <a class="reference external" href="https://www.huduser.gov/portal/periodicals/cityscpe/vol22num1/ch12.pdf">https://www.huduser.gov/portal/periodicals/cityscpe/vol22num1/ch12.pdf</a></p>
+</dd>
+<dt>Katy Rossiter, K. R. (2014, July 31). Standard Hierarchy of Census Bereau</dt><dd><p>Geographies [Photograph]. Understanding Geographic Relationships: Counties,
+Places, Tracts and More.
+<a class="reference external" href="https://www.census.gov/newsroom/blogs/random-samplings/2014/07/understanding-geographic-relation">https://www.census.gov/newsroom/blogs/random-samplings/2014/07/understanding-geographic-relation</a>
+ships-counties-places-tracts-and-more.html</p>
+</dd>
+<dt>U.S Department of Housing and Urban Development. (n.d.). HUD USPS ZIP</dt><dd><p>Code Crosswalk Files | HUD USER. HUD  USPS ZIP CODE CROSSWALK FILES.
+Retrieved February 17, 2022, from
+<a class="reference external" href="https://www.huduser.gov/portal/datasets/usps_crosswalk.html">https://www.huduser.gov/portal/datasets/usps_crosswalk.html</a></p>
+</dd>
+<dt>Wilson, Ron and Din, Alexander, 2018. “Understanding and Enhancing the U.S.</dt><dd><p>Department of Housing and Urban Development’s ZIP Code Crosswalk Files,”
+Cityscape: A Journal of Policy Development and Research, Volume 20 Number 2, 277
+– 294.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">hudpy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">USPS Crosswalk</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#census-geographies">Census Geographies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-the-omni-function-for-querying">Using the omni function for querying</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#crosswalking-a-dataset">Crosswalking a dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#geo-in-geo-functions-does-one-geography-overlap-another">Geo-in-geo functions: does one geography overlap another?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#most-recent-usps-crosswalk-files">Most recent USPS Crosswalk files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#returns">Returns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fair_markets_rent.html">Fair Markets Rent</a></li>
+<li class="toctree-l1"><a class="reference internal" href="income_limits.html">Income Limits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="comprehensive_housing_and_affordability.html">Comprehensive Housing and Affordability Strategy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">hudpy</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="setup.html" title="previous chapter">Setup</a></li>
+      <li>Next: <a href="fair_markets_rent.html" title="next chapter">Fair Markets Rent</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Emmet Tam.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/usps_crosswalk.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -12,6 +12,12 @@ Welcome to hudpy!
    :caption: Contents:
    
    setup
+   usps_crosswalk
+   fair_markets_rent
+   income_limits
+   comprehensive_housing_and_affordability
+   changelog
+   authors
    modules
 
 
