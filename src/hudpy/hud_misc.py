@@ -75,6 +75,9 @@ def hud_nation_states_territories(key: str = None) -> pd.DataFrame:
     
     call = hud_pkg_env.pkg_env["pool_manager"].request("GET", urls, headers = headers)
 
+    if int(call.status) != 200:
+        raise ValueError("No data returned: your key might be invalid.")
+
     cont = json.loads(call.data.decode('utf-8'))   
     cont = pd.json_normalize(cont) 
  
@@ -152,7 +155,9 @@ def hud_state_metropolitan(state: Union[int, str, list[int], list[str], tuple[in
     
     call = hud_pkg_env.pkg_env["pool_manager"].request("GET", urls, headers = headers)
     
-
+    if int(call.status) != 200:
+        raise ValueError("No data returned: your key might be invalid or some states are not valid.")
+        
     cont = json.loads(call.data.decode('utf-8'))    
     cont = pd.json_normalize(cont) 
     

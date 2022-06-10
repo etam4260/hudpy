@@ -59,7 +59,7 @@ def test_misc_nation_states():
     
     assert len(states) >= 1
 
-    with pytest.raises(ValueError) as e_info:
+    with pytest.raises(TypeError) as e_info:
         hud_misc.hud_nation_states_territories("CA", "qdqdwq")
 
 
