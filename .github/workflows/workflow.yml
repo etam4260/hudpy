@@ -6,6 +6,8 @@ jobs:
     env:
       OS: ubuntu-latest
       PYTHON: '3.9'
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      HUD_KEY: ${{ secrets.HUD_KEY }}
     steps:
     - uses: actions/checkout@v3
       with:
