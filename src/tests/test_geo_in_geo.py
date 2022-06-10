@@ -8,7 +8,7 @@ def test_z_in_trt():
   # Invalid zipcode 34321 should throw warning...
 
 
-    with pytest.warns(None) as e_info:
+    with pytest.warns(Warning) as e_info:
         assert hud_geo_in_geo.z_in_trt(zip = [35213, 34321], tract = ["01073010801"]) == [True, False]
 
     assert hud_geo_in_geo.z_in_trt(zip = [77032, 77396], tract = [24033800608]) == [False, False]
@@ -53,10 +53,10 @@ def test_z_in_cbsa():
 
 @pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_z_in_cbsadiv():
-    with pytest.warns(None) as e_info:
+    with pytest.warns(Warning) as e_info:
         assert hud_geo_in_geo.z_in_cbsadiv(zip = 35235, cbsadiv = 13820) == [False]
         
-    with pytest.warns(None) as e_info:
+    with pytest.warns(Warning) as e_info:
         assert hud_geo_in_geo.z_in_cbsadiv(zip = 35071, cbsadiv = 13820) == [False]
 
     with pytest.raises(Exception) as e_info:
@@ -153,11 +153,11 @@ def test_cbsa_in_z():
 
 @pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_cbsadiv_in_z():
-    with pytest.warns(None) as e_info:
+    with pytest.warns(Warning) as e_info:
         assert hud_geo_in_geo.cbsadiv_in_z(cbsadiv = 32300, zip = 24054) == [False]
-    with pytest.warns(None) as e_info:
+    with pytest.warns(Warning) as e_info:
         assert hud_geo_in_geo.cbsadiv_in_z(cbsadiv = 19260, zip = 24054) == [False]
-    with pytest.warns(None) as e_info:
+    with pytest.warns(Warning) as e_info:
         hud_geo_in_geo.cbsadiv_in_z(cbsadiv = [32300, 19260], zip = 24054)
 
 
@@ -175,7 +175,7 @@ def test_cd_in_z():
 
     assert hud_geo_in_geo.cd_in_z(cd = 5105, zip = 24059) == [True]
 
-    with pytest.warns(None) as e_info:
+    with pytest.warns(Warning) as e_info:
         assert hud_geo_in_geo.cd_in_z(cd = [5109, 5105, 5106, 4332], zip = 24059) == [True, True, True, False]
 
     with pytest.raises(Exception) as e_info:

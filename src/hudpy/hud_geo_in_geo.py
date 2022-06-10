@@ -180,9 +180,11 @@ def z_in_cty(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]]
     if(key == None and os.getenv("HUD_KEY") != None):
         key = os.getenv("HUD_KEY")
 
-    if hud_pkg_env.pkg_env["rec_cw"] == None:
-        args = hud_get_recent_data.hud_rec_cw_yr()
-        hud_pkg_env.pkg_env["rec_cw"] = args
+    if year == None or quarter == None: 
+        
+        if hud_pkg_env.pkg_env["rec_cw"] == None:
+            args = hud_get_recent_data.hud_rec_cw_yr()
+            hud_pkg_env.pkg_env["rec_cw"] = args
 
         # Store in pkg envrionment and retrieve when necessary
         if year == None:
@@ -190,6 +192,7 @@ def z_in_cty(zip : Union[int, str, list[int], list[str], tuple[int], tuple[str]]
         
         if quarter == None:
             quarter = hud_pkg_env.pkg_env["rec_cw"] ["quarter"]
+    
     
 
     cleaned = hud_input_check.cw_input_check_cleansing( primary_geoid = "county",
