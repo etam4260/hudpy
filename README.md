@@ -23,10 +23,10 @@ You can install the development version by cloning the repository
 git clone https://github.com/etam4260/hudpy.git
 ```
 
-and then running...
+go into the directory and run...
 
 ```
-pip install hudpy
+pip3 install .
 ```
 
 

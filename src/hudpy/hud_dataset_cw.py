@@ -7,7 +7,6 @@ import pandas as pd
 
 from hudpy import hud_input_check
 from hudpy import hud_cw
-from hudpy import hud_internet_online
 
 def crosswalk(data: pd.DataFrame,
               geoid: str,

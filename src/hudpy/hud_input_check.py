@@ -4,7 +4,6 @@ from datetime import date
 from typing import Union
 
 from hudpy import hud_pkg_env
-from hudpy import hud_input_check
 from hudpy import hud_misc 
 
 def chas_input_check_cleansing(query: Union[int, str, list[int], list[str], tuple[int], tuple[str]],

@@ -1,4 +1,5 @@
 import os
+import sys
 
 def hud_set_cache_dir(path):
     """
@@ -46,7 +47,6 @@ def hud_set_cache_dir(path):
     """
 
     # Set for the rhud cache path in the current session.
-
     # TODO: First check for valid path formatting by regex
 
 def hud_get_cache_dir():
@@ -93,11 +93,41 @@ def hud_clear_cache():
     >>>  hud_clear_cache()
 
     """
-    if (os.getenv("RHUD_CACHE_DIR") == "" or \
-        os.getenv("RHUD_CACHE_DIR") == None):
+    if os.getenv("RHUD_CACHE_DIR") == "" or \
+       os.getenv("RHUD_CACHE_DIR") == None:
+        print()
 
         # Clear the cache directory of python temp... 
         # tempdir() +  "//" + "rhud_cache"
-    else:
+    #else:
         # os.getenv("RHUD_CACHE_DIR")
     
+
+
+
+
+def hash_and_store(expr, **kwargs):
+
+    # Args will be supplied as a dictionary with the additional 
+    # arguments used in the expression.
+
+    # Hash each argument as well as the expression itself and add 
+    # them all up to get unique identifer. 
+    """
+    A helper function for hashing a function call along with the arguments. 
+    The hash will help determine a unique id for a file used to cache 
+    the results of a API function call.
+
+    See Also
+    --------
+
+    * hud_get_cache_dir()
+    * hud_set_cache_dir()
+    * hud_clear_cache()
+    
+    Examples
+    --------
+    >>>  hash_and_store(expr = hud_cw_zip_tract, zip = 13234, year = 2025, quarter = 3, key = "qdqo32")
+
+    """
+    #hashed_function_call = print(hex(hash(expr) + % ((sys.maxsize + 1) * 2)))
