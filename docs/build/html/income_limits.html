@@ -140,9 +140,117 @@ Virginia, and California, respectively.</p>
 </section>
 <section id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 11%" />
+<col style="width: 89%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameters</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>query</p></td>
+<td><p>Can provide either a 10 digit FIPS code which is almost always
+state fips + county fips + 99999, or state abbreviation.
+Can also provide a CBSA code. You are only allowed to query for metropolitan
+areas.</p>
+<p>Run hud_states() to get a list of counties.</p>
+<p>Run hud_metropolitan(&quot;MD&quot;) to get a list of metropolitan areas in MD.</p>
+<p>Run hud_counties(&quot;MD&quot;) to get list of counties in MD.</p>
+<ul class="simple">
+<li><p>query = 'METRO12700M12700'</p></li>
+<li><p>query = 'MD'</p></li>
+<li><p>query = '5100199999'</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>year</p></td>
+<td><p>Years of the data to retrieve: defaults to the current year.</p>
+<ul class="simple">
+<li><p>year = c(2019, 2018, 2021)</p></li>
+<li><p>year = c(2016)</p></li>
+<li><p>year = 2021</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>key</p></td>
+<td><p>The API key provided by HUD USER.</p>
+<ul class="simple">
+<li><p>key = &quot;a-sample-key&quot;</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="returns">
 <h2>Returns<a class="headerlink" href="#returns" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 88%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Data</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>query</p></td>
+<td><p>Identifier for county, state, or cbsadiv depending on function</p></td>
+</tr>
+<tr class="row-odd"><td><p>year</p></td>
+<td><p>Year when measurement was taken.</p>
+<ul class="simple">
+<li><p>year = c(2019, 2018, 2021)</p></li>
+<li><p>year = c(2016)</p></li>
+<li><p>year = 2021</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>county_name</p></td>
+<td><p>Name of the county if it is a county.</p></td>
+</tr>
+<tr class="row-odd"><td><p>counties_msa</p></td>
+<td><p>Names of all counties belonging to the Metro Area if it is a Metro Area(MSA).</p></td>
+</tr>
+<tr class="row-even"><td><p>town_name</p></td>
+<td><p>Town name - applicable for North East region</p></td>
+</tr>
+<tr class="row-odd"><td><p>metro_status</p></td>
+<td><p>value will be &quot;1&quot; if it is a metropolitan county. Otherwise value will be &quot;0&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p>metro_name</p></td>
+<td><p>Metro area name if metro_status is &quot;1&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p>smallarea
+_status</p></td>
+<td><p>value will be &quot;1&quot; if it is a small area. Otherwise value will be &quot;0&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p>median
+income</p></td>
+<td><p>Median Income for this geographic identifier</p></td>
+</tr>
+<tr class="row-odd"><td><p>very_low +</p></td>
+<td><p>Very low (50%) Income Limits. For more details on il50
+check the associated documentation at
+<a class="reference external" href="https://www.huduser.gov/portal/dataset/fmr-api.html">https://www.huduser.gov/portal/dataset/fmr-api.html</a></p></td>
+</tr>
+<tr class="row-even"><td><p>extremely
+low +</p></td>
+<td><p>Extremely low (30%) Income Limits.
+For more details on il30 check the associated documentation at
+<a class="reference external" href="https://www.huduser.gov/portal/dataset/fmr-api.html">https://www.huduser.gov/portal/dataset/fmr-api.html</a></p></td>
+</tr>
+<tr class="row-odd"><td><p>low +</p></td>
+<td><p>Low (80%) Income Limits.
+For more details on il80 check the associated documentation at
+<a class="reference external" href="https://www.huduser.gov/portal/dataset/fmr-api.html">https://www.huduser.gov/portal/dataset/fmr-api.html</a></p></td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>

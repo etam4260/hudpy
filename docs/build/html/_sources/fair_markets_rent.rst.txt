@@ -186,9 +186,92 @@ and New York.
 Parameters
 ==========
 
-Returns
-==========
++-----------+-------------------------------------------------------------------------------------+
+|Parameters | Description                                                                         |
++===========+=====================================================================================+
+| query     |   Can provide either a 10 digit FIPS code which is almost always                    |
+|           |   state fips + county fips + 99999, or state abbreviation.                          |
+|           |   Can also provide a CBSA code. You are only allowed to query for metropolitan      |
+|           |   areas.                                                                            |
+|           |                                                                                     |
+|           |   Run hud_states() to get a list of counties.                                       |
+|           |                                                                                     |
+|           |   Run hud_metropolitan("MD") to get a list of metropolitan areas in MD.             |
+|           |                                                                                     |
+|           |   Run hud_counties("MD") to get list of counties in MD.                             |
+|           |                                                                                     |
+|           |   * query = 'METRO12700M12700'                                                      |
+|           |   * query = 'MD'                                                                    |
+|           |   * query = '5100199999'                                                            |
+|           |                                                                                     |   
++-----------+-------------------------------------------------------------------------------------+ 		                             
+| year      |    Years of the data to retrieve: defaults to the current year.                     |
+|           |                                                                                     |
+|           |    * year = c(2019, 2018, 2021)                                                     |
+|           |    * year = c(2016)                                                                 |
+|           |    * year = 2021                                                                    |      
+|           |                                                                                     |  
++-----------+-------------------------------------------------------------------------------------+ 
+| key       |   The API key provided by HUD USER.                                                 |
+|           |                                                                                     |         
+|           |   * key = "a-sample-key"                                                            |                                         
++-----------+-------------------------------------------------------------------------------------+
 
+
+Returns
+=======
++------------+-------------------------------------------------------------------------------------+
+|Data        | Description                                                                         |
++============+=====================================================================================+
+| query      |   Identifier for county, state, or cbsadiv depending on function                    |
+|            |                                                                                     |
++------------+-------------------------------------------------------------------------------------+ 		                             
+| year       |   Year when measurement was taken.                                                  |
+|            |                                                                                     |
+|            |   * year = c(2019, 2018, 2021)                                                      |
+|            |   * year = c(2016)                                                                  |
+|            |   * year = 2021                                                                     |      
+|            |                                                                                     |  
++------------+-------------------------------------------------------------------------------------+ 
+|county_name |   Name of the county if it is a county.                                             |
+|            |                                                                                     |         
+|            |                                                                                     |                                         
++------------+-------------------------------------------------------------------------------------+
+|counties_msa|   Names of all counties belonging to the Metro Area if it is a Metro Area(MSA).     |    
+|            |                                                                                     |                                                
++------------+-------------------------------------------------------------------------------------+
+| town_name  |   Town name - applicable for North East region                                      |
+|            |                                                                                     |                                                 
++------------+-------------------------------------------------------------------------------------+
+|metro_status|   value will be "1" if it is a metropolitan county. Otherwise value will be "0".    |                                           
+|            |                                                                                     |                                                 
++------------+-------------------------------------------------------------------------------------+
+|metro_name  |   Metro area name if metro_status is "1"                                            |
+|            |                                                                                     |                                           
++------------+-------------------------------------------------------------------------------------+
+|smallarea   |                                                                                     |
+|_status     |   value will be "1" if it is a small area. Otherwise value will be "0".             |
+|            |                                                                                     |                                              
++------------+-------------------------------------------------------------------------------------+
+| Efficiency |                                                                                     |
+| (A studio  |                                                                                     |
+| apartment) |   Efficiency FMR in US Dollars                                                      |
+|            |                                                                                     |                                              
++------------+-------------------------------------------------------------------------------------+    
+| One-Bedroom|   1-bedroom FMR in US Dollars                                                       |
+|            |                                                                                     |                                     
++------------+-------------------------------------------------------------------------------------+ 
+| Two-Bedroom|   2-bedroom FMR in US Dollars                                                       |
+|            |                                                                                     |                                              
++------------+-------------------------------------------------------------------------------------+ 
+| Three-     |                                                                                     |
+| Bedroom    |  3-bedroom FMR in US Dollars                                                        |
+|            |                                                                                     |                                                                            
++------------+-------------------------------------------------------------------------------------+ 
+| Four-      |                                                                                     |
+| Bedroom    |   4-bedroom FMR in US Dollars                                                       |
+|            |                                                                                     |                                             
++------------+-------------------------------------------------------------------------------------+ 
 
 
 References
