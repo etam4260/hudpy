@@ -263,7 +263,7 @@ def crosswalk_a_dataset_input_check_cleansing(data,
                                               geoid: Union[int, str],
                                               geoid_col: Union[int, str],
                                               cw_geoid: str, 
-                                              cw_geoid_col : Union[int, str], 
+                                              cw_geoid_col : Union[int, str, list], 
                                               method: str, 
                                               year: Union[int, str], 
                                               quarter: Union[int, str], 
@@ -320,10 +320,13 @@ def crosswalk_a_dataset_input_check_cleansing(data,
         raise ValueError("\nmethod should be a string corresponding to either res, bus, oth, or tot.")
 
 
-    if cw_geoid_col != None:
-        cw_geoid_col = [str(cw_geoid_col)] if isinstance(cw_geoid_col, str) else list(map(lambda x: str(x), cw_geoid_col))
-
-    args = cw_input_check_cleansing(query = list(data[geoid_col]),
+    if isinstance(cw_geoid_col, str) or isinstance(cw_geoid_col, int):
+        cw_geoid_col = [str(cw_geoid_col)] 
+        
+        
+    args = cw_input_check_cleansing(primary_geoid = geoid,
+                                    secondary_geoid = cw_geoid,
+                                    query = list(data[geoid_col]),
                                     year = year,
                                     quarter = quarter,
                                     key = key

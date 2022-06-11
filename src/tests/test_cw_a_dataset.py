@@ -132,7 +132,7 @@ def test_simple_cw():
 
 @pytest.mark.skipif(os.getenv("HUD_KEY") == None, reason="HUD_KEY not available.")
 def test_awkward_cw():
-    sample = pd.DataFrame(mes = list(1232, 1232, 1232), zip = list(21206, 21206, 21206))
+    sample = pd.DataFrame({"mes": [1232, 1232, 1232], "zip": [21206, 21206, 21206]})
 
     cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "county", year = 2018,
               quarter = 1)
@@ -140,7 +140,7 @@ def test_awkward_cw():
     cw = hud_dataset_cw.crosswalk(sample, "zip", "zip", "county", "mes", "res",
               2018, 1)
 
-    sample = pd.DataFrame(mes = list(1232, 1232, 1232), zip = list(21202336, 212206, 2221206))
+    sample = pd.DataFrame({"mes": [1232, 1232, 1232], "zip": [21206, 21206, 21206767]})
 
     with pytest.raises(ValueError) as e_info:
         hud_dataset_cw.crosswalk(sample, "zip", "zip", "county", year = 2018,

@@ -203,14 +203,14 @@ def crosswalk(data: pd.DataFrame,
         cw_data[geoid] = cw_data[geoid].astype(str)
         data[geoid_col] = data[geoid_col].astype(str)
 
-        return(pd.merge(cw_data, data, left_on = geoid, right_on = geoid_col).drop(columns = 'index'))
+        return(pd.merge(cw_data, data, left_on = geoid, right_on = geoid_col))
 
     elif cw_geoid_col != None and method != None:
         
         cw_data[geoid] = cw_data[geoid].astype(str)
         data[geoid_col] = data[geoid_col].astype(str)
         
-        merged = pd.merge(cw_data, data, left_on = geoid, right_onyou = geoid_col).drop(columns = 'index')
+        merged = pd.merge(cw_data, data, left_on = geoid, right_on = geoid_col)
 
         # clear memory
         cw_data = None
@@ -220,29 +220,30 @@ def crosswalk(data: pd.DataFrame,
         if method == "residential" or method == "res" or method == "res_ratio":
             print("\n* Applying allocation method based on residential address percentage.")
 
+        
             for i in range((merged.shape[0])): 
-                merged[i, cw_geoid_col] <- float(merged[i, cw_geoid_col]) * float(merged[i, "res_ratio"])
+                merged.loc[i, cw_geoid_col] = merged.loc[i, cw_geoid_col].multiply(merged.loc[i, "res_ratio"], axis = "index")
 
         elif method == "business" or method == "bus" or method == "bus_ratio":
             print("\n* Applying allocation method based on business address percentage.")
             
             for i in range((merged.shape[0])): 
-                merged[i, cw_geoid_col] <- float(merged[i, cw_geoid_col]) * float(merged[i, "bus_ratio"])
+                merged.loc[i, cw_geoid_col] = merged.loc[i, cw_geoid_col].multiply(merged.loc[i, "bus_ratio"], axis = "index")
 
         elif method == "other" or method == "oth" or method == "oth_ratio":
             print("\n* Applying allocation method based on other address percentage.")
             
             for i in range((merged.shape[0])): 
-                merged[i, cw_geoid_col] <- float(merged[i, cw_geoid_col]) * float(merged[i, "oth_ratio"])
-            
+                merged.loc[i, cw_geoid_col] = merged.loc[i, cw_geoid_col].multiply(merged.loc[i, "oth_ratio"], axis = "index")
+
         elif method == "total" or method == "tot" or method == "tot_ratio":
             print("\n* Applying allocation method based on total address percentage.")
             
             for i in range((merged.shape[0])): 
-                merged[i, cw_geoid_col] <- float(merged[i, cw_geoid_col]) * float(merged[i, "tot_ratio"])
+                merged.loc[i, cw_geoid_col] = merged.loc[i, cw_geoid_col].multiply(merged.loc[i, "tot_ratio"], axis = "index")
 
         else:
             print("\nThe method or columns selected might be invalid. Check the documentation.")
-            return(merged)
 
+        return(merged)
     return(None)
