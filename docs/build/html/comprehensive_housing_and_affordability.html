@@ -47,12 +47,10 @@ will spend HUD monies, and HUD may use the data to distribute grant funds.</p>
 <p>These are basic examples showing you how to query the Comprehensive Housing and
 Affordability (CHAS) API.</p>
 <p>Each geoid query represents a CHAS measurement for that particular
-geographic resolution. Before looking at the examples I RECOMMEND first
-looking at [the parameters] <a class="reference internal" href="#parameters">Parameters</a>
-as well as [return data] <a class="reference internal" href="#returns">Returns</a> located at the bottom of the page.</p>
+geographic resolution.</p>
 <p>The functions below are the main functions for querying the CHAS API at
 different geographic resolutions. The package also contains an omni function
-which encapsulates thecapabilities of all the main function calls below --
+which encapsulates the capabilities of all the main function calls below --
 [omni-function] <a class="reference internal" href="#using-the-omni-function-for-querying">Using the omni function for querying</a></p>
 <ol class="arabic simple">
 <li><p>[nation] <a class="reference internal" href="#comprehensive-housing-and-affordability-strategy-for-nation">Comprehensive Housing and Affordability Strategy for Nation</a></p></li>
@@ -98,13 +96,11 @@ which encapsulates thecapabilities of all the main function calls below --
 </section>
 <section id="using-the-omni-function-for-querying">
 <h2>Using the omni function for querying<a class="headerlink" href="#using-the-omni-function-for-querying" title="Permalink to this headline">¶</a></h2>
-<p>The omni function requires specifying the type which can be from 1-12. The type
-argument follows the number scheme described at [Input Arguments][]. You also
+<p>The omni function requires specifying the type which can be from 1-12. You also
 must use the 'query' argument for inputting geoids instead of the specific
 geoid names (i.e county = 22031, cd = 7200) used by the other functions.</p>
 <p>The input arguments for the omni function closely follow the API arguments
-provided by HUD USER. Please type in '?hud_chas' into your terminal to get more
-details on how to use this.</p>
+provided by HUD USER.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_chas</span><span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="n">hud_chas</span><span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">51</span><span class="p">)</span>

@@ -18,13 +18,11 @@ These are basic examples showing you how to query the Comprehensive Housing and
 Affordability (CHAS) API.
 
 Each geoid query represents a CHAS measurement for that particular 
-geographic resolution. Before looking at the examples I RECOMMEND first
-looking at [the parameters] `Parameters`_
-as well as [return data] `Returns`_ located at the bottom of the page.
+geographic resolution.
 
 The functions below are the main functions for querying the CHAS API at
 different geographic resolutions. The package also contains an omni function 
-which encapsulates thecapabilities of all the main function calls below --
+which encapsulates the capabilities of all the main function calls below --
 [omni-function] `Using the omni function for querying`_
 
 1) [nation] `Comprehensive Housing and Affordability Strategy for Nation`_
@@ -80,22 +78,19 @@ Comprehensive Housing and Affordability Strategy for Place
 
 Using the omni function for querying
 ====================================
-The omni function requires specifying the type which can be from 1-12. The type
-argument follows the number scheme described at [Input Arguments][]. You also 
+The omni function requires specifying the type which can be from 1-12. You also 
 must use the 'query' argument for inputting geoids instead of the specific 
 geoid names (i.e county = 22031, cd = 7200) used by the other functions.
 
 The input arguments for the omni function closely follow the API arguments
-provided by HUD USER. Please type in '?hud_chas' into your terminal to get more
-details on how to use this.
+provided by HUD USER. 
+
 
 .. code-block:: Python
   
     hud_chas(type = 1)
 
     hud_chas(type = 2, 51)
-
-
 
 
 Querying for Geographic Identifers
