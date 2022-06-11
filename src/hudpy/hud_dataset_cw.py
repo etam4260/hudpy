@@ -219,7 +219,6 @@ def crosswalk(data: pd.DataFrame,
         # apply method to columns specified.
         if method == "residential" or method == "res" or method == "res_ratio":
             print("\n* Applying allocation method based on residential address percentage.")
-
         
             for i in range((merged.shape[0])): 
                 merged.loc[i, cw_geoid_col] = merged.loc[i, cw_geoid_col].multiply(merged.loc[i, "res_ratio"], axis = "index")

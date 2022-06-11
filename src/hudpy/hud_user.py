@@ -551,10 +551,10 @@ def hud_chas(type: Union[str, int],
     if not isinstance(type, (int, str)) :
         raise ValueError("\ntype should be int or str")
     
-    if not isinstance(state_id, (int, str, list)) :
+    if state_id != None and not isinstance(state_id, (int, str, list)):
         raise ValueError("\nstate_id should be int, str, or list or tuple of ints and strings.")
     
-    if not isinstance(entity_id, (int, str, list)) :
+    if entity_id != None and not isinstance(entity_id, (int, str, list)):
         raise ValueError("\nentity_id should be int, str, or list or tuple of ints and strings.")
 
     if not isinstance(year, (int, str, list)) :
@@ -563,13 +563,14 @@ def hud_chas(type: Union[str, int],
     if key == None:
         raise ValueError("\nIt looks like the HUD_KEY was not set: use hud_set_key().")
         
-    if type(key) != str:
+    if not isinstance(key, str):
         raise ValueError("\nKey should be a string")
 
     year = [str(year)] if isinstance(year, str) or isinstance(year, int) else list(map(lambda x: str(x), year))
-    if str(type) != "1":
-        state_id = [str(state_id)] if isinstance(state_id, str) or isinstance(state_id, int) else list(map(lambda x: str(x), state_id))
-        entity_id = [str(entity_id)] if isinstance(entity_id, str) or isinstance(entity_id, int) else list(map(lambda x: str(x), entity_id))
+
+    if isinstance(state_id, str) or isinstance(state_id, int):
+        state_id = [str(state_id)] 
+        entity_id = [str(entity_id)]
         
     year = list(set(map(lambda x: str.strip(x), year)))
     
@@ -593,28 +594,35 @@ def hud_chas(type: Union[str, int],
 
 
     if str(type) == "1": 
-        urls = "https://www.huduser.gov/hudapi/public/chas?type=" + "1" + \
-                    "&year=", year
-    
-    if str(type) == "2": 
+        all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=1"], 
+                                             ["&year="], year))
+        
+        urls = []
+        for i in range(len(all_queries)):
+            urls.append(
+                all_queries[i][0] + 
+                all_queries[i][1] +
+                all_queries[i][2] 
+            )
+
+
+    elif str(type) == "2": 
         if state_id == None: raise ValueError("You need to specify a stateId for this type.")
            
 
-        all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=2&stateId="],
-                                            [state_id],
-                                            ["&year="],
-                                            [year]))
-
+        all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type=2&stateId="], 
+                                            state_id, ["&year="], year))
+        
         urls = []
-        for i in range(0, len(all_queries)):
+        for i in range(len(all_queries)):
             urls.append(
                 all_queries[i][0] + 
                 all_queries[i][1] +
                 all_queries[i][2] +
-                all_queries[i][3] 
+                all_queries[i][3]
             )
-
-    if str(type) == "3" or str(type) == "4" or str(type) == "5": 
+  
+    elif str(type) == "3" or str(type) == "4" or str(type) == "5": 
         if state_id == None or entity_id == None: 
             raise ValueError("You need to specify a stateId and entityId for this type.")
 
@@ -622,13 +630,9 @@ def hud_chas(type: Union[str, int],
             raise ValueError("\nYou need to make sure stateId and entityId are " + \
                              "of same length and correspond to each other by index.")
     
-        all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type="],
-                                            [type],
-                                            ["&stateId="],
-                                            [state_id],
-                                            ["&year="],
-                                            [year]))
-
+        all_queries = list(itertools.product(["https://www.huduser.gov/hudapi/public/chas?type="], [str(type)],
+                                              ["&stateId="], state_id, ["&year="], year))
+        
         urls = []
         for i in range(0, len(all_queries)):
             urls.append(
@@ -636,11 +640,11 @@ def hud_chas(type: Union[str, int],
                 all_queries[i][1] +
                 all_queries[i][2] +
                 all_queries[i][3] +
-                all_queries[i][4] +
                 "&entityId=" +
-                entity_id[i % len(entity_id)] +
-                all_queries[i][5] +
-                all_queries[i][6] 
+                entity_id[i % len(entity_id)]+
+                all_queries[i][4] +
+                all_queries[i][5] 
             )
+
 
     return(hud_do_query_calls.chas_do_query_calls(urls, key = key))
