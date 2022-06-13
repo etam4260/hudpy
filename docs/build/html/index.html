@@ -95,8 +95,9 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#rhud-0-1-0-9000-6-15-2022">rhud 0.1.0.9000 (6/15/2022)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog.html#rhud-0-0-0-9000-1-28-2022">rhud 0.0.0.9000 (1/28/2022)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#hudpy-0-2-0-9000-6-13-2022">hudpy 0.2.0.9000 (6/13/2022)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#hudpy-0-1-0-9000-6-13-2022">hudpy 0.1.0.9000 (6/13/2022)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog.html#hudpy-0-0-0-9000-5-12-2022">hudpy 0.0.0.9000 (5/12/2022)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Authors</a><ul>
@@ -116,7 +117,18 @@
 <li><p>This interface uses the HUD User Data API but is not endorsed or
 certified by HUD User.</p></li>
 </ul>
-<p>Are you a R developer? Check out [rhud](<a class="reference external" href="https://github.com/etam4260/rhud">https://github.com/etam4260/rhud</a>) instead</p>
+<p>To install from pypi use:</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>pip install hudpy
+</pre></div>
+</div>
+<p>You can install the development version by cloning the repository:</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/etam4260/hudpy.git
+</pre></div>
+</div>
+<p>now run:</p>
+<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>pip install ./hudpy
+</pre></div>
+</div>
 <section id="key-access">
 <h2>Key Access<a class="headerlink" href="#key-access" title="Permalink to this headline">¶</a></h2>
 <p>To use functions provided by this package, you need to get access HUD
@@ -126,14 +138,14 @@ datasets provided by HUD. This will include selecting USPS Crosswalk,
 Fair Markets Rent, Income Limits, and Comprehensive Housing
 Affordability Strategy.</p>
 <p>Now copy and paste that key into the hud_set_key() function.</p>
-<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>hud_set_key<span class="o">(</span><span class="s2">&quot;sample-key&quot;</span><span class="o">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_set_key</span><span class="p">(</span><span class="s2">&quot;sample-key&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="simplistic-example">
 <h2>Simplistic Example<a class="headerlink" href="#simplistic-example" title="Permalink to this headline">¶</a></h2>
 <p>This sample provided below shows how to query the USPS Crosswalk API</p>
-<div class="highlight-Bash notranslate"><div class="highlight"><pre><span></span>hud_cw_zip_tract<span class="o">(</span><span class="nv">zip</span> <span class="o">=</span> <span class="s1">&#39;35213&#39;</span>, <span class="nv">year</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;2010&#39;</span><span class="o">]</span>, <span class="nv">quarter</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;1&#39;</span><span class="o">])</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">hud_cw_zip_tract</span><span class="p">(</span><span class="nb">zip</span> <span class="o">=</span> <span class="s1">&#39;35213&#39;</span><span class="p">,</span> <span class="n">year</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;2010&#39;</span><span class="p">],</span> <span class="n">quarter</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>

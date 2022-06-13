@@ -13,6 +13,6 @@ Authors
 Citation
 ========
 
-Tam, E., Reilly, A., & Ghaedi, H. (2022). rhud: An R interface for accessing HUD
-(US Department of Housing and Urban Development) APIs (Version 0.3.0.9000).
-https://github.com/etam4260/rhud
+Tam, E., Reilly, A., & Ghaedi, H. (2022). hudpy: An Python interface for accessing HUD
+(US Department of Housing and Urban Development) APIs (Version 0.2.0).
+https://github.com/etam4260/hudpy

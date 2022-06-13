@@ -26,7 +26,27 @@ Getting Started
 -   This interface uses the HUD User Data API but is not endorsed or
     certified by HUD User.
 
-Are you a R developer? Check out [rhud](https://github.com/etam4260/rhud) instead
+To install from pypi use:
+
+.. code-block:: Bash
+    
+    pip install hudpy
+
+
+You can install the development version by cloning the repository:
+
+.. code-block:: Bash
+    
+    git clone https://github.com/etam4260/hudpy.git
+
+
+now run:
+
+.. code-block:: Bash
+    
+    pip install ./hudpy
+
+
 
 Key Access
 ----------
@@ -41,7 +61,7 @@ Affordability Strategy.
 Now copy and paste that key into the hud_set_key() function.
 
 
-.. code-block:: Bash
+.. code-block:: Python
 
    hud_set_key("sample-key")
 
@@ -51,7 +71,7 @@ Simplistic Example
 This sample provided below shows how to query the USPS Crosswalk API
 
 
-.. code-block:: Bash
+.. code-block:: Python
 
    hud_cw_zip_tract(zip = '35213', year = ['2010'], quarter = ['1'])
 

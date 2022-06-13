@@ -13,23 +13,23 @@
 
 <!-- badges: end -->
 
-Are you a R developer? Check out [rhud](https://github.com/etam4260/rhud) instead
+Are you a R developer? Check out [rhud](https://github.com/etam4260/rhud) instead.
 
 ## Installation
 
-To install from pypi use
+To install from pypi use:
 
 ```
 pip install hudpy
 ```
 
-You can install the development version by cloning the repository
+You can install the development version by cloning the repository:
 
 ```
 git clone https://github.com/etam4260/hudpy.git
 ```
 
-now run
+now run:
 
 ```
 pip install ./hudpy
@@ -104,7 +104,7 @@ the data into memory.
 Please cite this package using:
 
 Tam E, Reilly A, Ghaedi H, Jin S (2022). hudpy: A Python Interface to the
-HUD (US Department of Housing and Urban Development) APIs. 0.1.0.9000,  
+HUD (US Department of Housing and Urban Development) APIs. 0.2.0,  
 <https://github.com/etam4260/hudpy/>.
 
 ## Available Data

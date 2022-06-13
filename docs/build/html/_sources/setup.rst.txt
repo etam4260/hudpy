@@ -1,6 +1,16 @@
 Setup
 =====
 
+Are you a R developer? Check out [rhud](https://github.com/etam4260/rhud) instead.
+
+
+To install from pypi use:
+
+.. code-block:: Bash
+
+    pip install hudpy
+
+
 You can install the development version by cloning the repository
 
 .. code-block:: Bash
