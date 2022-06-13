@@ -1,11 +1,12 @@
-rhud 0.1.0.9000 (6/15/2022)
+
+hudpy 0.1.0 (6/15/2022)
 =============================
 
-### NEW FEATURES
+## NEW FEATURES
 
-  * Ported all features from the rhud package and implemented them in python.
+  * Ported all features from the rhud package and implemented them in the hudpy package.
 
-rhud 0.0.0.9000 (1/28/2022)
+hudpy 0.0.0 (1/28/2022)
 =============================
   
   * Added a `NEWS.md` file to track changes to the package.

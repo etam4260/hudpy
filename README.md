@@ -12,7 +12,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/etam4260/hudpy/badge)](https://www.codefactor.io/repository/github/etam4260/hudpy)
 
 <br/><br/> 
-[![devel version](https://img.shields.io/badge/devel%20version-0.1.0-yellow)]()
+[![devel version](https://img.shields.io/badge/devel%20version-0.2.0-yellow)]()
 
 <!-- badges: end -->
 
