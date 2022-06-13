@@ -5,13 +5,9 @@
 <!-- badges: start -->
 
 [![ Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-
 [![PyPI Latest Release](https://img.shields.io/pypi/v/hudpy.svg)](https://pypi.org/project/hudpy/)
-
 [![License](https://img.shields.io/pypi/l/hudpy.svg)](https://raw.githubusercontent.com/etam4260/hudpy/blob/main/LICENSE)
-
 [![Downloads](https://static.pepy.tech/personalized-badge/hudpy?period=month&units=international_system&left_color=black&right_color=orange&left_text=PyPI%20downloads%20per%20month)](https://pepy.tech/project/hudpy)
-
 [![Codecov test coverage](https://codecov.io/gh/etam4260/hudpy/branch/main/graph/badge.svg)](https://app.codecov.io/gh/etam4260/hudpy?branch=main)
 [![CodeFactor](https://www.codefactor.io/repository/github/etam4260/hudpy/badge)](https://www.codefactor.io/repository/github/etam4260/hudpy)
 
