@@ -7,7 +7,7 @@
 [![ Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 
 [![PyPI Latest Release](https://img.shields.io/pypi/v/hudpy.svg)](https://pypi.org/project/hudpy/)
-[![Package Status](https://img.shields.io/pypi/status/hudpy.svg)](https://pypi.org/project/hudpy/)
+
 [![License](https://img.shields.io/pypi/l/hudpy.svg)](https://raw.githubusercontent.com/etam4260/hudpy/blob/main/LICENSE)
 
 [![Downloads](https://static.pepy.tech/personalized-badge/hudpy?period=month&units=international_system&left_color=black&right_color=orange&left_text=PyPI%20downloads%20per%20month)](https://pepy.tech/project/hudpy)
@@ -23,6 +23,12 @@
 Are you a R developer? Check out [rhud](https://github.com/etam4260/rhud) instead
 
 ## Installation
+
+To install from pypi use
+
+```
+pip install hudpy
+```
 
 You can install the development version by cloning the repository
 
