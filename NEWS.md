@@ -1,5 +1,10 @@
+hudpy 0.3.0 (6/14/2022)
+=======================
 
-hudpy 0.2.0.9000 (6/13/2022)
+  * Removed .9000 version number from NEWS.md and changelog.
+  * Updated website to fix references to rhud in changelog and author information
+
+hudpy 0.2.0 (6/13/2022)
 ============================
 
   * Testing pypi and making sure files are unique according to their specifications.
